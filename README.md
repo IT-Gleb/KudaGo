@@ -1,6 +1,6 @@
 Тест сервиса KudaGo
 
-Использую Nuxt 3.25? tailwindcss 4.14
+Использую Nuxt 3.16.2, Tailwindcss 4.1.4
 
 # Nuxt Minimal Starter
 

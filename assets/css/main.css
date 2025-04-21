@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+:root {
+  --textNum: 16;
+  --txtSize: calc(var(--textNum) * 1px);
+  --headingSize: calc((var(--textNum) * 2.1) * 1px);
+  --lengthT: calc(var(--txtSize)+2px);
+  --lengthH: calc(var(var(--headingSize))+2px);
+}
+
+html,
+body {
+  @apply dark:bg-slate-900 min-h-[100%] dark:text-white bg-white font-sans text-[length:clamp(1.8vw,var(--txtSize),2.5vw)]/[var(--lengthT)] text-slate-500 flex flex-col overflow-x-hidden;
+}
+h1 {
+  @apply py-1 text-[length:clamp(3.5vw,var(--headingSize),5vw)]/[var(--lengthH)] uppercase font-serif;
+}
