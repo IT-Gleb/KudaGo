@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
+    "motion-v": "^1.0.0-beta.2",
     "nuxt": "^3.16.2",
     "tailwindcss": "^4.1.4",
     "vue": "^3.5.13",
@@ -32,5 +33,9 @@
     "Android 2.3",
     "Android >= 4",
     "Opera >= 12"
-  ]
+  ],
+  "devDependencies": {
+    "@vueuse/core": "^13.1.0",
+    "@vueuse/nuxt": "^13.1.0"
+  }
 }

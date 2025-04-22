@@ -4,15 +4,20 @@ export default defineComponent({ components: { Navigate } });
 </script>
 
 <template>
-  <div>
-    <header class="w-full text-center min-h-[4vh] bg-slate-600 text-slate-100">
+  <div class="flex flex-col min-h-[100vh]">
+    <header
+      class="w-full text-center min-h-[4vh] bg-slate-600 dark:bg-sky-950 text-slate-100 dark:text-slate-300 place-content-center"
+    >
       <Navigate />
     </header>
-    <main class="w-full min-h-[89vh] flex-auto grow">
+    <main class="w-full flex-auto">
       <slot />
     </main>
-    <footer class="text-center min-h-[4vh] bg-slate-800 text-slate-100">
-      Это footer
+    <footer
+      class="w-full text-center min-h-[4vh] bg-slate-700 dark:bg-sky-950 text-slate-100 dark:text-slate-300 place-content-center"
+    >
+      Это footer Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Laudantium, numquam!
     </footer>
   </div>
 </template>
