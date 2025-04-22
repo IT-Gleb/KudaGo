@@ -6,7 +6,7 @@ export default defineComponent({ components: { Navigate } });
 <template>
   <div class="flex flex-col min-h-[100vh]">
     <header
-      class="w-full text-center min-h-[4vh] bg-slate-600 dark:bg-sky-950 text-slate-100 dark:text-slate-300 place-content-center"
+      class="w-full text-center bg-slate-200 dark:bg-slate-600 dark:text-slate-300 place-content-center"
     >
       <Navigate />
     </header>
@@ -14,7 +14,7 @@ export default defineComponent({ components: { Navigate } });
       <slot />
     </main>
     <footer
-      class="w-full text-center min-h-[4vh] bg-slate-700 dark:bg-sky-950 text-slate-100 dark:text-slate-300 place-content-center"
+      class="w-full text-center min-h-[6vh] bg-slate-700 dark:bg-sky-950 text-slate-100 dark:text-slate-300 place-content-center"
     >
       Это footer Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Laudantium, numquam!
