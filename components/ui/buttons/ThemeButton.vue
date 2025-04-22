@@ -75,7 +75,7 @@ watch(isDesktop, () => {
 
 <template>
   <div
-    class="w-[60px] h-[24px] lg:w-[100px] lg:h-[30px] bg-slate-500 dark:bg-black rounded-4xl border border-slate-400 dark:border-slate-500 overflow-hidden place-content-center"
+    class="w-[60px] h-[24px] lg:w-[100px] lg:h-[30px] bg-[linear-gradient(to_right,theme(colors.slate.100),theme(colors.slate.500))] dark:bg-[linear-gradient(to_right,theme(colors.black),theme(colors.slate.500))] rounded-4xl border border-indigo-950 dark:border-slate-500 overflow-hidden place-content-center"
   >
     <!-- <div class="w-[35px] h-[35px] rounded-full bg-slate-800 cursor-pointer" /> -->
     <motion.div
@@ -84,7 +84,7 @@ watch(isDesktop, () => {
       @click="handleX"
       role="button"
       title="Изменить тему отображения"
-      class="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px] rounded-full bg-slate-800 dark:bg-slate-400 cursor-pointer lowercase"
+      class="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px] rounded-full bg-slate-500 dark:bg-slate-300 cursor-pointer lowercase"
     >
     </motion.div>
   </div>
