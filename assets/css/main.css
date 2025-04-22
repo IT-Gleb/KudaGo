@@ -11,8 +11,35 @@
 
 html,
 body {
-  @apply dark:bg-slate-900 min-h-[100%] dark:text-white bg-white font-sans text-[3vw]/[3.6vw] sm:text-[length:clamp(1.8vw,var(--txtSize),2vw)]/[var(--lengthT)] text-slate-500 overflow-x-hidden;
+  font-family: Inter, serif;
+  @apply dark:bg-slate-900 min-h-[100%] dark:text-slate-300 bg-white text-[3vw]/[3.6vw] sm:text-[length:clamp(1.2vw,var(--txtSize),1.6vw)]/[var(--lengthT)] text-slate-600 overflow-x-hidden;
 }
 h1 {
-  @apply py-1 text-[length:clamp(3.5vw,var(--headingSize),5vw)]/[var(--lengthH)] uppercase font-serif font-semibold;
+  font-family: Roboto, sans-serif;
+  @apply py-1 text-[length:clamp(4.5vw,var(--headingSize),5vw)]/[var(--lengthH)] uppercase font-semibold;
+}
+
+h2 {
+  font-family: Roboto, sans-serif;
+  @apply py-1 text-[length:clamp(3.2vw,var(--headingSize),4vw)]/[var(--lengthH)] uppercase font-semibold;
+}
+
+h3 {
+  font-family: Roboto, sans-serif;
+  @apply py-1 text-[length:clamp(2.8vw,var(--headingSize),3.2vw)]/[var(--lengthH)] uppercase font-semibold;
+}
+
+h4 {
+  font-family: Roboto, sans-serif;
+  @apply py-1 text-[length:clamp(2.2vw,var(--headingSize),2.6vw)]/[var(--lengthH)] uppercase font-semibold;
+}
+
+h5 {
+  font-family: Roboto, sans-serif;
+  @apply py-1 text-[length:clamp(1.75vw,var(--headingSize),2.1vw)]/[var(--lengthH)] uppercase font-semibold;
+}
+
+h6 {
+  font-family: Roboto, sans-serif;
+  @apply py-1 text-[length:clamp(1.15vw,var(--headingSize),1.65vw)]/[var(--lengthH)] uppercase font-semibold;
 }

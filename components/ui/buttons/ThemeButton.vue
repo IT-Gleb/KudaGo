@@ -10,7 +10,7 @@ const lengths = ref([36, 72]);
 
 const isDesktop = useMediaQuery("only screen and (min-width: 1024px)");
 
-let pathLength = isDesktop.value
+const pathLength = isDesktop.value
   ? ref(lengths.value[1])
   : ref(lengths.value[0]); //72;
 
@@ -43,6 +43,9 @@ if (store) {
       isDark.value = true;
       break;
     case "false":
+      isDark.value = false;
+      break;
+    default:
       isDark.value = false;
       break;
   }
@@ -79,6 +82,8 @@ watch(isDesktop, () => {
       :transition="{ type: 'spring' }"
       :animate="{ x: thisX }"
       @click="handleX"
+      role="button"
+      title="Изменить тему отображения"
       class="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px] rounded-full bg-slate-800 dark:bg-slate-400 cursor-pointer lowercase"
     >
     </motion.div>

@@ -11,5 +11,5 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ["motion-v/nuxt", "@vueuse/nuxt"],
+  modules: ["motion-v/nuxt", "@vueuse/nuxt", "@nuxt/fonts"],
 });
