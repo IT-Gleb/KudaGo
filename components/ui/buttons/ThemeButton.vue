@@ -12,9 +12,9 @@ const isDesktop = useMediaQuery("only screen and (min-width: 1024px)");
 
 const pathLength = isDesktop.value
   ? ref(lengths.value[1])
-  : ref(lengths.value[0]); //72;
+  : ref(lengths.value[0]); //36;
 
-let store: any = undefined;
+let store: Storage | undefined = undefined;
 if (import.meta.client) {
   store = window.localStorage;
   //console.log(store);
@@ -65,7 +65,7 @@ watch(isDark, () => {
 });
 
 watch(isDesktop, () => {
-  pathLength.value = isDesktop.value ? lengths.value[1] : lengths.value[0]; //72;
+  pathLength.value = isDesktop.value ? lengths.value[1] : lengths.value[0]; //72:36;
 
   handlePath();
   // console.log(isDesktop.value, pathLength.value);

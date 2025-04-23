@@ -9,7 +9,7 @@ import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMen
     class="h-[93dvh] flex flex-col gap-0 bg-[linear-gradient(to_bottom,theme(colors.slate.200),theme(colors.indigo.950)_40%)] dark:bg-[linear-gradient(to_bottom,theme(colors.indigo.950),theme(colors.slate.900)_40%)] relative"
   >
     <div
-      class="absolute max-[767px]:left-[5%] md:left-[50%] max-[767px]:top-[45%] md:top-[40%] p-2 z-10"
+      class="absolute max-[767px]:left-[5%] md:left-[50%] max-[767px]:top-[46%] md:top-[40%] p-2 z-10"
     >
       <MainScreenMenu />
     </div>
@@ -32,7 +32,7 @@ import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMen
       class="w-full h-[19%] md:h-[42%] bg-slate-200 dark:bg-slate-950 [mask-image:url('/svg/wave.svg')] [mask-position:left_top] [mask-repeat:no-repeat] [mask-size:100%]"
     ></div>
     <div
-      class="bg-indigo-950 bg-[url('/svg/tusa.svg')] bg-repeat-x bg-contain bg-bottom-left dark:bg-slate-900 w-full h-[75%] lg:h-[33%] overflow-hidden place-content-start xl:place-content-center flex flex-col-reverse gap-5 lg:gap-0 md:flex-row items-center justify-center"
+      class="bg-indigo-950 bg-[url('/svg/tusa.svg')] bg-repeat-x bg-contain bg-bottom-left dark:bg-slate-900 w-full h-[75%] lg:h-[33%] overflow-hidden place-content-start xl:place-content-center flex flex-col-reverse gap-5 lg:gap-0 lg:flex-row items-center justify-center"
     >
       <div
         class="w-[320px] xl:ml-20 xl:w-[450px] text-slate-400 dark:text-slate-600 mask-b-from-20% mask-b-to-90%"
