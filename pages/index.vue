@@ -1,12 +1,19 @@
 <script setup>
 import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
+import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
 </script>
 
 <template>
   <section
-    class="h-[93dvh] flex flex-col gap-0 bg-[linear-gradient(to_bottom,theme(colors.slate.200),theme(colors.indigo.950)_40%)] dark:bg-[linear-gradient(to_bottom,theme(colors.indigo.950),theme(colors.slate.900)_40%)]"
+    class="h-[93dvh] flex flex-col gap-0 bg-[linear-gradient(to_bottom,theme(colors.slate.200),theme(colors.indigo.950)_40%)] dark:bg-[linear-gradient(to_bottom,theme(colors.indigo.950),theme(colors.slate.900)_40%)] relative"
   >
+    <div
+      class="absolute max-[767px]:left-[5%] md:left-[50%] max-[767px]:top-[45%] md:top-[40%] p-2 z-10"
+    >
+      <MainScreenMenu />
+    </div>
+
     <div
       class="bg-slate-200 dark:bg-slate-950 w-full h-[48%] place-content-center flex flex-col lg:flex-row items-center justify-evenly"
     >
