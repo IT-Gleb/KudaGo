@@ -2,6 +2,7 @@
 import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
 import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
+import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
 </script>
 
 <template>
@@ -46,4 +47,5 @@ import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMen
       </div>
     </div>
   </section>
+  <NewsBlock />
 </template>
