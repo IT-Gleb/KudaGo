@@ -4,7 +4,6 @@ import {
   FormatDateToString,
   TextToArray,
   ArrayGrowArray,
-  DeleteFromStrWithRegExp,
 } from "~/utils/functions";
 
 const detailsRef = ref(null);
@@ -53,13 +52,15 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
     >
       <h6 class="hidden md:inline-block">{{ props.header }}</h6>
       <h5 class="md:hidden">{{ props.header }}</h5>
-      <button
-        type="button"
-        class="min-w-[24px] min-h-[24px] bg-indigo-950 text-white text-center cursor-pointer active:scale-90"
-        @click="handleClick"
-      >
-        x
-      </button>
+      <small>
+        <button
+          type="button"
+          class="text-indigo-950 dark:text-slate-300 text-center cursor-pointer active:scale-90 hover:underline font-bold"
+          @click="handleClick"
+        >
+          Развернуть
+        </button>
+      </small>
     </summary>
     <article
       class="pt-4 px-2"
@@ -90,7 +91,7 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
             @click="handleClose"
             class="hover:underline cursor-pointer active:scale-90 font-bold"
           >
-            Закрыть
+            Свернуть
           </button>
         </small>
       </div>

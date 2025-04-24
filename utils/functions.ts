@@ -40,9 +40,12 @@ export function TextToArray(param: string): string[] {
   // Удалить ненужные символы и строки
   const p1: string = "Ранее мы рассказывали";
   const p2: string = "Ранее мы писали";
+  const p3: string = "Ранее портал KUDAGO опубликовал";
+
   let txt: string = param.replaceAll("\n", delimeter);
   txt = DeleteFromStrWithRegExp(txt, p1);
   txt = DeleteFromStrWithRegExp(txt, p2);
+  txt = DeleteFromStrWithRegExp(txt, p3);
 
   txt = txt.replaceAll("..", delimeter);
   txt = txt.replaceAll("...", delimeter);
