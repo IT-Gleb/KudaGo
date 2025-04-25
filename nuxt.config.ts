@@ -12,4 +12,12 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   modules: ["motion-v/nuxt", "@vueuse/nuxt", "@nuxt/fonts"],
+  routeRules: {
+    "/api/news": {
+      swr: true,
+      cache: {
+        maxAge: 30 * 60,
+      },
+    },
+  },
 });

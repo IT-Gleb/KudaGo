@@ -46,7 +46,7 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
       :class="
         props.isodd
           ? 'bg-slate-100 dark:bg-slate-600'
-          : 'bg-indigo-100 dark:bg-slate-700'
+          : 'bg-indigo-100 dark:bg-slate-800'
       "
       @click.prevent="() => null"
     >
@@ -58,10 +58,11 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
           class="text-indigo-950 dark:text-slate-300 text-center cursor-pointer active:scale-90 hover:underline font-bold"
           @click="handleClick"
         >
-          Развернуть
+          {{ opened ? "Свернуть" : "Развернуть" }}
         </button>
       </small>
     </summary>
+    <slot />
     <article
       class="pt-4 px-2"
       :class="
