@@ -10,8 +10,8 @@ const {
   error,
 } = await useLazyAsyncData(
   "news",
-  async () =>
-    await $fetch("/api/news", {
+  () =>
+    $fetch("/api/news", {
       method: "GET",
       cache: "reload",
       signal: AbortSignal.timeout(3000),

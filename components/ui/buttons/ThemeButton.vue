@@ -3,10 +3,10 @@ import { ref, watch } from "vue";
 import { motion } from "motion-v";
 const darkClass: string = "dark";
 
-const thisX = ref(0);
-const isDark = ref(false);
+const thisX = ref<number>(0);
+const isDark = ref<boolean>(false);
 const keyStore: string = "darkTheme";
-const lengths = ref([36, 72]);
+const lengths = ref<number[]>([36, 72]);
 
 const isDesktop = useMediaQuery("only screen and (min-width: 1024px)");
 

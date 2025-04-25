@@ -6,11 +6,11 @@ import {
   ArrayGrowArray,
 } from "~/utils/functions";
 
-const detailsRef = ref(null);
+const detailsRef = ref<HTMLDetailsElement | null>(null);
 
-const opened = ref(false);
-const link_text = ref("new");
-const link = ref("#");
+const opened = ref<boolean>(false);
+const link_text = ref<string>("new");
+const link = ref<string>("#");
 
 const props = defineProps<{
   id: number;
@@ -21,7 +21,7 @@ const props = defineProps<{
   isodd?: boolean;
 }>();
 
-const textParagrafs = ref(TextToArray(props.text as string));
+const textParagrafs = ref<string[]>(TextToArray(props.text as string));
 
 const handleClick = () => {
   opened.value ? (opened.value = false) : (opened.value = true);

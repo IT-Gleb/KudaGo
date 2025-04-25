@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Navigate from "~/components/nav/Navigate.vue";
 import { getNowYear } from "~/utils/functions";
-const thisYear = ref(getNowYear());
+const thisYear = ref<string>(getNowYear());
 //export default defineComponent({ components: { Navigate } });
 </script>
 
