@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import NewsBlockItem from "./NewsBlockItem.vue";
 import NewsImagesBlock from "./NewsImagesBlock.vue";
-import { countOnPage } from "#imports";
+import { countOnPage } from "~/utils/urls";
+import { LazyUiSectionsNewsPagination } from "#components";
+
+const ActivePage = ref<number>(1);
+const titleRef = ref<HTMLHeadingElement | null>(null);
 
 const {
   status,
@@ -15,6 +19,9 @@ const {
       method: "GET",
       cache: "reload",
       signal: AbortSignal.timeout(3000),
+      params: {
+        page: ActivePage.value,
+      },
     }),
   {
     transform: (data) => {
@@ -30,12 +37,23 @@ const {
 const handleReload = async () => {
   await refresh();
 };
+
+const handleActiveIndex = async (param: number) => {
+  //console.log(param);
+  ActivePage.value = param;
+  (titleRef.value as HTMLHeadElement).scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest",
+  });
+  await refresh();
+};
 </script>
 
 <template>
   <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto">
     <div class="flex flex-row items-center justify-between">
-      <h2 class="mt-5 uppercase">Новости</h2>
+      <h2 ref="titleRef" class="mt-5 uppercase">Новости</h2>
       <div>
         <button
           type="button"
@@ -54,7 +72,10 @@ const handleReload = async () => {
       Идет загрузка...
     </div>
     <div v-else-if="error">{{ error }}</div>
-    <section class="grid grid-cols-1 mx-auto mt-5 gap-x-5 gap-y-5">
+    <section
+      v-show="status !== 'pending' && status !== 'error'"
+      class="grid grid-cols-1 mx-auto mt-5 gap-x-5 gap-y-5"
+    >
       <div v-for="(item, index) in news?.data">
         <NewsBlockItem
           :key="item.id"
@@ -73,7 +94,14 @@ const handleReload = async () => {
       v-if="status !== 'pending' && status !== 'error'"
       class="w-fit mx-auto my-5"
     >
-      Всего страниц: {{ news?.total }}
+      <!-- Всего страниц: {{ news?.total }} -->
+      <LazyUiSectionsNewsPagination
+        v-show="news !== null"
+        :totalPages="news?.total as number"
+        :active-page="ActivePage"
+        @updateActiveIndex="handleActiveIndex"
+        hydrate-on-visible
+      />
     </div>
   </section>
 </template>

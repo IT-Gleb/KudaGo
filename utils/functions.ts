@@ -42,7 +42,11 @@ export function TextToArray(param: string): string[] {
   const p2: string = "Ранее мы писали";
   const p3: string = "Ранее портал KUDAGO опубликовал";
 
-  let txt: string = param.replaceAll("\n", delimeter);
+  let txt: string = "";
+
+  txt = param.replaceAll("\n", delimeter);
+  txt = RegExpDomain(param);
+
   txt = DeleteFromStrWithRegExp(txt, p1);
   txt = DeleteFromStrWithRegExp(txt, p2);
   txt = DeleteFromStrWithRegExp(txt, p3);
@@ -104,5 +108,23 @@ export function DeleteFromStrWithRegExp(param: string, paramToDelete: string) {
   }
 
   //console.log(ar);
+  return txt;
+}
+
+export function RegExpDomain(paramText: string) {
+  //  let RegX = new RegExp("(?:www.|)([w.-]+).*", "gui");
+  let RegX = new RegExp(`Фото: ?[a-zA-Z-]*.[a-zA-Z-]*.[a-zA-Z]{2,}`, "gi");
+  let txt: string = paramText;
+
+  const arr = RegX.exec(txt);
+  if (arr && arr.length > 0) {
+    //console.log(arr);
+    arr.forEach((item) => {
+      if (item && item.length > 0) {
+        //console.log(item);
+        txt = txt.replaceAll(item as string, "");
+      }
+    });
+  }
   return txt;
 }

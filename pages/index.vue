@@ -2,7 +2,7 @@
 import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
 import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
-import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
+import LazyNewsBlock from "~/components/ui/sections/NewsBlock.vue";
 </script>
 
 <template>
@@ -47,5 +47,5 @@ import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
       </div>
     </div>
   </section>
-  <NewsBlock />
+  <LazyNewsBlock hydrate-on-visible />
 </template>
