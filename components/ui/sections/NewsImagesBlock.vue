@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import nextSvg from "../svg/nextSvg.vue";
 
-const itemsRef = ref([]);
-const ActiveIndex = ref(0);
+const itemsRef = ref<HTMLDivElement[]>([]);
+const ActiveIndex = ref<number>(0);
 
 const props = defineProps<{ images: TNewsImages }>();
 
@@ -44,7 +44,7 @@ const handlePrev = () => {
       <nextSvg />
     </button>
     <div
-      class="w-[320px] h-[214px] sm:w-[480px] sm:h-[320px] lg:w-[640px] lg:h-[384px]overflow-y-hidden overflow-x-scroll relative"
+      class="w-[320px] h-[214px] sm:w-[480px] sm:h-[320px] lg:w-[640px] lg:h-[384px] overflow-y-hidden overflow-x-scroll relative"
       style="
         scroll-snap-type: x mandatory;
         scroll-snap-align: center;
