@@ -1,3 +1,5 @@
+const delimeter: string = ". ";
+
 export function getNowYear(): string {
   const dt = new Date();
   return `${dt.getUTCFullYear()}`;
@@ -30,19 +32,13 @@ export function FormatDateToString(param: number | string): string {
   )}`;
 }
 
-//Функция получает текст и разбивает на массив строк
-export function TextToArray(param: string): string[] {
-  const delimeter: string = ". ";
-  if (param.length < 1) {
-    return [];
-  }
-
+export function deleteNonUsedSymbols(param: string) {
   // Удалить ненужные символы и строки
   const p1: string = "Ранее мы рассказывали";
   const p2: string = "Ранее мы писали";
   const p3: string = "Ранее портал KUDAGO опубликовал";
 
-  let txt: string = "";
+  let txt: string = param;
 
   txt = param.replaceAll("\n", delimeter);
   txt = RegExpDomain(param);
@@ -55,6 +51,16 @@ export function TextToArray(param: string): string[] {
   txt = txt.replaceAll("...", delimeter);
 
   //--------------------------------------
+  return txt;
+}
+
+//Функция получает текст и разбивает на массив строк
+export function TextToArray(param: string): string[] {
+  if (param.length < 1) {
+    return [];
+  }
+
+  let txt: string = param;
 
   const arrStr = txt.split(delimeter);
   const anotherArray: string[] = [];
@@ -116,6 +122,8 @@ export function RegExpDomain(paramText: string) {
   //  let RegX = new RegExp("(?:www.|)([w.-]+).*", "gui");
   let Reg = new RegExp(`Фото: ([a-z-]{0,}).?([a-z]*).([a-z]{1,})`, "gmui");
   let txt: string = paramText;
+  txt = txt.replaceAll(Reg, "");
+  Reg = new RegExp(`пишет ([a-z-]{0,}).?([a-z]*).([a-z]{1,})`, "gmui");
   txt = txt.replaceAll(Reg, "");
 
   // const arr = Reg.exec(txt);

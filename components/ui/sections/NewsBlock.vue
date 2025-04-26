@@ -17,7 +17,7 @@ const {
   () =>
     $fetch("/api/news", {
       method: "GET",
-      cache: "reload",
+      cache: "no-store",
       signal: AbortSignal.timeout(3000),
       params: {
         page: ActivePage.value,
@@ -27,6 +27,12 @@ const {
     transform: (data) => {
       //console.log(data);
       const myNews: TNewsItem[] = (data as TNewsData).results;
+      //Удалить ненужное из текста
+      myNews.forEach(
+        (item) => (item.body_text = deleteNonUsedSymbols(item.body_text))
+      );
+      //-------------------------
+
       let tPages: number = Number((data as TNewsData).count);
       tPages = Math.floor(tPages / countOnPage);
       return { data: myNews, total: tPages };
