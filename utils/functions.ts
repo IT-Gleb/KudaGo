@@ -99,13 +99,14 @@ export function DeleteFromStrWithRegExp(param: string, paramToDelete: string) {
   let txt: string = param;
   //console.log(paramToDelete);
 
-  let regX = new RegExp(`${paramToDelete}*['а-я','А-Я','a-z','A-Z']`, "gui");
-  let ar = regX.exec(txt);
-  if (ar) {
-    const text_toDel: string = ar.input.substring(ar.index, ar.input.length);
-    txt = txt.replaceAll(text_toDel, "");
-    //console.log(ar, ar.index, text_toDel);
-  }
+  let regX = new RegExp(`${paramToDelete}*['а-я','А-Я','a-z','A-Z']`, "gmui");
+  txt = txt.replaceAll(regX, "");
+  // let ar = regX.exec(txt);
+  // if (ar) {
+  //   const text_toDel: string = ar.input.substring(ar.index, ar.input.length);
+  //   txt = txt.replaceAll(text_toDel, "");
+  //   //console.log(ar, ar.index, text_toDel);
+  // }
 
   //console.log(ar);
   return txt;
@@ -113,18 +114,17 @@ export function DeleteFromStrWithRegExp(param: string, paramToDelete: string) {
 
 export function RegExpDomain(paramText: string) {
   //  let RegX = new RegExp("(?:www.|)([w.-]+).*", "gui");
-  let RegX = new RegExp(`Фото: ?[a-zA-Z-]*.[a-zA-Z-]*.[a-zA-Z]{2,}`, "gi");
+  let Reg = new RegExp(`Фото: ([a-z-]{0,}).?([a-z]*).([a-z]{1,})`, "gmui");
   let txt: string = paramText;
+  txt = txt.replaceAll(Reg, "");
 
-  const arr = RegX.exec(txt);
-  if (arr && arr.length > 0) {
-    //console.log(arr);
-    arr.forEach((item) => {
-      if (item && item.length > 0) {
-        //console.log(item);
-        txt = txt.replaceAll(item as string, "");
-      }
-    });
-  }
+  // const arr = Reg.exec(txt);
+  // if (arr && arr.length > 0) {
+  //   console.log(arr);
+  //   if (arr[0].length > 0) {
+  //     console.log(arr[0]);
+  //     txt = txt.replaceAll(arr[0] as string, "");
+  //   }
+  // }
   return txt;
 }

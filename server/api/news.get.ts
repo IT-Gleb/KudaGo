@@ -3,7 +3,7 @@ const newPage: string = "page";
 
 export default defineEventHandler(async (event) => {
   const Page =
-    new URL(`http://localhost${event.path}`).searchParams.get(newPage) ?? "";
+    new URL(`http://localhost${event.path}`).searchParams.get(newPage) ?? "1";
   const url = new URL(NewsUrl);
   url.searchParams.set(newPage, Page);
   if (event.method === "GET") {

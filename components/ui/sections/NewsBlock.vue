@@ -57,7 +57,7 @@ const handleActiveIndex = async (param: number) => {
       <div>
         <button
           type="button"
-          class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 py-[2px] rounded-md"
+          class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 py-[2px] rounded-md"
           @click="handleReload"
           :disabled="status === 'pending'"
         >
