@@ -52,22 +52,22 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
     >
       <h6 class="hidden md:inline-block">{{ props.header }}</h6>
       <h5 class="md:hidden">{{ props.header }}</h5>
-      <small>
-        <button
-          type="button"
-          class="text-indigo-950 dark:text-slate-300 text-center cursor-pointer active:scale-90 hover:underline font-bold"
-          @click="handleClick"
-        >
+      <button
+        type="button"
+        class="text-indigo-950 dark:text-slate-300 text-center cursor-pointer active:scale-90 hover:underline font-bold"
+        @click="handleClick"
+      >
+        <small>
           {{ opened ? "Свернуть" : "Развернуть" }}
-        </button>
-      </small>
+        </small>
+      </button>
     </summary>
 
     <article
       class="pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700"
     >
       <div>
-        <div class="float-left mx-2 md:float-right">
+        <div class="mx-2 md:float-right">
           <slot />
         </div>
         <p class="indent-5 text-indigo-800 dark:text-yellow-400 font-bold">

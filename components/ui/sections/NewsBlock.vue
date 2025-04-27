@@ -25,10 +25,12 @@ const {
       params: {
         page: ActivePage.value,
       },
+      retry: 3,
     }),
   {
     //immediate: false,
     watch: [ActivePage],
+    dedupe: "cancel",
     transform: (data) => {
       //console.log(data);
       const myNews: TNewsItem[] = (data as TNewsData).results;

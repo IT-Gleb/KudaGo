@@ -42,6 +42,7 @@ export function deleteNonUsedSymbols(param: string) {
 
   txt = param.replaceAll("\n", delimeter);
   txt = RegExpDomain(param);
+  txt = RegExpOnlyDomain(txt);
 
   txt = DeleteFromStrWithRegExp(txt, p1);
   txt = DeleteFromStrWithRegExp(txt, p2);
@@ -134,5 +135,13 @@ export function RegExpDomain(paramText: string) {
   //     txt = txt.replaceAll(arr[0] as string, "");
   //   }
   // }
+  return txt;
+}
+
+export function RegExpOnlyDomain(paramText: string) {
+  //  let RegX = new RegExp("(?:www.|)([w.-]+).*", "gui");
+  let Reg = new RegExp(`([a-z-]{0,}).?([a-z]*).([a-z]{1,})`, "gmui");
+  let txt: string = paramText;
+  txt = txt.replaceAll(Reg, "");
   return txt;
 }

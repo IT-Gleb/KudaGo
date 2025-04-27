@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 import nextSvg from "../svg/nextSvg.vue";
-import { motion } from "motion-v";
+//import type { TemplateRefsList } from "@vueuse/core";
 
 const itemsRef = ref<HTMLDivElement[]>([]);
 const ActiveIndex = ref<number>(0);
 
 const props = defineProps<{ images: TNewsImages }>();
+//const imgsRef = ref<TemplateRefsList<HTMLDivElement>[]>([]);
+// if (props.images.length > 0) {
+//   imgsRef.value.length = props.images.length;
+// }
 
 const ItemInView = (paramIndex: number) => {
   (itemsRef.value[paramIndex] as HTMLDivElement).scrollIntoView({
@@ -61,8 +65,8 @@ const handlePrev = () => {
         <div class="absolute left-0 top-0 flex flex-row items-start">
           <div
             v-for="(item, index) in props.images"
-            ref="itemsRef"
             :key="index"
+            ref="itemsRef"
             class="w-[320px] sm:w-[480px] lg:w-[640px] object-left-top object-cover"
           >
             <img
