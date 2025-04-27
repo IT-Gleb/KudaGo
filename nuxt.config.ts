@@ -12,6 +12,17 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   modules: ["motion-v/nuxt", "@vueuse/nuxt", "@nuxt/fonts"],
+  app: {
+    head: {
+      charset: "utf-8",
+      title: "KudaGo API",
+      htmlAttrs: {
+        lang: "ru",
+      },
+      viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    },
+  },
   routeRules: {
     "/api/news": {
       swr: true,

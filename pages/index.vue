@@ -3,6 +3,14 @@ import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
 import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
 import LazyNewsBlock from "~/components/ui/sections/NewsBlock.vue";
+
+useHead({
+  title: "Новости:[Kuda Go]",
+  meta: [
+    { name: "description", content: "Этот сайт использует API Kuda Go." },
+    { name: "author", content: "Gleb Torgashin" },
+  ],
+});
 </script>
 
 <template>

@@ -40,7 +40,7 @@ const handlePrev = () => {
       <button
         v-show="itemsRef.length > 1"
         @click.prevent="handlePrev"
-        class="w-[32px] h-[32px] sm:h-[64px] bg-transparent text-yellow-400 dark:text-slate-300 font-bold place-content-center cursor-pointer -scale-100 active:-scale-90 absolute left-0 top-[45%] z-10"
+        class="w-[32px] h-[32px] sm:h-[64px] bg-transparent text-yellow-400 dark:text-slate-300 font-bold place-content-center cursor-pointer -scale-100 active:-scale-90 absolute left-0 md:left-8 top-[45%] z-10"
       >
         <div
           class="w-[32px] h-[32px] md:w-[64px] md:h-[64px]"
@@ -77,7 +77,7 @@ const handlePrev = () => {
       <button
         v-show="itemsRef.length > 1"
         @click.prevent="handleNext"
-        class="w-[32px] h-[32px] sm:[w-64px] sm:h-[64px] bg-transparent text-yellow-400 dark:text-slate-300 font-bold place-content-center cursor-pointer active:scale-90 absolute right-0 top-[45%] z-10"
+        class="w-[32px] h-[32px] sm:[w-64px] sm:h-[64px] bg-transparent text-yellow-400 dark:text-slate-300 font-bold place-content-center cursor-pointer active:scale-90 absolute right-0 md:right-8 top-[45%] z-10"
       >
         <div
           class="w-[32px] h-[32px] md:w-[64px] md:h-[64px]"

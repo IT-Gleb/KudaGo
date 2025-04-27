@@ -62,39 +62,44 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
         </button>
       </small>
     </summary>
-    <slot />
+
     <article
-      class="pt-4 px-2"
+      class="pt-4 px-2 flex flex-col items-start"
       :class="
         props.isodd
           ? 'bg-slate-50 dark:bg-slate-700'
           : 'bg-indigo-50 dark:bg-slate-600'
       "
     >
-      <p class="indent-5 text-indigo-800 dark:text-yellow-400 font-bold">
-        {{ props.description }}
-      </p>
-      <p class="indent-5 mt-1" v-for="item in textParagrafs">{{ item }}</p>
+      <div>
+        <div class="float-left mx-2 md:float-right">
+          <slot />
+        </div>
+        <p class="indent-5 text-indigo-800 dark:text-yellow-400 font-bold">
+          {{ props.description }}
+        </p>
+        <p class="indent-5 mt-1" v-for="item in textParagrafs">{{ item }}</p>
+      </div>
       <div
-        class="flex flex-row gap-x-3 items-end mt-4 justify-end border-t p-2"
+        class="w-full flex flex-row gap-x-3 items-end mt-4 justify-end border-t p-2"
       >
-        <small>
-          <span>{{
+        <span
+          ><small>{{
             FormatDateToString(props.date_publication?.toString() as string)
-          }}</span>
-        </small>
+          }}</small></span
+        >
+
         <small>
           <NuxtLink :to="link" class="font-bold">К началу</NuxtLink>
         </small>
-        <small>
-          <button
-            type="button"
-            @click="handleClose"
-            class="hover:underline cursor-pointer active:scale-90 font-bold"
-          >
-            Свернуть
-          </button>
-        </small>
+
+        <button
+          type="button"
+          @click="handleClose"
+          class="hover:underline cursor-pointer active:scale-90 font-bold"
+        >
+          <small> Свернуть </small>
+        </button>
       </div>
     </article>
   </details>

@@ -24,17 +24,22 @@ const {
       },
     }),
   {
+    watch: [ActivePage],
     transform: (data) => {
       //console.log(data);
       const myNews: TNewsItem[] = (data as TNewsData).results;
       //Удалить ненужное из текста
-      myNews.forEach(
-        (item) => (item.body_text = deleteNonUsedSymbols(item.body_text))
-      );
+      if (myNews) {
+        myNews.forEach(
+          (item) => (item.body_text = deleteNonUsedSymbols(item.body_text))
+        );
+      }
       //-------------------------
-
-      let tPages: number = Number((data as TNewsData).count);
-      tPages = Math.floor(tPages / countOnPage);
+      let tPages: number = 0;
+      if (data) {
+        tPages = Number((data as TNewsData).count);
+        tPages = Math.floor(tPages / countOnPage);
+      }
       return { data: myNews, total: tPages };
     },
   }
@@ -52,8 +57,18 @@ const handleActiveIndex = async (param: number) => {
     block: "start",
     inline: "nearest",
   });
-  await refresh();
+  //  await refresh();
 };
+
+useHead({
+  title: `Страница-[${ActivePage.value}]:Новости:[KudaGo]`,
+});
+
+watch(ActivePage, (newPage) => {
+  useHead({
+    title: `Страница-[${newPage}]:Новости:[KudaGo]`,
+  });
+});
 </script>
 
 <template>
@@ -63,7 +78,7 @@ const handleActiveIndex = async (param: number) => {
       <div>
         <button
           type="button"
-          class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 py-[2px] rounded-md"
+          class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 pt-[2px] pb-1 rounded-md"
           @click="handleReload"
           :disabled="status === 'pending'"
         >
