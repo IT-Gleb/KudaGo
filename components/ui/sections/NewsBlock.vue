@@ -3,6 +3,8 @@ import NewsBlockItem from "./NewsBlockItem.vue";
 import NewsImagesBlock from "./NewsImagesBlock.vue";
 import { countOnPage } from "~/utils/urls";
 import { LazyUiSectionsNewsPagination } from "#components";
+import { useLazyAsyncData } from "#app";
+import loaderComponent from "~/components/loader/loaderComponent.vue";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
@@ -15,6 +17,7 @@ const {
 } = await useLazyAsyncData(
   "news",
   () =>
+    //@ts-ignore
     $fetch("/api/news", {
       method: "GET",
       cache: "no-store",
@@ -24,6 +27,7 @@ const {
       },
     }),
   {
+    //immediate: false,
     watch: [ActivePage],
     transform: (data) => {
       //console.log(data);
@@ -46,7 +50,8 @@ const {
 );
 
 const handleReload = async () => {
-  await refresh();
+  ActivePage.value = 1;
+  //await refresh();
 };
 
 const handleActiveIndex = async (param: number) => {
@@ -88,9 +93,9 @@ watch(ActivePage, (newPage) => {
     </div>
     <div
       v-if="status === 'pending'"
-      class="w-fit mx-auto text-indigo-950 dark:text-slate-100"
+      class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
     >
-      Идет загрузка...
+      <loaderComponent />
     </div>
     <div v-else-if="error">{{ error }}</div>
     <section

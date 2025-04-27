@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import nextSvg from "../svg/nextSvg.vue";
+import { motion } from "motion-v";
 
 const itemsRef = ref<HTMLDivElement[]>([]);
 const ActiveIndex = ref<number>(0);

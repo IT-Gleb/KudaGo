@@ -45,8 +45,8 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
       class="flex flex-row items-start justify-between p-2"
       :class="
         props.isodd
-          ? 'bg-slate-100 dark:bg-slate-600'
-          : 'bg-indigo-100 dark:bg-slate-800'
+          ? 'bg-slate-50 dark:bg-slate-600'
+          : 'bg-indigo-50 dark:bg-slate-800'
       "
       @click.prevent="() => null"
     >
@@ -64,12 +64,7 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
     </summary>
 
     <article
-      class="pt-4 px-2 flex flex-col items-start"
-      :class="
-        props.isodd
-          ? 'bg-slate-50 dark:bg-slate-700'
-          : 'bg-indigo-50 dark:bg-slate-600'
-      "
+      class="pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700"
     >
       <div>
         <div class="float-left mx-2 md:float-right">
