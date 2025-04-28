@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     "/api/news": {
       swr: true,
       cache: {
-        maxAge: 30 * 60,
+        maxAge: 30,
       },
     },
   },

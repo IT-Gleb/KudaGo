@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     try {
       const request = await fetch(url, {
         headers: { "Content-Type": "application.json;utf-8" },
-        signal: AbortSignal.timeout(3000),
+        signal: AbortSignal.timeout(5000),
       });
       const data = await request.json();
       return data;

@@ -12,15 +12,15 @@ const titleRef = ref<HTMLHeadingElement | null>(null);
 const {
   status,
   data: news,
-  refresh,
+  // refresh,
   error,
 } = await useLazyAsyncData(
-  "news",
+  `news-${Math.random().toString()}`,
   () =>
     //@ts-ignore
     $fetch("/api/news", {
       method: "GET",
-      cache: "no-store",
+      //cache: "no-store",
       signal: AbortSignal.timeout(3000),
       params: {
         page: ActivePage.value,
@@ -41,7 +41,7 @@ const {
         );
       }
       //-------------------------
-      let tPages: number = 0;
+      let tPages: number = 1;
       if (data) {
         tPages = Number((data as TNewsData).count);
         tPages = Math.floor(tPages / countOnPage);
@@ -81,7 +81,13 @@ watch(ActivePage, (newPage) => {
 <template>
   <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto">
     <div class="flex flex-row items-center justify-between">
-      <h2 ref="titleRef" class="mt-5 uppercase">Новости</h2>
+      <h2 ref="titleRef" class="mt-5 uppercase">
+        Новости
+        <span
+          class="text-[clamp(2.2vw,2.8vw,3vw)] md:text-[clamp(1vw,1.3vw,1.5vw)]"
+          >Страница-[{{ ActivePage }}]</span
+        >
+      </h2>
       <div>
         <button
           type="button"
