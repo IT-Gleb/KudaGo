@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ["motion-v/nuxt", "@vueuse/nuxt", "@nuxt/fonts"],
+  modules: ["motion-v/nuxt", "@vueuse/nuxt", "@nuxt/fonts", "@pinia/nuxt"],
   app: {
     head: {
       charset: "utf-8",
@@ -29,6 +29,9 @@ export default defineNuxtConfig({
       cache: {
         maxAge: 30,
       },
+    },
+    "/api/cityes": {
+      swr: false,
     },
   },
 });

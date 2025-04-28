@@ -1,11 +1,31 @@
 import { NewsUrl } from "~/utils/urls";
 const newPage: string = "page";
+const location_str: string = "location";
 
 export default defineEventHandler(async (event) => {
-  const Page =
-    new URL(`http://localhost${event.path}`).searchParams.get(newPage) ?? "1";
-  const url = new URL(NewsUrl);
-  url.searchParams.set(newPage, Page);
+  const paramUrl = new URL(`http://localhost${event.path}`);
+  const Page = paramUrl.searchParams.get(newPage) ?? "1";
+  let City = paramUrl.searchParams.get("city") ?? "";
+  City = City === "*" ? "" : City;
+
+  let news_Url: string = "https://kudago.com/public-api/v1.2/news/?location=";
+
+  switch (City) {
+    case "":
+      news_Url = NewsUrl;
+      break;
+    default:
+      news_Url = `https://kudago.com/public-api/v1.4/news/?lang=ru&location=&fields=id,title,slug,publication_date,description,body_text,images&expand=images,place&order_by=&text_format=text&ids=&actual_only=true`;
+      break;
+  }
+
+  const url = new URL(news_Url);
+  City === ""
+    ? url.searchParams.set(newPage, Page)
+    : url.searchParams.set(location_str, City);
+
+  //console.log(City, " ", url.search);
+
   if (event.method === "GET") {
     try {
       const request = await fetch(url, {

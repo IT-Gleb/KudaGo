@@ -5,9 +5,13 @@ import { countOnPage } from "~/utils/urls";
 import { LazyUiSectionsNewsPagination } from "#components";
 import { useLazyAsyncData } from "#app";
 import loaderComponent from "~/components/loader/loaderComponent.vue";
+import { useCityes } from "~/store/cityStore";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
+
+const cityStore = useCityes();
+const { SelectedItem } = storeToRefs(cityStore);
 
 const {
   status,
@@ -20,16 +24,17 @@ const {
     //@ts-ignore
     $fetch("/api/news", {
       method: "GET",
-      //cache: "no-store",
+      cache: "no-store",
       signal: AbortSignal.timeout(3000),
       params: {
         page: ActivePage.value,
+        city: SelectedItem.value?.slug,
       },
       retry: 3,
     }),
   {
     //immediate: false,
-    watch: [ActivePage],
+    watch: [ActivePage, SelectedItem],
     dedupe: "cancel",
     transform: (data) => {
       //console.log(data);
@@ -80,14 +85,15 @@ watch(ActivePage, (newPage) => {
 
 <template>
   <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto">
-    <div class="flex flex-row items-center justify-between">
-      <h2 ref="titleRef" class="mt-5 uppercase">
+    <div class="flex flex-row items-end justify-between mt-5">
+      <h2 ref="titleRef" class="uppercase">
         Новости
         <span
           class="text-[clamp(2.2vw,2.8vw,3vw)] md:text-[clamp(1vw,1.3vw,1.5vw)]"
           >Страница-[{{ ActivePage }}]</span
         >
       </h2>
+      <UiCityesComponentCitysComponent />
       <div>
         <button
           type="button"
@@ -134,7 +140,6 @@ watch(ActivePage, (newPage) => {
         :totalPages="news?.total as number"
         :active-page="ActivePage"
         @updateActiveIndex="handleActiveIndex"
-        hydrate-on-visible
       />
     </div>
   </section>
