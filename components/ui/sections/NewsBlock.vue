@@ -86,18 +86,9 @@ watch(ActivePage, (newPage) => {
 </script>
 
 <template>
-  <div
-    v-if="status === 'pending'"
-    class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
-  >
-    <loaderComponent />
-  </div>
-  <div v-if="error">
-    {{ error }}
-  </div>
   <ClientOnly>
     <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto">
-      <div class="flex flex-row items-end justify-between mt-5">
+      <div class="flex flex-row items-end justify-between my-10">
         <h2 ref="titleRef" class="uppercase">
           Новости
           <span
@@ -105,6 +96,7 @@ watch(ActivePage, (newPage) => {
             >Страница-[{{ ActivePage }}]</span
           >
         </h2>
+        <LazyCitysComponent />
         <button
           type="button"
           class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 pt-[2px] pb-1 rounded-md"
@@ -113,7 +105,18 @@ watch(ActivePage, (newPage) => {
           <small>Обновить</small>
         </button>
       </div>
+      <div
+        v-if="status === 'pending'"
+        class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
+      >
+        <loaderComponent />
+      </div>
+      <div v-if="error">
+        {{ error }}
+      </div>
+
       <NewsBlockItem
+        v-if="status !== 'pending' && !error"
         v-for="(item, index) in news?.data"
         :key="item.id"
         :id="item.id"

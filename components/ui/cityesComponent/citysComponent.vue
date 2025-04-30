@@ -20,7 +20,7 @@ watch(City, (newValue) => {
   <div class="flex flex-row gap-x-2 items-center">
     <div>Город:</div>
     <select
-      class="p-1 border border-black bg-white dark:text-indigo-950"
+      class="p-1 outline-none border border-black bg-white dark:text-indigo-950"
       v-model="City"
     >
       <option v-for="item of towns" :key="item.id" :value="item">
