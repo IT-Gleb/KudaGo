@@ -27,11 +27,11 @@ export default defineNuxtConfig({
     "/api/news": {
       swr: true,
       cache: {
-        maxAge: 30,
+        maxAge: 10,
       },
     },
     "/api/cityes": {
-      swr: false,
+      ssr: false,
     },
   },
 });
