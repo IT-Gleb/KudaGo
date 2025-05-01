@@ -24,7 +24,7 @@ declare type TNewsItem = {
 
 declare type TNewsData = {
   count: number;
-  next: string | null;
-  previos: string | null;
+  next?: string | null;
+  previos?: string | null;
   results: TNewsItem[];
 };

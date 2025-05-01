@@ -17,10 +17,10 @@ const { SelectedItem } = storeToRefs(cityStore);
 const {
   status,
   data: news,
-  // refresh,
+  refresh,
   error,
 } = await useLazyAsyncData(
-  `news-${Math.random().toString()}`,
+  `news-${(ActivePage.value + Math.random()).toString()}`,
   () =>
     //@ts-ignore
     $fetch("/api/news", {
@@ -37,7 +37,7 @@ const {
     //immediate: false,
     watch: [ActivePage, SelectedItem],
     dedupe: "cancel",
-    transform: (data) => {
+    transform: (data: unknown) => {
       //console.log(data);
       const myNews: TNewsItem[] = (data as TNewsData).results;
       //Удалить ненужное из текста
@@ -53,25 +53,19 @@ const {
         tPages = Math.floor(tPages / countOnPage);
       }
 
-      return { data: myNews, total: tPages };
+      return {
+        data: myNews,
+        total: tPages,
+        nextPage: (data as TNewsData).next,
+        prevPage: (data as TNewsData).previos,
+      };
     },
   }
 );
 
 const handleReload = async () => {
   ActivePage.value = 1;
-  //await refresh();
-};
-
-const handleActiveIndex = async (param: number) => {
-  //console.log(param);
-  ActivePage.value = param;
-  (titleRef.value as HTMLHeadElement).scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-    inline: "nearest",
-  });
-  //  await refresh();
+  await refresh();
 };
 
 useHead({
@@ -115,6 +109,25 @@ watch(ActivePage, (newPage) => {
         {{ error }}
       </div>
 
+      <div v-if="status !== 'pending' && !error">
+        <p>
+          {{
+            news?.prevPage !== null && typeof news?.prevPage !== "undefined"
+              ? news?.prevPage
+              : "No prevPage"
+          }}
+        </p>
+        <p>
+          {{
+            news?.nextPage
+              ?.split("&")
+              .map((item1) =>
+                item1.split("?").map((itm) => itm.replaceAll("%2C", ","))
+              )
+              .flat(3)
+          }}
+        </p>
+      </div>
       <NewsBlockItem
         v-if="status !== 'pending' && !error"
         v-for="(item, index) in news?.data"

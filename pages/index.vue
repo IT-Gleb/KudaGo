@@ -16,7 +16,7 @@ useHead({
 <template>
   <div>
     <section
-      class="h-[93dvh] flex flex-col gap-0 bg-[linear-gradient(to_bottom,theme(colors.slate.200),theme(colors.indigo.950)_40%)] dark:bg-[linear-gradient(to_bottom,theme(colors.indigo.950),theme(colors.slate.900)_40%)] relative"
+      class="h-[95dvh] flex flex-col gap-0 bg-[linear-gradient(to_bottom,theme(colors.slate.200),theme(colors.indigo.950)_40%)] dark:bg-[linear-gradient(to_bottom,theme(colors.indigo.950),theme(colors.slate.900)_40%)] relative"
     >
       <div
         class="absolute max-[767px]:left-[5%] md:left-[50%] max-[767px]:top-[46%] md:top-[40%] p-2 z-10"

@@ -11,8 +11,6 @@ const ActiveIndex = ref<number>(0);
 const props = defineProps<{ images: TNewsImages }>();
 const targetIsVisible = shallowRef(true);
 
-ActiveIndex.value = props.images.length > 0 ? 0 : -1;
-
 //const imgsRef = ref<TemplateRefsList<HTMLDivElement>[]>([]);
 // if (props.images.length > 0) {
 //   imgsRef.value.length = props.images.length;
@@ -89,7 +87,7 @@ watch(ActiveIndex, () => {
             class="w-[320px] sm:w-[480px] lg:w-[640px] object-left-top object-cover"
             v-intersection-observer="[
               onIntersectionObserver,
-              { root, threshold: [0.25, 0.85] },
+              { root, threshold: [0.35, 1] },
             ]"
           >
             <img

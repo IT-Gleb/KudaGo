@@ -9,8 +9,7 @@ import {
 const detailsRef = ref<HTMLDetailsElement | null>(null);
 
 const opened = ref<boolean>(false);
-const link_text = ref<string>("new");
-const link = ref<string>("#");
+const link_text = ref<string>("#new");
 
 const props = defineProps<{
   id: number;
@@ -32,7 +31,6 @@ const handleClose = () => {
 };
 
 link_text.value = `${link_text.value}-${props.id}`;
-link.value = link.value + link_text.value;
 
 //console.log(props.date_publication?.toString(), "  ", Date.now().toString());
 textParagrafs.value = ArrayGrowArray(textParagrafs.value);
@@ -73,7 +71,12 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
         <p class="indent-5 text-indigo-800 dark:text-yellow-400 font-bold">
           {{ props.description }}
         </p>
-        <p class="indent-5 mt-1" v-for="item in textParagrafs">{{ item }}</p>
+        <p
+          class="indent-5 mt-1 first-letter:uppercase"
+          v-for="item in textParagrafs"
+        >
+          {{ item }}
+        </p>
       </div>
       <div
         class="w-full flex flex-row gap-x-3 items-end mt-4 justify-end border-t p-2"
@@ -85,7 +88,7 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
         >
 
         <small>
-          <NuxtLink :to="link" class="font-bold">К началу</NuxtLink>
+          <NuxtLink :to="link_text" class="font-bold">К началу</NuxtLink>
         </small>
 
         <button
