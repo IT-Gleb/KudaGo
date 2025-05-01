@@ -13,6 +13,10 @@ const titleRef = ref<HTMLHeadingElement | null>(null);
 
 const cityStore = useCityes();
 const { SelectedItem } = storeToRefs(cityStore);
+const { SetItem } = cityStore;
+
+type TParamsObject = { [index: string]: string | number };
+const paramsObj = ref<TParamsObject>();
 
 const {
   status,
@@ -52,6 +56,25 @@ const {
         tPages = Number((data as TNewsData).count);
         tPages = Math.floor(tPages / countOnPage);
       }
+      //-------------------
+      if ((data as TNewsData).next) {
+        paramsObj.value = (data as TNewsData).next
+          ?.split("&")
+          .map((item1) =>
+            item1.split("?").map((itm) => itm.replaceAll("%2C", ","))
+          )
+          .flat(3)
+          .reverse()
+          .reduceRight((acc: TParamsObject, curr: string) => {
+            let tmp = curr.split("=");
+            if (tmp.length === 2) {
+              acc[tmp[0]] = tmp[1];
+            } else {
+              acc["url"] = tmp[0];
+            }
+            return acc;
+          }, {});
+      }
 
       return {
         data: myNews,
@@ -65,7 +88,9 @@ const {
 
 const handleReload = async () => {
   ActivePage.value = 1;
+  SetItem("*");
   await refresh();
+  //console.log(SelectedItem.value);
 };
 
 useHead({
@@ -118,14 +143,7 @@ watch(ActivePage, (newPage) => {
           }}
         </p>
         <p>
-          {{
-            news?.nextPage
-              ?.split("&")
-              .map((item1) =>
-                item1.split("?").map((itm) => itm.replaceAll("%2C", ","))
-              )
-              .flat(3)
-          }}
+          {{ paramsObj }}
         </p>
       </div>
       <NewsBlockItem

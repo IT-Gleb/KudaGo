@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { type TCity } from "#imports";
 
 export const useCityes = defineStore("cityes", () => {
   const towns = ref<TCityData>([]);
   let t_error = ref<boolean | string>(false);
-  const ActiveIndex = ref<number>(-1);
-  const SelectedItem = ref<TCity | undefined>(undefined);
+  const SelectedItem = ref<TCity>();
 
   async function Init() {
     t_error.value = false;
@@ -23,21 +23,16 @@ export const useCityes = defineStore("cityes", () => {
     }
     if (data) {
       towns.value = Array.from(data.value as unknown as TCityData);
+      SelectedItem.value = towns.value[0];
     }
   }
 
-  function setActiveIndex(param: number) {
-    ActiveIndex.value = param;
-    ActiveIndex.value = Math.max(
-      0,
-      Math.min(ActiveIndex.value, towns.value.length - 1)
-    );
-  }
-
   function SetItem(param: string) {
-    const find = towns.value.find((item) => item.slug === param);
-    if (find) {
-      SelectedItem.value = find;
+    const find = towns.value.find(
+      (item) => item.slug.toLowerCase() === param.toLowerCase()
+    );
+    if ((find as TCity)?.slug !== SelectedItem.value?.slug) {
+      SelectedItem.value = find as TCity;
     }
   }
 
