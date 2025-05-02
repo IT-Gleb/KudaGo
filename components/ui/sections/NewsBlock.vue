@@ -12,7 +12,7 @@ const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
 
 const cityStore = useCityes();
-const { SelectedItem } = storeToRefs(cityStore);
+const { SelectedItem, Filtered } = storeToRefs(cityStore);
 const { SetItem } = cityStore;
 
 type TParamsObject = { [index: string]: string | number };
@@ -64,8 +64,7 @@ const {
             item1.split("?").map((itm) => itm.replaceAll("%2C", ","))
           )
           .flat(3)
-          .reverse()
-          .reduceRight((acc: TParamsObject, curr: string) => {
+          .reduce((acc: TParamsObject, curr: string) => {
             let tmp = curr.split("=");
             if (tmp.length === 2) {
               acc[tmp[0]] = tmp[1];
@@ -86,6 +85,15 @@ const {
   }
 );
 
+const handleChangePage = (param: number) => {
+  ActivePage.value = param;
+  (titleRef.value as HTMLElement).scrollIntoView({
+    behavior: "smooth",
+    block: "nearest",
+    inline: "center",
+  });
+};
+
 const handleReload = async () => {
   ActivePage.value = 1;
   SetItem("*");
@@ -102,6 +110,18 @@ watch(ActivePage, (newPage) => {
     title: `Страница-[${newPage}]:Новости:[KudaGo]`,
   });
 });
+
+watch(SelectedItem, () => {
+  useHead({
+    title: Filtered.value
+      ? `Фильтр-[${SelectedItem.value?.name}]:Новости:[KudaGo]`
+      : `Страница-[${ActivePage.value}]:Новости:[KudaGo]`,
+  });
+});
+
+// watch(Filtered, () => {
+//   console.log("Filtered: ", Filtered.value);
+// });
 </script>
 
 <template>
@@ -112,7 +132,11 @@ watch(ActivePage, (newPage) => {
           Новости
           <span
             class="text-[clamp(2.2vw,2.8vw,3vw)] md:text-[clamp(1vw,1.3vw,1.5vw)]"
-            >Страница-[{{ ActivePage }}]</span
+            >{{
+              Filtered
+                ? `Фильтр-[${SelectedItem?.name}]`
+                : `Страница-[${ActivePage}]`
+            }}</span
           >
         </h2>
         <LazyCitysComponent />
@@ -142,7 +166,7 @@ watch(ActivePage, (newPage) => {
               : "No prevPage"
           }}
         </p>
-        <p>
+        <p class="py-5">
           {{ paramsObj }}
         </p>
       </div>
@@ -159,6 +183,12 @@ watch(ActivePage, (newPage) => {
       >
         <NewsImagesBlock :images="item.images" />
       </NewsBlockItem>
+      <NewsPagination
+        v-if="status !== 'error' && status !== 'pending' && Filtered === false"
+        :total-pages="news?.total as number"
+        :active-page="ActivePage"
+        @update-active-index="handleChangePage"
+      />
     </section>
   </ClientOnly>
 </template>

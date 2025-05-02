@@ -7,6 +7,8 @@ export const useCityes = defineStore("cityes", () => {
   let t_error = ref<boolean | string>(false);
   const SelectedItem = ref<TCity>();
 
+  const Filtered = computed(() => SelectedItem.value?.slug !== "*");
+
   async function Init() {
     t_error.value = false;
     const { data, error } = await useFetch("/api/cityes", {
@@ -38,5 +40,5 @@ export const useCityes = defineStore("cityes", () => {
 
   Init();
 
-  return { towns, t_error, SelectedItem, SetItem };
+  return { towns, t_error, Filtered, SelectedItem, SetItem };
 });

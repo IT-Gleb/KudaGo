@@ -9,7 +9,7 @@ import {
 const detailsRef = ref<HTMLDetailsElement | null>(null);
 
 const opened = ref<boolean>(false);
-const link_text = ref<string>("#new");
+// const link_text = ref<{ link: string; idStr: string }>({ link: "", idStr: "" });
 
 const props = defineProps<{
   id: number;
@@ -30,16 +30,24 @@ const handleClose = () => {
   opened.value = false;
 };
 
-link_text.value = `${link_text.value}-${props.id}`;
+// link_text.value.idStr = `new-${props.id}`;
+// link_text.value.link = `#${link_text.value.idStr}`;
 
 //console.log(props.date_publication?.toString(), "  ", Date.now().toString());
 textParagrafs.value = ArrayGrowArray(textParagrafs.value);
+
+const handleUp = () => {
+  (detailsRef.value as HTMLElement).scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "center",
+  });
+};
 </script>
 
 <template>
   <details ref="detailsRef" :open="opened">
     <summary
-      :id="link_text"
       class="flex flex-row items-start justify-between p-2"
       :class="
         props.isodd
@@ -87,9 +95,13 @@ textParagrafs.value = ArrayGrowArray(textParagrafs.value);
           }}</small></span
         >
 
-        <small>
-          <NuxtLink :to="link_text" class="font-bold">К началу</NuxtLink>
-        </small>
+        <button
+          type="button"
+          @click="handleUp"
+          class="font-bold hover:underline active:scale-90 cursor-pointer"
+        >
+          <small>К началу</small>
+        </button>
 
         <button
           type="button"

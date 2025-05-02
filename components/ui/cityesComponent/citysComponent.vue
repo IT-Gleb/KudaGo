@@ -27,7 +27,10 @@ watch(City, () => {
 });
 
 onMounted(() => {
-  City.value = towns.value[0];
+  const { length } = towns.value;
+  if (length && length > 0) {
+    City.value = towns.value[0];
+  }
 });
 </script>
 
