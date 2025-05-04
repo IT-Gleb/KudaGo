@@ -18,6 +18,8 @@ const targetIsVisible = shallowRef(true);
 //const containerRef = useTemplateRef<HTMLDivElement>("imageContainer");
 const root = useTemplateRef<HTMLDivElement>("root");
 
+type TImageNextPrevParam = -1 | 1;
+
 const ItemInView = (paramIndex: number) => {
   (itemsRef.value[paramIndex] as HTMLDivElement).scrollIntoView({
     behavior: "smooth",
@@ -26,39 +28,46 @@ const ItemInView = (paramIndex: number) => {
   });
 };
 
-const handleNext = () => {
+const handleNext = (param: TImageNextPrevParam) => {
   const { length } = itemsRef.value;
   if (length > 0) {
     //ActiveIndex.value += 1;
-    ActiveIndex.value = Math.min(ActiveIndex.value + 1, length - 1);
+    ActiveIndex.value = Math.min(ActiveIndex.value + param, length - 1);
+    if (ActiveIndex.value < 0) {
+      ActiveIndex.value = 0;
+    }
+    ItemInView(ActiveIndex.value);
   }
 };
 
-const handlePrev = () => {
-  const { length } = itemsRef.value;
-  if (length > 0) {
-    ActiveIndex.value = Math.max(0, ActiveIndex.value - 1);
-  }
-};
+// const handlePrev = () => {
+//   const { length } = itemsRef.value;
+//   if (length > 0) {
+//     ActiveIndex.value = Math.max(0, ActiveIndex.value - 1);
+//   }
+// };
 
 function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
   targetIsVisible.value = entry?.isIntersecting || false;
   if (targetIsVisible.value) {
-    ActiveIndex.value = Number((entry.target as HTMLDivElement).dataset.item);
+    const item: number = Number((entry.target as HTMLDivElement).dataset.item);
+    if (ActiveIndex.value !== item) {
+      ActiveIndex.value = item;
+    }
   }
 }
 
-watch(ActiveIndex, () => {
-  //console.log(oldValue, newValue);
-  ItemInView(ActiveIndex.value);
-});
+// watch(ActiveIndex, () => {
+//   //console.log(oldValue, newValue);
+//   ItemInView(ActiveIndex.value);
+// });
 </script>
 
 <template>
   <div class="flex flex-col w-fit mx-auto">
     <div class="w-fit my-5 relative">
       <button
-        @click.prevent="handlePrev"
+        @click.prevent="handleNext(-1)"
         class="w-[32px] h-[32px] sm:h-[64px] bg-transparent text-yellow-400 dark:text-indigo-950 font-bold place-content-center cursor-pointer -scale-100 active:-scale-90 absolute left-0 md:left-8 top-[45%] z-10"
       >
         <div
@@ -87,7 +96,7 @@ watch(ActiveIndex, () => {
             class="w-[320px] sm:w-[480px] lg:w-[640px] object-left-top object-cover"
             v-intersection-observer="[
               onIntersectionObserver,
-              { root, threshold: [0.35, 1] },
+              { root, rootMargin: '0px 100% 100% 50%', threshold: [0.5, 1] },
             ]"
           >
             <img
@@ -102,7 +111,7 @@ watch(ActiveIndex, () => {
       </div>
       <button
         v-show="itemsRef.length > 1 && ActiveIndex < itemsRef.length - 1"
-        @click.prevent="handleNext"
+        @click.prevent="handleNext(1)"
         class="w-[32px] h-[32px] sm:[w-64px] sm:h-[64px] bg-transparent text-yellow-400 dark:text-indigo-950 font-bold place-content-center cursor-pointer active:scale-90 absolute right-0 md:right-8 top-[45%] z-10"
       >
         <div

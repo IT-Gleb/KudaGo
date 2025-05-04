@@ -28,3 +28,5 @@ declare type TNewsData = {
   previos?: string | null;
   results: TNewsItem[];
 };
+
+declare type TGetParamsObject = { [index: string]: string | number };

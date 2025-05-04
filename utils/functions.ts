@@ -27,7 +27,7 @@ export function FormatDateToString(param: number | string): string {
   // }).format(param);
   return `${ZeroNumber(dt.getUTCDate())}-${ZeroNumber(
     dt.getUTCMonth() + 1
-  )}-${dt.getUTCFullYear()} ${ZeroNumber(dt.getUTCHours())}:${ZeroNumber(
+  )}-${dt.getUTCFullYear()} ${ZeroNumber(dt.getUTCHours() + 3)}:${ZeroNumber(
     dt.getUTCMinutes()
   )}`;
 }
@@ -144,4 +144,26 @@ export function RegExpOnlyDomain(paramText: string) {
   let txt: string = paramText;
   txt = txt.replaceAll(Reg, "");
   return txt;
+}
+
+export function getParamsToObject(paramUrl: string): TGetParamsObject | null {
+  //Проверить параметр на соответствие URL
+  let RegObj = new RegExp(`(https?)://([a-z0-9\/\.-]+)`, "gmiu");
+  if (paramUrl.match(RegObj)) {
+    return paramUrl
+      ?.split("&")
+      .map((item1) => item1.split("?").map((itm) => itm.replaceAll("%2C", ",")))
+      .flat(3)
+      .reduce((acc: TGetParamsObject, curr: string) => {
+        let tmp = curr.split("=");
+        if (tmp.length === 2) {
+          acc[tmp[0]] = tmp[1];
+        } else {
+          acc["url"] = tmp[0];
+        }
+        return acc;
+      }, {});
+  }
+  //----------------------------------
+  return null;
 }

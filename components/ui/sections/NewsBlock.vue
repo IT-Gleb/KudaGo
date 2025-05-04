@@ -7,6 +7,7 @@ import { useLazyAsyncData } from "#app";
 import loaderComponent from "~/components/loader/loaderComponent.vue";
 import { useCityes } from "~/store/cityStore";
 import LazyCitysComponent from "../cityesComponent/citysComponent.vue";
+import { getParamsToObject } from "~/utils/functions";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
@@ -15,8 +16,7 @@ const cityStore = useCityes();
 const { SelectedItem, Filtered } = storeToRefs(cityStore);
 const { SetItem } = cityStore;
 
-type TParamsObject = { [index: string]: string | number };
-const paramsObj = ref<TParamsObject>();
+const paramsObj = ref<TGetParamsObject>();
 
 const {
   status,
@@ -58,21 +58,12 @@ const {
       }
       //-------------------
       if ((data as TNewsData).next) {
-        paramsObj.value = (data as TNewsData).next
-          ?.split("&")
-          .map((item1) =>
-            item1.split("?").map((itm) => itm.replaceAll("%2C", ","))
-          )
-          .flat(3)
-          .reduce((acc: TParamsObject, curr: string) => {
-            let tmp = curr.split("=");
-            if (tmp.length === 2) {
-              acc[tmp[0]] = tmp[1];
-            } else {
-              acc["url"] = tmp[0];
-            }
-            return acc;
-          }, {});
+        const paramObj: TGetParamsObject | null = getParamsToObject(
+          (data as TNewsData).next as string
+        );
+        if (paramObj) {
+          paramsObj.value = paramObj;
+        }
       }
 
       return {
@@ -118,10 +109,6 @@ watch(SelectedItem, () => {
       : `Страница-[${ActivePage.value}]:Новости:[KudaGo]`,
   });
 });
-
-// watch(Filtered, () => {
-//   console.log("Filtered: ", Filtered.value);
-// });
 </script>
 
 <template>
