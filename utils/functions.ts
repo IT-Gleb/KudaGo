@@ -25,9 +25,10 @@ export function FormatDateToString(param: number | string): string {
   //   hour: "2-digit",
   //   minute: "2-digit",
   // }).format(param);
+  dt.setHours(dt.getUTCHours() + 3);
   return `${ZeroNumber(dt.getUTCDate())}-${ZeroNumber(
     dt.getUTCMonth() + 1
-  )}-${dt.getUTCFullYear()} ${ZeroNumber(dt.getUTCHours() + 3)}:${ZeroNumber(
+  )}-${dt.getUTCFullYear()} ${ZeroNumber(dt.getHours())}:${ZeroNumber(
     dt.getUTCMinutes()
   )}`;
 }

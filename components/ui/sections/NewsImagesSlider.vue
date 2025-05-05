@@ -61,6 +61,9 @@ function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
 //   //console.log(oldValue, newValue);
 //   ItemInView(ActiveIndex.value);
 // });
+onMounted(() => {
+  ItemInView(0);
+});
 </script>
 
 <template>
