@@ -69,8 +69,6 @@ export function TextToArray(param: string): string[] {
   for (let item of arrStr) {
     if (item[item.length - 1] !== delimeter) {
       item = item + delimeter;
-    }
-    if (item.trim() !== ".") {
       anotherArray.push(item);
     }
   }

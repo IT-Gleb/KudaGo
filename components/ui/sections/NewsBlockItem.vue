@@ -48,7 +48,7 @@ const handleUp = () => {
 <template>
   <details ref="detailsRef" :open="opened">
     <summary
-      class="flex flex-row items-start justify-between p-2"
+      class="flex flex-row items-start gap-x-2 justify-between p-2"
       :class="
         props.isodd
           ? 'bg-slate-50 dark:bg-slate-600'

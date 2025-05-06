@@ -114,7 +114,7 @@ watch(SelectedItem, () => {
 <template>
   <ClientOnly>
     <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto">
-      <div class="flex flex-row items-end justify-between my-10">
+      <div class="flex flex-row items-end justify-between gap-x-2 my-10">
         <h2 ref="titleRef" class="uppercase">
           Новости
           <span
