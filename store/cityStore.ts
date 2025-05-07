@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { type TCity } from "#imports";
+import { type TCity, type TCityData } from "#imports";
 
 export const useCityes = defineStore("cityes", () => {
   const towns = ref<TCityData>([]);
