@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { type TCityData, TCity } from "~/utils/cityes";
+import { type TCityData, type TCity, cityes } from "~/utils/cityes";
 
 const locationURL: string =
   "https://kudago.com/public-api/v1.4/locations/?lang=ru";
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       }
     } catch (err) {
       console.log(err as Error);
-      return err;
+      return cityes;
     }
   }
 

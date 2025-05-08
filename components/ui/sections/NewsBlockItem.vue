@@ -71,6 +71,7 @@ const handleUp = () => {
 
     <article
       class="pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700"
+      :aria-hidden="!opened"
     >
       <div>
         <div class="mx-2 md:float-right">
