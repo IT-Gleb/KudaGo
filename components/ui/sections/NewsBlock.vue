@@ -171,7 +171,10 @@ watch(SelectedItem, () => {
         <NewsImagesBlock :images="item.images" />
       </NewsBlockItem>
       <NewsPagination
-        v-if="status !== 'error' && status !== 'pending' && Filtered === false"
+        v-if="
+          (news?.total as number) > 1 &&
+          Filtered === false
+        "
         :total-pages="news?.total as number"
         :active-page="ActivePage"
         @update-active-index="handleChangePage"

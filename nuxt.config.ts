@@ -25,10 +25,11 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/api/news": {
-      swr: true,
-      cache: {
-        maxAge: 10,
-      },
+      ssr: true,
+      // swr: true,
+      // cache: {
+      //   maxAge: 10,
+      // },
     },
     "/api/cityes": {
       ssr: true,

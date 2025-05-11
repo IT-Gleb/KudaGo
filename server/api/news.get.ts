@@ -8,14 +8,14 @@ export default defineEventHandler(async (event) => {
   let City = paramUrl.searchParams.get("city") ?? "";
   City = City === "*" ? "" : City;
 
-  let news_Url: string = "https://kudago.com/public-api/v1.2/news/?location=";
+  let news_Url: string = "https://kudago.com/public-api/v1.4/news/?location=";
 
   switch (City) {
     case "":
       news_Url = NewsUrl;
       break;
     default:
-      news_Url = `https://kudago.com/public-api/v1.2/news/?lang=ru&location=&page_size=${countOnPage}&fields=id,title,slug,publication_date,description,body_text,images&expand=images,place&order_by=&text_format=text&ids=&actual_only=true`;
+      news_Url = `https://kudago.com/public-api/v1.4/news/?lang=ru&location=&page_size=${countOnPage}&fields=id,title,slug,publication_date,description,body_text,images&expand=images,place&order_by=&text_format=text&ids=&actual_only=true`;
       break;
   }
 

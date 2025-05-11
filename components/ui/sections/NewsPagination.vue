@@ -23,17 +23,17 @@ for (let indx: number = 0; indx < props.totalPages; indx++) {
     >
       <button
         type="button"
-        v-for="(item, index) in pages"
-        :key="index"
-        :tabindex="index + 1"
-        aria-hidden="true"
-        class="w-[20px] h-[20px] md:w-[32px] md:h-[32px] overflow-hidden font-bold cursor-pointer active:scale-90 place-content-center"
+        role="button"
+        v-for="item in pages"
+        :key="item"
+        :tabindex="item"
+        class="w-[20px] h-[20px] md:w-[32px] md:h-[32px] overflow-hidden font-bold cursor-pointer active:scale-90 place-content-center focus:outline focus:outline-offset-2 focus:outline-indigo-900 focus:dark:outline-slate-200"
         :class="
-          props.activePage === index + 1
+          props.activePage === item
             ? 'bg-indigo-400 text-yellow-100 dark:bg-yellow-500 dark:text-red-600 outline outline-offset-2 outline-indigo-900 dark:outline-slate-200'
             : 'bg-slate-700 text-slate-100 dark:bg-slate-400 dark:text-indigo-900'
         "
-        @click="() => emit('updateActiveIndex', index + 1)"
+        @click="() => emit('updateActiveIndex', item)"
       >
         <small>
           {{ item }}
