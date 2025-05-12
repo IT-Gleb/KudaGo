@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   css: ["~/assets/css/main.css"],
   imports: {
     autoImport: true,
@@ -25,14 +25,18 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/api/news": {
-      ssr: true,
+      //ssr: true,
+      prerender: true,
       // swr: true,
       // cache: {
       //   maxAge: 10,
       // },
     },
     "/api/cityes": {
-      ssr: true,
+      swr: true,
+      cache: {
+        maxAge: 10,
+      },
     },
   },
 });

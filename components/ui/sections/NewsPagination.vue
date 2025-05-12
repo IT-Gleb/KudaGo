@@ -5,9 +5,13 @@ const emit = defineEmits<{
   (event: "updateActiveIndex", param: number): void;
 }>();
 
-for (let indx: number = 0; indx < props.totalPages; indx++) {
+const PagesCount = ref<number>(props.totalPages);
+
+for (let indx: number = 0; indx < PagesCount.value; indx++) {
   pages.value.push(indx + 1);
 }
+
+//console.log(PagesCount.value);
 </script>
 
 <template>
@@ -15,7 +19,7 @@ for (let indx: number = 0; indx < props.totalPages; indx++) {
     <div class="w-fit mx-auto my-3 flex items-center gap-x-2">
       <h6>Всего страниц</h6>
       <span
-        ><small>-[{{ props.totalPages }}]</small></span
+        ><small>-[{{ PagesCount }}]</small></span
       >
     </div>
     <div
