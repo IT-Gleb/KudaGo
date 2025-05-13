@@ -114,7 +114,9 @@ watch(SelectedItem, () => {
 <template>
   <ClientOnly>
     <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto xl:w-[80%]">
-      <div class="flex flex-row items-end justify-between gap-x-2 my-10">
+      <div
+        class="flex flex-row flex-wrap items-center justify-between gap-2 my-10"
+      >
         <h2 ref="titleRef" class="uppercase">
           Новости
           <span
@@ -126,6 +128,7 @@ watch(SelectedItem, () => {
             }}</span
           >
         </h2>
+        <TimerComponent />
         <LazyCitysComponent />
         <button
           type="button"
@@ -145,7 +148,7 @@ watch(SelectedItem, () => {
         {{ error }}
       </div>
 
-      <div v-if="status !== 'pending' && !error">
+      <!-- <div v-if="status !== 'pending' && !error">
         <p>
           {{
             news?.prevPage !== null && typeof news?.prevPage !== "undefined"
@@ -156,7 +159,7 @@ watch(SelectedItem, () => {
         <p class="py-5">
           {{ paramsObj }}
         </p>
-      </div>
+      </div> -->
       <NewsBlockItem
         v-if="status !== 'pending' && !error"
         v-for="(item, index) in news?.data"

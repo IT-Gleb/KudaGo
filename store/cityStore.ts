@@ -4,7 +4,7 @@ import { type TCity, type TCityData } from "#imports";
 
 export const useCityes = defineStore("cityes", () => {
   const towns = ref<TCityData>([]);
-  let t_error = ref<boolean | string>(false);
+  const t_error = ref<boolean | string>(false);
   const SelectedItem = ref<TCity>();
 
   const Filtered = computed(() => SelectedItem.value?.slug !== "*");
