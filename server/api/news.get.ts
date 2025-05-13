@@ -1,12 +1,15 @@
 import { countOnPage, NewsUrl } from "~/utils/urls";
 const newPage: string = "page";
 const location_str: string = "location";
+const onPage: string = "totalOnPage";
 
 export default defineEventHandler(async (event) => {
   const paramUrl = new URL(`http://localhost${event.path}`);
   const Page = paramUrl.searchParams.get(newPage) ?? "1";
   let City = paramUrl.searchParams.get("city") ?? "";
   City = City === "*" ? "" : City;
+
+  const NewsOnPage = paramUrl.searchParams.get(onPage) ?? countOnPage;
 
   let news_Url: string = "https://kudago.com/public-api/v1.4/news/?location=";
 
@@ -15,7 +18,7 @@ export default defineEventHandler(async (event) => {
       news_Url = NewsUrl;
       break;
     default:
-      news_Url = `https://kudago.com/public-api/v1.4/news/?lang=ru&location=&page_size=${countOnPage}&fields=id,title,slug,publication_date,description,body_text,images&expand=images,place&order_by=&text_format=text&ids=&actual_only=true`;
+      news_Url = `https://kudago.com/public-api/v1.4/news/?lang=ru&location=&page_size=${NewsOnPage}&fields=id,title,slug,publication_date,description,body_text,images&expand=images,place&order_by=&text_format=text&ids=&actual_only=true`;
       break;
   }
 
@@ -23,6 +26,8 @@ export default defineEventHandler(async (event) => {
   City === ""
     ? url.searchParams.set(newPage, Page)
     : url.searchParams.set(location_str, City);
+  url.searchParams.set("page_size", `${NewsOnPage}`);
+  //console.log(url.search);
 
   //console.log(City, " ", url.search);
 

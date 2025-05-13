@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import NewsBlockItem from "./NewsBlockItem.vue";
 import NewsImagesBlock from "./NewsImagesSlider.vue";
-import { countOnPage } from "~/utils/urls";
-import NewsPagination from "~/components/ui/sections/NewsPagination.vue";
-import { useLazyAsyncData } from "#app";
-import loaderComponent from "~/components/loader/loaderComponent.vue";
-import { useCityes } from "~/store/cityStore";
+import { countOnPage } from "../../../utils/urls";
+import NewsPagination from "./NewsPagination.vue";
+import loaderComponent from "../../loader/loaderComponent.vue";
+import { useCityes } from "../../../store/cityStore";
 import LazyCitysComponent from "../cityesComponent/citysComponent.vue";
-import { getParamsToObject } from "~/utils/functions";
+import { getParamsToObject } from "../../../utils/functions";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
@@ -17,11 +16,13 @@ const { SelectedItem, Filtered } = storeToRefs(cityStore);
 const { SetItem } = cityStore;
 
 const paramsObj = ref<TGetParamsObject>();
+const NewsOnPage = ref<number>(countOnPage);
 
 const {
   status,
   data: news,
-  refresh,
+  execute,
+  clear,
   error,
 } = await useLazyAsyncData(
   `news-${(ActivePage.value + Math.random()).toString()}`,
@@ -34,16 +35,18 @@ const {
       params: {
         page: ActivePage.value,
         city: SelectedItem.value?.slug,
+        totalOnPage: NewsOnPage.value,
       },
       retry: 3,
     }),
   {
     //immediate: false,
-    watch: [ActivePage, SelectedItem],
+    watch: [ActivePage, SelectedItem, NewsOnPage],
     dedupe: "cancel",
     transform: (data: unknown) => {
       //console.log(data);
-      const myNews: TNewsItem[] = (data as TNewsData).results;
+      let myNews: TNewsItem[] = (data as TNewsData).results;
+
       //Удалить ненужное из текста
       if (myNews) {
         myNews.forEach(
@@ -51,10 +54,28 @@ const {
         );
       }
       //-------------------------
+      //Убрать дубликаты по description
+      let tmpNews: TNewsItem[] = [];
+      if (myNews) {
+        myNews.forEach((item) => {
+          let finded = tmpNews.find(
+            (findItem) =>
+              findItem.description.toLowerCase() ===
+              item.description.toLowerCase()
+          );
+          if (!finded) {
+            tmpNews.push(item);
+          }
+        });
+        myNews = Array.from(tmpNews);
+      }
+
+      //----------------------------
+
       let tPages: number = 1;
       if (data) {
         tPages = Number((data as TNewsData).count);
-        tPages = Math.floor(tPages / countOnPage);
+        tPages = Math.ceil(tPages / NewsOnPage.value);
       }
       //-------------------
       if ((data as TNewsData).next) {
@@ -88,8 +109,16 @@ const handleChangePage = (param: number) => {
 const handleReload = async () => {
   ActivePage.value = 1;
   SetItem("*");
-  await refresh();
+  clear();
+  await execute();
   //console.log(SelectedItem.value);
+};
+
+const handleNewsOnPage = async (param: number) => {
+  //console.log("handle on Page: ", param);
+  NewsOnPage.value = param;
+  clear();
+  await execute();
 };
 
 useHead({
@@ -115,7 +144,7 @@ watch(SelectedItem, () => {
   <ClientOnly>
     <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto xl:w-[80%]">
       <div
-        class="flex flex-row flex-wrap items-center justify-between gap-2 my-10"
+        class="flex flex-row flex-wrap items-center justify-between gap-2 mt-10"
       >
         <h2 ref="titleRef" class="uppercase">
           Новости
@@ -128,8 +157,6 @@ watch(SelectedItem, () => {
             }}</span
           >
         </h2>
-        <TimerComponent />
-        <LazyCitysComponent />
         <button
           type="button"
           class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 pt-[2px] pb-1 rounded-md"
@@ -139,13 +166,20 @@ watch(SelectedItem, () => {
         </button>
       </div>
       <div
+        class="flex flex-row items-center justify-between gap-2 my-5 pb-3 border-b border-b-indigo-900 dark:border-b-slate-400"
+      >
+        <LazyCitysComponent />
+        <PagesComponent @set-news-count-on-page="handleNewsOnPage" />
+        <TimerComponent />
+      </div>
+      <div
         v-if="status === 'pending'"
         class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
       >
         <loaderComponent />
       </div>
       <div v-if="error">
-        {{ error }}
+        {{ error + " Попробуйте обновить позже 8-)" }}
       </div>
 
       <!-- <div v-if="status !== 'pending' && !error">
@@ -159,6 +193,11 @@ watch(SelectedItem, () => {
         <p class="py-5">
           {{ paramsObj }}
         </p>
+      </div> -->
+      <!-- <div v-for="item in news?.data" :key="item.id">
+        <span>{{ item.id }}</span
+        >&nbsp;
+        <span>{{ item.title }}</span>
       </div> -->
       <NewsBlockItem
         v-if="status !== 'pending' && !error"
