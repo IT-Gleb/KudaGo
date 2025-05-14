@@ -1,3 +1,9 @@
+import type {
+  IEventOfDayRoot,
+  TEventOfDayObject,
+  TGetParamsObject,
+} from "~/types/myTypes";
+
 const delimeter: string = ". ";
 
 export function getNowYear(): string {
@@ -165,4 +171,60 @@ export function getParamsToObject(paramUrl: string): TGetParamsObject | null {
   }
   //----------------------------------
   return null;
+}
+
+//Сбросить знаяения объекта
+function resetObj<T extends Object>(param: T): T {
+  const res: T = Object.assign({}, param);
+  for (let [key, value] of Object.entries(res)) {
+    if (typeof value === "object" && (value !== undefined || value !== null)) {
+      resetObj(value);
+    } else if (typeof value === "object" && Array.isArray(value)) {
+      res[key as never] = [] as never;
+    } else if (typeof value === "string") {
+      res[key as never] = "" as never;
+    } else if (typeof value === "boolean") {
+      res[key as never] = false as never;
+    } else {
+      if (typeof value === "number") {
+        res[key as never] = 0 as never;
+      }
+    }
+  }
+  return res;
+}
+
+export function convertToSmallData(param: IEventOfDayRoot) {
+  let tmpKeysObj: TEventOfDayObject = {
+    id: 0,
+    item_url: "",
+    title: "",
+    body_text: "",
+    age_restriction: "",
+    description: "",
+    slug: "",
+    place: { id: 0 },
+    first_image: {
+      image: "",
+      thumbnails: { "640x384": "", "144x96": "" },
+      source: { name: "", link: "" },
+    },
+  };
+
+  let fields = Object.keys(tmpKeysObj);
+  //console.log(Object.keys(param.results[0].object));
+  const data: TEventOfDayObject[] = [];
+
+  for (let item of param.results) {
+    tmpKeysObj = resetObj(tmpKeysObj);
+    fields.forEach((fieldName) => {
+      if (Object.keys(item.object).includes(fieldName)) {
+        tmpKeysObj[fieldName as never] = item.object[fieldName as never];
+      }
+    });
+    data.push(tmpKeysObj);
+  }
+
+  //console.log(tmpKeysObj);
+  return data;
 }

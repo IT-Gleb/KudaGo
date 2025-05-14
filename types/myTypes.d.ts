@@ -30,3 +30,84 @@ declare type TNewsData = {
 };
 
 declare type TGetParamsObject = { [index: string]: string | number };
+
+//Событие дня интерафейсы
+export interface IEventOfDayRoot {
+  count: number;
+  next: string | null;
+  previos: string | null;
+  results: IEventOfDay[];
+}
+
+export interface IEventOfDay {
+  date: string;
+  location: string;
+  object: IEventObject;
+  title: string;
+}
+export interface IEventObject {
+  id: number;
+  slug: string;
+  title: string;
+  favorites_count: number;
+  comments_count: number;
+  description: string;
+  body_text: string;
+  item_url: string;
+  disable_comments: boolean;
+  ctype: string;
+  place: IPlace;
+  daterange: IDaterange;
+  first_image: IFirstImage;
+  age_restriction: string;
+}
+
+export interface IPlace {
+  id: number;
+}
+
+export interface IDaterange {
+  start_date: string | null;
+  start_time: string;
+  start: number;
+  end_date: string;
+  end_time: string;
+  end: number;
+  is_continuous: boolean;
+  is_endless: boolean;
+  is_startless: boolean;
+  schedules: any[];
+  use_place_schedule: boolean;
+}
+
+export interface IFirstImage {
+  image: string;
+  thumbnails: IThumbnails;
+  source: ISource;
+}
+
+export interface IThumbnails {
+  "640x384": string;
+  "144x96": string;
+}
+
+export interface ISource {
+  name: string;
+  link: string;
+}
+
+export type TEventOfDayObject = Pick<
+  IEventObject,
+  | "id"
+  | "item_url"
+  | "title"
+  | "slug"
+  | "place"
+  | "body_text"
+  | "description"
+  | "age_restriction"
+  | "first_image"
+>;
+export type TEventOfDay = Pick<IEventOfDay, "date" | "location" | "object">;
+
+//-------------------------------
