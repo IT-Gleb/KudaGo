@@ -15,7 +15,7 @@ for (let indx: number = 0; indx < PagesCount.value; indx++) {
 </script>
 
 <template>
-  <section>
+  <section class="p-1">
     <div class="w-fit mx-auto my-3 flex items-center gap-x-2">
       <h6>Всего страниц</h6>
       <span

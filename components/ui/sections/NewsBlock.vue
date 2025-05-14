@@ -166,7 +166,7 @@ watch(SelectedItem, () => {
         </button>
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-2 my-5 pb-3 border-b border-b-indigo-900 dark:border-b-slate-400"
+        class="flex flex-col-reverse md:flex-row items-center justify-between gap-2 my-5 pb-3 border-b border-b-indigo-900 dark:border-b-slate-400"
       >
         <LazyCitysComponent />
         <PagesComponent @set-news-count-on-page="handleNewsOnPage" />

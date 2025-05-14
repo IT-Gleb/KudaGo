@@ -30,7 +30,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <span class="font-mono"
+  <span class="font-mono font-bold whitespace-nowrap"
     ><small>{{ DateStr }}</small></span
   >
 </template>
