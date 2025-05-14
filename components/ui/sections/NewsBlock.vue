@@ -60,8 +60,8 @@ const {
         myNews.forEach((item) => {
           let finded = tmpNews.find(
             (findItem) =>
-              findItem.description.toLowerCase() ===
-              item.description.toLowerCase()
+              findItem.description.toLowerCase().trim() ===
+              item.description.toLowerCase().trim()
           );
           if (!finded) {
             tmpNews.push(item);

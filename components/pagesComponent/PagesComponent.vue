@@ -23,6 +23,7 @@ watch(CountP, () => {
       <option
         v-for="item of CountOnPageArray"
         :key="item"
+        :value="item"
         class="odd:bg-slate-100 dark:odd:bg-slate-900 p-2"
       >
         {{ item }}
