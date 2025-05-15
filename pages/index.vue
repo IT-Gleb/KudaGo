@@ -3,6 +3,7 @@ import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
 import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
 import LazyNewsBlock from "~/components/ui/sections/NewsBlock.vue";
+import LazyEventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
 
 useHead({
   title: "Новости:[Kuda Go]",
@@ -56,6 +57,7 @@ useHead({
         </div>
       </div>
     </section>
+    <LazyEventOfDay hydrate-on-visible />
     <LazyNewsBlock hydrate-on-visible />
   </div>
 </template>

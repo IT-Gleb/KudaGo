@@ -7,6 +7,7 @@ import loaderComponent from "../../loader/loaderComponent.vue";
 import { useCityes } from "../../../store/cityStore";
 import LazyCitysComponent from "../cityesComponent/citysComponent.vue";
 import { getParamsToObject } from "../../../utils/functions";
+import type { TGetParamsObject, TNewsItem, TNewsData } from "~/types/myTypes";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);

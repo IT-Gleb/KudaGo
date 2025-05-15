@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const MainMenuItems = ref(["Новости", "Мероприятия", "Выставки", "Музеи"]);
+const MainMenuItems = ref(["Новости", "События", "Выставки", "Музеи"]);
 </script>
 
 <template>

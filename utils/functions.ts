@@ -173,14 +173,17 @@ export function getParamsToObject(paramUrl: string): TGetParamsObject | null {
   return null;
 }
 
-//Сбросить знаяения объекта
+//Сбросить значения объекта
 function resetObj<T extends Object>(param: T): T {
   const res: T = Object.assign({}, param);
   for (let [key, value] of Object.entries(res)) {
-    if (typeof value === "object" && (value !== undefined || value !== null)) {
-      resetObj(value);
-    } else if (typeof value === "object" && Array.isArray(value)) {
+    if (typeof value === "object" && Array.isArray(value)) {
       res[key as never] = [] as never;
+    } else if (
+      typeof value === "object" &&
+      (value !== undefined || value !== null)
+    ) {
+      resetObj(value);
     } else if (typeof value === "string") {
       res[key as never] = "" as never;
     } else if (typeof value === "boolean") {
@@ -195,34 +198,55 @@ function resetObj<T extends Object>(param: T): T {
 }
 
 export function convertToSmallData(param: IEventOfDayRoot) {
-  let tmpKeysObj: TEventOfDayObject = {
-    id: 0,
-    item_url: "",
-    title: "",
-    body_text: "",
-    age_restriction: "",
-    description: "",
-    slug: "",
-    place: { id: 0 },
-    first_image: {
-      image: "",
-      thumbnails: { "640x384": "", "144x96": "" },
-      source: { name: "", link: "" },
-    },
-  };
+  let tmpKeysObj: Array<keyof TEventOfDayObject> = [
+    "id",
+    "slug",
+    "ctype",
+    "item_url",
+    "title",
+    "age_restriction",
+    "description",
+    "body_text",
+    "place",
+    "first_image",
+    "daterange",
+  ];
 
-  let fields = Object.keys(tmpKeysObj);
-  //console.log(Object.keys(param.results[0].object));
   const data: TEventOfDayObject[] = [];
 
   for (let item of param.results) {
-    tmpKeysObj = resetObj(tmpKeysObj);
-    fields.forEach((fieldName) => {
-      if (Object.keys(item.object).includes(fieldName)) {
-        tmpKeysObj[fieldName as never] = item.object[fieldName as never];
+    let tmp: Partial<TEventOfDayObject> = {};
+    const { object } = item;
+    tmpKeysObj.forEach((fieldName) => {
+      if (Object.keys(object).includes(fieldName)) {
+        tmp[fieldName as never] = object[fieldName as never];
       }
     });
-    data.push(tmpKeysObj);
+    if (tmp.body_text) {
+      const reg = new RegExp(
+        `([^\:\w"])([а-яА-Яё0-9,\!\?.-\s]+)([^,\"])([^a-z0-9,\"]+)`,
+        "gmiu"
+      );
+      let str = tmp.body_text.match(reg);
+      if (str && str.length > 0) {
+        let tmp3 = str?.join("");
+        tmp3 = tmp3.replaceAll(".,", ".");
+        tmp3 = tmp3.replaceAll(". ,", ".");
+        tmp3 = tmp3.replaceAll(".", ". ");
+        tmp.body_text = tmp3;
+      }
+    }
+    //Убрать <p></p>
+    if (tmp.description) {
+      const reg = RegExp(`([^<p//>])*`, "gmiu");
+      let str = tmp.description.match(reg);
+      if (str && str.length > 0) {
+        let tmpStr = str.join("");
+        //console.log(tmpStr);
+        tmp.description = tmpStr;
+      }
+    }
+    data.push(tmp as TEventOfDayObject);
   }
 
   //console.log(tmpKeysObj);

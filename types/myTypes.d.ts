@@ -70,8 +70,8 @@ export interface IDaterange {
   start_date: string | null;
   start_time: string;
   start: number;
-  end_date: string;
-  end_time: string;
+  end_date: string | null;
+  end_time: string | null;
   end: number;
   is_continuous: boolean;
   is_endless: boolean;
@@ -107,6 +107,8 @@ export type TEventOfDayObject = Pick<
   | "description"
   | "age_restriction"
   | "first_image"
+  | "ctype"
+  | "daterange"
 >;
 export type TEventOfDay = Pick<IEventOfDay, "date" | "location" | "object">;
 
