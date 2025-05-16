@@ -224,15 +224,26 @@ export function convertToSmallData(param: IEventOfDayRoot) {
     });
     if (tmp.body_text) {
       const reg = new RegExp(
-        `([^\:\w"])([а-яА-Яё0-9,\!\?.-\s]+)([^,\"])([^a-z0-9,\"]+)`,
+        `([^\:\w"])([а-яА-Яё0-9,\!\?.-\s]+)([^,\"]+)([^a-z0-9,\"]+)([^a-zA-Z0-9\s=\.\&\/%;:-<>\",\W,\*]+)`,
         "gmiu"
       );
       let str = tmp.body_text.match(reg);
       if (str && str.length > 0) {
         let tmp3 = str?.join("");
+        const reg1 = new RegExp(`(?<=(<div)).*`, "gmi");
+        tmp3 = tmp3.replace(reg1, "");
+        tmp3 = tmp3.replace("<div", "");
+        tmp3 = tmp3.replace("}]}}]", "");
+        tmp3 = tmp3.replaceAll("\\", "");
         tmp3 = tmp3.replaceAll(".,", ".");
         tmp3 = tmp3.replaceAll(". ,", ".");
         tmp3 = tmp3.replaceAll(".", ". ");
+        tmp3 = tmp3.replaceAll("предоставлено организатором", "");
+        tmp3 = tmp3.replaceAll("предоставлены организатором", "");
+        tmp3 = tmp3.trim();
+        if (tmp3[tmp3.length - 1] !== ".") {
+          tmp3 = tmp3 + ".";
+        }
         tmp.body_text = tmp3;
       }
     }

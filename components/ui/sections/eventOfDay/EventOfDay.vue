@@ -57,30 +57,35 @@ const handleReload = async () => {
         <div
           v-for="item in eventsDay"
           :key="item.id"
-          class="my-5 pb-3 border-b border-b-indigo-800 dark:border-b-slate-300"
+          class="my-5 pb-3 border-b border-b-indigo-800 dark:border-b-slate-300 overflow-hidden"
         >
           <div class="my-2">
             {{ item.daterange.start_date }}
           </div>
           <h6 class="text-balance my-5">{{ item.title }}</h6>
-          <div class="float-left object-cover overflow-hidden rounded-xl mr-2">
+          <div
+            class="w-[300px] h-[177px] aspect-video xl:w-[560px] xl:h-[330px] float-left object-cover object-left-top overflow-hidden rounded-xl mb-4 sm:mb-0 mr-2"
+          >
             <img
-              :src="item.first_image.thumbnails['144x96']"
+              :src="item.first_image.thumbnails['640x384']"
               alt=""
               loading="lazy"
               decoding="async"
               class="block w-full h-full"
             />
           </div>
-          <p class="my-2 font-bold">{{ item.description }}</p>
+          <p class="indent-4 my-2 font-bold">{{ item.description }}</p>
           <p class="first-letter:uppercase indent-5 text-balance">
             {{ item.body_text }}
           </p>
           <div
             v-if="item.daterange.end_time !== null"
-            class="text-right font-bold xl:text-[clamp(0.65vw,2vw,0.8vw)]"
+            class="text-right xl:text-[clamp(0.65vw,2vw,0.8vw)] flex flex-col gap-2"
           >
-            {{ item.daterange.start_date }} - {{ item.daterange.end_date }}
+            <span>Начало мероприятия: </span>
+            <span class="font-bold">{{ item.daterange.start_date }}</span>
+            <span> Окончание мероприятия: </span>
+            <span class="font-bold">{{ item.daterange.end_date }}</span>
           </div>
         </div>
       </div>
