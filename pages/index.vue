@@ -14,11 +14,11 @@ useHead({
   ],
 });
 
-const ComponentsArray = reactive([false, false]);
+const ViewComponentsArray = reactive([false, false]);
 const handleObserve = (param1: number, param2: boolean) => {
   // console.log("index: ", param1, "value: ", param2);
   if (param2) {
-    ComponentsArray[param1] = param2;
+    ViewComponentsArray[param1] = param2;
   }
 };
 </script>
@@ -66,10 +66,10 @@ const handleObserve = (param1: number, param2: boolean) => {
         </div>
       </div>
     </section>
-    <EventOfDay v-if="ComponentsArray[0]" />
-    <NewsBlock v-if="ComponentsArray[1]" />
+    <EventOfDay v-if="ViewComponentsArray[0]" />
+    <NewsBlock v-if="ViewComponentsArray[1]" />
     <DivObserveDataLoad
-      :comps-length="ComponentsArray.length"
+      :comps-length="ViewComponentsArray.length"
       @on-observe="handleObserve"
     />
   </div>

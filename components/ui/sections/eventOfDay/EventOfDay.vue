@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { TEventOfDayObject } from "~/types/myTypes";
-import { FormatDateFromString } from "#imports";
+import { FormatDateFromString, FormatNowDate } from "#imports";
 import { vIntersectionObserver } from "@vueuse/components";
 
 const abortDelay: number = 4000;
 const url = "/api/eventofday";
 
 const headRef = ref<HTMLDivElement | null>();
+
+const DateEvent = ref<string>(FormatNowDate());
+//console.log(DateEvent.value);
 
 const {
   data: eventsDay,
@@ -23,7 +26,34 @@ const {
       retry: 3,
       retryDelay: 1000,
       signal: AbortSignal.timeout(abortDelay),
-    })
+    }),
+  {
+    dedupe: "cancel",
+    transform: (input) => {
+      let tmp: TEventOfDayObject[] = [];
+      if (input) {
+        tmp = Array.from(input);
+        tmp.forEach((item) => {
+          if (item.daterange === null) {
+            item.daterange = {
+              start_date: DateEvent.value,
+              end_date: DateEvent.value,
+              start_time: "",
+              start: 0,
+              end: 0,
+              end_time: "",
+              schedules: [],
+              is_continuous: false,
+              is_endless: false,
+              is_startless: false,
+              use_place_schedule: false,
+            };
+          }
+        });
+      }
+      return tmp;
+    },
+  }
 );
 
 const handleReload = async () => {
@@ -45,13 +75,7 @@ function onIntersectionObserve([entry]: IntersectionObserverEntry[]) {
 watch(isVisibled, () => {
   if (isVisibled.value) {
     useHead({
-      title: `"Событие дня:${
-        eventsDay.value !== null
-          ? FormatDateFromString(
-              eventsDay.value[0].daterange.start_date as string
-            )
-          : ""
-      }:[Kuda Go]`,
+      title: `"Событие дня:${FormatDateFromString(DateEvent.value)}:[Kuda Go]`,
     });
   }
 });
@@ -108,7 +132,7 @@ watch(isVisibled, () => {
             {{ item.body_text }}
           </p>
           <div
-            v-if="item.daterange.end_time !== null"
+            v-if="item.daterange !== null && item.daterange.end_time !== null"
             class="text-right xl:text-[clamp(0.65vw,2vw,0.8vw)] flex flex-col gap-2"
           >
             <span>Начало мероприятия: </span>

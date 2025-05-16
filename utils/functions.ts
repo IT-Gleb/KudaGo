@@ -57,24 +57,60 @@ export function FormatDateFromString(param: string) {
   }
 }
 
+export function FormatNowDate() {
+  const dt = Date.now();
+
+  let res = Intl.DateTimeFormat("ru-RU", {
+    year: "numeric",
+    day: "2-digit",
+    month: "2-digit",
+  }).format(dt);
+
+  const reg = new RegExp("\\.|/", "gi");
+  res = res.replaceAll(reg, "-");
+  res = res.split("-").reverse().join("-");
+
+  return res;
+}
+
 export function deleteNonUsedSymbols(param: string) {
   // Удалить ненужные символы и строки
   const p1: string = "Ранее мы рассказывали";
   const p2: string = "Ранее мы писали";
   const p3: string = "Ранее портал KUDAGO опубликовал";
+  const p4: string = "Ранее порта рассказывал";
 
-  let txt: string = param;
-
+  let txt: string = "";
   txt = param.replaceAll("\n", delimeter);
-  txt = RegExpDomain(param);
+
+  let reg = new RegExp(`(?<=(${p1})).*`, "gmi");
+  txt = txt.replaceAll(reg, "");
+  reg = new RegExp(`(?<=(${p2})).*`, "gmi");
+  txt = txt.replaceAll(reg, "");
+  reg = new RegExp(`(?<=(${p3})).*`, "gmi");
+  txt = txt.replaceAll(reg, "");
+  reg = new RegExp(`(?<=(${p4})).*`, "gmi");
+  txt = txt.replaceAll(reg, "");
+  txt = txt.replaceAll(p1, "");
+  txt = txt.replaceAll(p2, "");
+  txt = txt.replaceAll(p3, "");
+  txt = txt.replaceAll(p4, "");
+
+  txt = RegExpDomain(txt);
   txt = RegExpOnlyDomain(txt);
 
-  txt = DeleteFromStrWithRegExp(txt, p1);
-  txt = DeleteFromStrWithRegExp(txt, p2);
-  txt = DeleteFromStrWithRegExp(txt, p3);
+  // txt = DeleteFromStrWithRegExp(txt, p1);
+  // txt = DeleteFromStrWithRegExp(txt, p2);
+  // txt = DeleteFromStrWithRegExp(txt, p3);
 
   txt = txt.replaceAll("..", delimeter);
   txt = txt.replaceAll("...", delimeter);
+  txt = txt.replaceAll(" . ", ".");
+  txt = txt.replaceAll("..", ".");
+  txt = txt.trim();
+  if (txt[txt.length - 1] !== ".") {
+    txt += ".";
+  }
 
   //--------------------------------------
   return txt;
@@ -192,7 +228,7 @@ export function getParamsToObject(paramUrl: string): TGetParamsObject | null {
 }
 
 //Сбросить значения объекта
-function resetObj<T extends Object>(param: T): T {
+export function resetObj<T extends Object>(param: T): T {
   const res: T = Object.assign({}, param);
   for (let [key, value] of Object.entries(res)) {
     if (typeof value === "object" && Array.isArray(value)) {
