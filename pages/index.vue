@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
 import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
-import LazyNewsBlock from "~/components/ui/sections/NewsBlock.vue";
-import LazyEventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
+import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
+import EventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
+import DivObserveDataLoad from "~/components/ui/intersectObserve/DivObserveDataLoad.vue";
 
 useHead({
   title: "Новости:[Kuda Go]",
@@ -12,6 +13,14 @@ useHead({
     { name: "author", content: "Gleb Torgashin" },
   ],
 });
+
+const ComponentsArray = reactive([false, false]);
+const handleObserve = (param1: number, param2: boolean) => {
+  // console.log("index: ", param1, "value: ", param2);
+  if (param2) {
+    ComponentsArray[param1] = param2;
+  }
+};
 </script>
 
 <template>
@@ -57,7 +66,11 @@ useHead({
         </div>
       </div>
     </section>
-    <LazyEventOfDay hydrate-on-visible />
-    <LazyNewsBlock hydrate-on-visible />
+    <EventOfDay v-if="ComponentsArray[0]" />
+    <NewsBlock v-if="ComponentsArray[1]" />
+    <DivObserveDataLoad
+      :comps-length="ComponentsArray.length"
+      @on-observe="handleObserve"
+    />
   </div>
 </template>

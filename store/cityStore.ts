@@ -40,5 +40,5 @@ export const useCityes = defineStore("cityes", () => {
 
   Init();
 
-  return { towns, t_error, Filtered, SelectedItem, SetItem };
+  return { towns, t_error, Filtered, SelectedItem, SetItem, Init };
 });

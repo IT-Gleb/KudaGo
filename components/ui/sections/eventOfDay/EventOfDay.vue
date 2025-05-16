@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { TEventOfDayObject } from "~/types/myTypes";
+import { FormatDateFromString } from "#imports";
+import { vIntersectionObserver } from "@vueuse/components";
 
 const abortDelay: number = 4000;
 const url = "/api/eventofday";
@@ -33,12 +35,39 @@ const handleReload = async () => {
   clear();
   await execute();
 };
+
+const isVisibled = shallowRef(false);
+
+function onIntersectionObserve([entry]: IntersectionObserverEntry[]) {
+  isVisibled.value = entry?.isIntersecting || false;
+}
+
+watch(isVisibled, () => {
+  if (isVisibled.value) {
+    useHead({
+      title: `"Событие дня:${
+        eventsDay.value !== null
+          ? FormatDateFromString(
+              eventsDay.value[0].daterange.start_date as string
+            )
+          : ""
+      }:[Kuda Go]`,
+    });
+  }
+});
 </script>
 
 <template>
   <ClientOnly>
     <section class="min-h-screen w-[96%] lg:w-[80%] mx-auto p-1">
-      <div ref="headRef" class="flex flex-row items-baseline justify-between">
+      <div
+        ref="headRef"
+        class="flex flex-row items-baseline justify-between"
+        v-intersection-observer="[
+          onIntersectionObserve,
+          { root: headRef, threshold: [0.25, 1] },
+        ]"
+      >
         <h4 class="my-3">Событие дня</h4>
         <button
           type="button"
@@ -60,7 +89,7 @@ const handleReload = async () => {
           class="my-5 pb-3 border-b border-b-indigo-800 dark:border-b-slate-300 overflow-hidden"
         >
           <div class="my-2">
-            {{ item.daterange.start_date }}
+            {{ FormatDateFromString(item.daterange.start_date as string) }}
           </div>
           <h6 class="text-balance my-5">{{ item.title }}</h6>
           <div
@@ -83,9 +112,13 @@ const handleReload = async () => {
             class="text-right xl:text-[clamp(0.65vw,2vw,0.8vw)] flex flex-col gap-2"
           >
             <span>Начало мероприятия: </span>
-            <span class="font-bold">{{ item.daterange.start_date }}</span>
+            <span class="font-bold">{{
+              FormatDateFromString(item.daterange.start_date as string)
+            }}</span>
             <span> Окончание мероприятия: </span>
-            <span class="font-bold">{{ item.daterange.end_date }}</span>
+            <span class="font-bold">{{
+              FormatDateFromString(item.daterange.end_date as string)
+            }}</span>
           </div>
         </div>
       </div>

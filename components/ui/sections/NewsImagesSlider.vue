@@ -2,6 +2,7 @@
 import { ref, useTemplateRef } from "vue";
 import nextSvg from "../svg/nextSvg.vue";
 import { vIntersectionObserver } from "@vueuse/components";
+import type { TNewsImages } from "../../../types/myTypes";
 
 //import type { TemplateRefsList } from "@vueuse/core";
 

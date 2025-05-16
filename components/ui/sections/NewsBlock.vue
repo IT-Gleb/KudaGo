@@ -5,7 +5,7 @@ import { countOnPage } from "../../../utils/urls";
 import NewsPagination from "./NewsPagination.vue";
 import loaderComponent from "../../loader/loaderComponent.vue";
 import { useCityes } from "../../../store/cityStore";
-import LazyCitysComponent from "../cityesComponent/citysComponent.vue";
+import CitysComponent from "../cityesComponent/citysComponent.vue";
 import { getParamsToObject } from "../../../utils/functions";
 import type { TGetParamsObject, TNewsItem, TNewsData } from "~/types/myTypes";
 
@@ -169,7 +169,7 @@ watch(SelectedItem, () => {
       <div
         class="flex flex-col-reverse md:flex-row items-center justify-between gap-2 my-5 pb-3 border-b border-b-indigo-900 dark:border-b-slate-400"
       >
-        <LazyCitysComponent />
+        <CitysComponent />
         <PagesComponent @set-news-count-on-page="handleNewsOnPage" />
         <TimerComponent />
       </div>

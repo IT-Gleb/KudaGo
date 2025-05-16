@@ -39,6 +39,24 @@ export function FormatDateToString(param: number | string): string {
   )}`;
 }
 
+export function FormatDateFromString(param: string) {
+  //Проверить param на шаблон даты
+  const regX = new RegExp(`[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}`, "giu");
+  if (!regX.test(param.trim())) {
+    return "Не верная дата передана - " + param;
+  }
+  try {
+    const dt = new Date(param.trim() + "T00:00:00");
+    return Intl.DateTimeFormat("ru-RU", {
+      year: "numeric",
+      day: "2-digit",
+      month: "long",
+    }).format(dt);
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
 export function deleteNonUsedSymbols(param: string) {
   // Удалить ненужные символы и строки
   const p1: string = "Ранее мы рассказывали";

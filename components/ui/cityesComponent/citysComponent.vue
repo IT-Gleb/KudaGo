@@ -4,7 +4,10 @@ import { storeToRefs } from "pinia";
 
 const store = useCityes();
 const { towns, SelectedItem } = storeToRefs(store);
-const { SetItem } = store;
+const { SetItem, Init } = store;
+
+await callOnce("cityes", () => Init());
+
 const nameGroup: Array<Record<string, string>> = [
   { label: "Всё", tag: "A" },
   { label: "Интересное", tag: "B" },
