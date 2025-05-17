@@ -1,4 +1,4 @@
-<script async setup lang="ts">
+<script setup lang="ts">
 import type { TEventOfDayObject } from "~/types/myTypes";
 import { FormatDateFromString, FormatNowDate } from "#imports";
 import { vIntersectionObserver } from "@vueuse/components";
@@ -106,7 +106,7 @@ watch(isVisibled, () => {
         class="w-[50px] h-[50px] mx-auto"
       />
       <div v-if="error !== null">{{ error }}</div>
-      <div v-if="error === null && status !== 'pending'">
+      <div v-if="error === null && status !== 'pending' && eventsDay !== null">
         <div
           v-for="item in eventsDay"
           :key="item.id"

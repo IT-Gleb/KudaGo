@@ -66,8 +66,12 @@ const handleObserve = (param1: number, param2: boolean) => {
         </div>
       </div>
     </section>
-    <EventOfDay v-if="ViewComponentsArray[0]" />
-    <NewsBlock v-if="ViewComponentsArray[1]" />
+    <Suspense>
+      <EventOfDay v-if="ViewComponentsArray[0]" />
+    </Suspense>
+    <Suspense>
+      <NewsBlock v-if="ViewComponentsArray[1]" />
+    </Suspense>
     <DivObserveDataLoad
       :comps-length="ViewComponentsArray.length"
       @on-observe="handleObserve"

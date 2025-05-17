@@ -1,4 +1,4 @@
-<script async setup lang="ts">
+<script setup lang="ts">
 import NewsBlockItem from "./NewsBlockItem.vue";
 import NewsImagesBlock from "./NewsImagesSlider.vue";
 import { countOnPage } from "../../../utils/urls";
@@ -174,7 +174,7 @@ watch(SelectedItem, () => {
         <TimerComponent />
       </div>
       <div
-        v-if="status === 'pending'"
+        v-if="status === 'pending' && !error"
         class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
       >
         <loaderComponent />
@@ -183,25 +183,8 @@ watch(SelectedItem, () => {
         {{ error + " Попробуйте обновить позже 8-)" }}
       </div>
 
-      <!-- <div v-if="status !== 'pending' && !error">
-        <p>
-          {{
-            news?.prevPage !== null && typeof news?.prevPage !== "undefined"
-              ? news?.prevPage
-              : "No prevPage"
-          }}
-        </p>
-        <p class="py-5">
-          {{ paramsObj }}
-        </p>
-      </div> -->
-      <!-- <div v-for="item in news?.data" :key="item.id">
-        <span>{{ item.id }}</span
-        >&nbsp;
-        <span>{{ item.title }}</span>
-      </div> -->
       <NewsBlockItem
-        v-if="status !== 'pending' && !error"
+        v-if="status !== 'pending' && !error && news"
         v-for="(item, index) in news?.data"
         :key="item.id"
         :id="item.id"

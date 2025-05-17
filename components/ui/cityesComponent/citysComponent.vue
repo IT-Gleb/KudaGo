@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script async setup lang="ts">
 import { useCityes } from "~/store/cityStore";
 import { storeToRefs } from "pinia";
 

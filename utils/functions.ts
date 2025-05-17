@@ -39,14 +39,15 @@ export function FormatDateToString(param: number | string): string {
   )}`;
 }
 
-export function FormatDateFromString(param: string) {
+export function FormatDateFromString(param: string | null) {
+  let dataStr: string = param === null ? FormatNowDate() : param;
   //Проверить param на шаблон даты
   const regX = new RegExp(`[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}`, "giu");
-  if (!regX.test(param.trim())) {
-    return "Не верная дата передана - " + param;
+  if (!regX.test(dataStr)) {
+    return "Не верная дата передана - " + dataStr;
   }
   try {
-    const dt = new Date(param.trim() + "T00:00:00");
+    const dt = new Date(dataStr + "T00:00:00");
     return Intl.DateTimeFormat("ru-RU", {
       year: "numeric",
       day: "2-digit",
