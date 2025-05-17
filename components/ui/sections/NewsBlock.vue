@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script async setup lang="ts">
 import NewsBlockItem from "./NewsBlockItem.vue";
 import NewsImagesBlock from "./NewsImagesSlider.vue";
 import { countOnPage } from "../../../utils/urls";

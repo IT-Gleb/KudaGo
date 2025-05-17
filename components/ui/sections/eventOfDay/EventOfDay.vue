@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script async setup lang="ts">
 import type { TEventOfDayObject } from "~/types/myTypes";
 import { FormatDateFromString, FormatNowDate } from "#imports";
 import { vIntersectionObserver } from "@vueuse/components";

@@ -113,3 +113,10 @@ export type TEventOfDayObject = Pick<
 export type TEventOfDay = Pick<IEventOfDay, "date" | "location" | "object">;
 
 //-------------------------------
+type TKeysOf<T> = {
+  [K in keyof T]: K;
+};
+
+const myKeys: Array<keyof TKeysOf<IDaterange>> = Object.keys({}) as Array<
+  keyof TKeysOf<IDaterange>
+>;
