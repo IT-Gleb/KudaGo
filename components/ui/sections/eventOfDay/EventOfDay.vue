@@ -2,6 +2,8 @@
 import type { TEventOfDayObject } from "~/types/myTypes";
 import { FormatDateFromString, FormatNowDate } from "#imports";
 import { vIntersectionObserver } from "@vueuse/components";
+import { ref } from "vue";
+// import { onErrorCaptured } from "vue";
 
 const abortDelay: number = 4000;
 const url = "/api/eventofday";
@@ -9,6 +11,11 @@ const url = "/api/eventofday";
 const headRef = ref<HTMLDivElement | null>();
 
 const DateEvent = ref<string>(FormatNowDate());
+const errorMessage = ref<{ isError: boolean; message: string }>({
+  isError: false,
+  message: "",
+});
+
 //console.log(DateEvent.value);
 
 const {
@@ -79,6 +86,12 @@ watch(isVisibled, () => {
     });
   }
 });
+
+// onErrorCaptured((err: Error) => {
+//   errorMessage.value.message = "Ошибка!  " + err.message;
+//   errorMessage.value.isError = true;
+//   return false;
+// });
 </script>
 
 <template>
@@ -106,7 +119,7 @@ watch(isVisibled, () => {
         class="w-[50px] h-[50px] mx-auto"
       />
       <div v-if="error !== null">{{ error }}</div>
-      <div v-if="error === null && status !== 'pending' && eventsDay !== null">
+      <div v-if="error === null && status !== 'pending'">
         <div
           v-for="item in eventsDay"
           :key="item.id"

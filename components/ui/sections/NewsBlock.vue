@@ -143,68 +143,83 @@ watch(SelectedItem, () => {
 
 <template>
   <ClientOnly>
-    <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto xl:w-[80%]">
-      <div
-        class="flex flex-row flex-wrap items-center justify-between gap-2 mt-10"
-      >
-        <h2 ref="titleRef" class="uppercase">
-          Новости
-          <span
-            class="text-[clamp(2.2vw,2.8vw,3vw)] md:text-[clamp(1vw,1.3vw,1.5vw)]"
-            >{{
-              Filtered
-                ? `Фильтр-[${SelectedItem?.name}]`
-                : `Страница-[${ActivePage}]`
-            }}</span
-          >
-        </h2>
-        <button
-          type="button"
-          class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 pt-[2px] pb-1 rounded-md"
-          @click="handleReload"
+    <NuxtErrorBoundary
+      @error="
+        () => {
+          console.log('Ups');
+        }
+      "
+    >
+      <section class="min-h-screen w-full p-2 md:w-[95%] md:mx-auto xl:w-[80%]">
+        <div
+          class="flex flex-row flex-wrap items-center justify-between gap-2 mt-10"
         >
-          <small>Обновить</small>
-        </button>
-      </div>
-      <div
-        class="flex flex-col-reverse md:flex-row items-center justify-between gap-2 my-5 pb-3 border-b border-b-indigo-900 dark:border-b-slate-400"
-      >
-        <CitysComponent />
-        <PagesComponent @set-news-count-on-page="handleNewsOnPage" />
-        <TimerComponent />
-      </div>
-      <div
-        v-if="status === 'pending' && !error"
-        class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
-      >
-        <loaderComponent />
-      </div>
-      <div v-if="error">
-        {{ error + " Попробуйте обновить позже 8-)" }}
-      </div>
+          <h2 ref="titleRef" class="uppercase">
+            Новости
+            <span
+              class="text-[clamp(2.2vw,2.8vw,3vw)] md:text-[clamp(1vw,1.3vw,1.5vw)]"
+              >{{
+                Filtered
+                  ? `Фильтр-[${SelectedItem?.name}]`
+                  : `Страница-[${ActivePage}]`
+              }}</span
+            >
+          </h2>
+          <button
+            type="button"
+            class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 pt-[2px] pb-1 rounded-md"
+            @click="handleReload"
+          >
+            <small>Обновить</small>
+          </button>
+        </div>
+        <div
+          class="flex flex-col-reverse md:flex-row items-center justify-between gap-2 my-5 pb-3 border-b border-b-indigo-900 dark:border-b-slate-400"
+        >
+          <CitysComponent />
+          <PagesComponent @set-news-count-on-page="handleNewsOnPage" />
+          <TimerComponent />
+        </div>
+        <div
+          v-if="status === 'pending' && !error"
+          class="w-[64px] h-[64px] mx-auto text-indigo-950 dark:text-slate-100"
+        >
+          <loaderComponent />
+        </div>
+        <div v-if="error">
+          {{ error + " Попробуйте обновить позже 8-)" }}
+        </div>
 
-      <NewsBlockItem
-        v-if="status !== 'pending' && !error && news"
-        v-for="(item, index) in news?.data"
-        :key="item.id"
-        :id="item.id"
-        :header="item.title"
-        :description="item.description"
-        :text="item.body_text"
-        :date_publication="item.publication_date"
-        :isodd="index % 2 === 0"
-      >
-        <NewsImagesBlock :images="item.images" />
-      </NewsBlockItem>
-      <NewsPagination
-        v-if="
+        <NewsBlockItem
+          v-if="status !== 'pending' && !error"
+          v-for="(item, index) in news?.data"
+          :key="item.id"
+          :id="item.id"
+          :header="item.title"
+          :description="item.description"
+          :text="item.body_text"
+          :date_publication="item.publication_date"
+          :isodd="index % 2 === 0"
+        >
+          <NewsImagesBlock :images="item.images" />
+        </NewsBlockItem>
+        <NewsPagination
+          v-if="
           (news?.total as number) > 1 &&
           Filtered === false
         "
-        :total-pages="news?.total as number"
-        :active-page="ActivePage"
-        @update-active-index="handleChangePage"
-      />
-    </section>
+          :total-pages="news?.total as number"
+          :active-page="ActivePage"
+          @update-active-index="handleChangePage"
+        />
+      </section>
+      <template #error="{ error, clearError }">
+        <div class="w-fit mx-auto mt-5">
+          <h3 class="w-fit mx-auto">Ошибка</h3>
+          <p>{{ error }}</p>
+          <button @click="clearError">Очистить</button>
+        </div>
+      </template>
+    </NuxtErrorBoundary>
   </ClientOnly>
 </template>

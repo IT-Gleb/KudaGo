@@ -67,10 +67,46 @@ const handleObserve = (param1: number, param2: boolean) => {
       </div>
     </section>
     <Suspense>
-      <EventOfDay v-if="ViewComponentsArray[0]" />
+      <NuxtErrorBoundary
+        @error="
+          () => {
+            console.log('Ups');
+          }
+        "
+      >
+        <EventOfDay v-if="ViewComponentsArray[0]" />
+        <template #error="{ error, clearError }">
+          <div class="w-fit mx-auto mt-5">
+            <h4 class="w-fit mx-auto">Ошибка</h4>
+            <p class="my-2 indent-2">{{ error }}</p>
+
+            <button
+              class="p-1 place-content-center bg-red-600 text-white overflow-hidden rounded-md cursor-pointer active:scale-90"
+              @click="clearError"
+            >
+              Очистить
+            </button>
+          </div>
+        </template>
+      </NuxtErrorBoundary>
     </Suspense>
     <Suspense>
-      <NewsBlock v-if="ViewComponentsArray[1]" />
+      <NuxtErrorBoundary>
+        <NewsBlock v-if="ViewComponentsArray[1]" />
+        <template #error="{ error, clearError }">
+          <div class="w-fit mx-auto mt-5">
+            <h4 class="w-fit mx-auto">Ошибка</h4>
+            <p class="my-2 indent-2">{{ error }}</p>
+
+            <button
+              class="p-1 place-content-center bg-red-600 text-white overflow-hidden rounded-md cursor-pointer active:scale-90"
+              @click="clearError"
+            >
+              Очистить
+            </button>
+          </div>
+        </template>
+      </NuxtErrorBoundary>
     </Suspense>
     <DivObserveDataLoad
       :comps-length="ViewComponentsArray.length"
