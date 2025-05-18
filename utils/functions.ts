@@ -41,6 +41,7 @@ export function FormatDateToString(param: number | string): string {
 
 export function FormatDateFromString(param: string | null) {
   let dataStr: string = param === null ? FormatNowDate() : param;
+  // let dataStr: string = param as string;
   //Проверить param на шаблон даты
   const regX = new RegExp(`[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}`, "giu");
   if (!regX.test(dataStr)) {

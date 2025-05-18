@@ -5,6 +5,7 @@ import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMen
 import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
 import EventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
 import DivObserveDataLoad from "~/components/ui/intersectObserve/DivObserveDataLoad.vue";
+import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
 
 useHead({
   title: "Новости:[Kuda Go]",
@@ -76,17 +77,7 @@ const handleObserve = (param1: number, param2: boolean) => {
       >
         <EventOfDay v-if="ViewComponentsArray[0]" />
         <template #error="{ error, clearError }">
-          <div class="w-fit mx-auto mt-5">
-            <h4 class="w-fit mx-auto">Ошибка</h4>
-            <p class="my-2 indent-2">{{ error }}</p>
-
-            <button
-              class="p-1 place-content-center bg-red-600 text-white overflow-hidden rounded-md cursor-pointer active:scale-90"
-              @click="clearError"
-            >
-              Очистить
-            </button>
-          </div>
+          <MyErrorComponent :err-object="error" :err-fn="clearError" />
         </template>
       </NuxtErrorBoundary>
     </Suspense>
@@ -94,17 +85,7 @@ const handleObserve = (param1: number, param2: boolean) => {
       <NuxtErrorBoundary>
         <NewsBlock v-if="ViewComponentsArray[1]" />
         <template #error="{ error, clearError }">
-          <div class="w-fit mx-auto mt-5">
-            <h4 class="w-fit mx-auto">Ошибка</h4>
-            <p class="my-2 indent-2">{{ error }}</p>
-
-            <button
-              class="p-1 place-content-center bg-red-600 text-white overflow-hidden rounded-md cursor-pointer active:scale-90"
-              @click="clearError"
-            >
-              Очистить
-            </button>
-          </div>
+          <MyErrorComponent :err-object="error" :err-fn="clearError" />
         </template>
       </NuxtErrorBoundary>
     </Suspense>
