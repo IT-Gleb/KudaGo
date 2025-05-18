@@ -11,10 +11,10 @@ const url = "/api/eventofday";
 const headRef = ref<HTMLDivElement | null>();
 
 const DateEvent = ref<string>(FormatNowDate());
-const errorMessage = ref<{ isError: boolean; message: string }>({
-  isError: false,
-  message: "",
-});
+// const errorMessage = ref<{ isError: boolean; message: string }>({
+//   isError: false,
+//   message: "",
+// });
 
 //console.log(DateEvent.value);
 
