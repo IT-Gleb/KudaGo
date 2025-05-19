@@ -93,6 +93,7 @@ export function deleteNonUsedSymbols(param: string) {
   txt = txt.replaceAll(reg, "");
   reg = new RegExp(`(?<=(${p4})).*`, "gmi");
   txt = txt.replaceAll(reg, "");
+  txt = txt.replace(reg, "");
   txt = txt.replaceAll(p1, "");
   txt = txt.replaceAll(p2, "");
   txt = txt.replaceAll(p3, "");
@@ -286,9 +287,13 @@ export function convertToSmallData(param: IEventOfDayRoot) {
       let str = tmp.body_text.match(reg);
       if (str && str.length > 0) {
         let tmp3 = str?.join("");
-        const reg1 = new RegExp(`(?<=(<div)).*`, "gmi");
+        let reg1 = new RegExp(`(?<=(<div)).*`, "gmi");
         tmp3 = tmp3.replace(reg1, "");
+        reg1 = new RegExp(`(?<=(<iframe)).*`, "gmi");
+        tmp3 = tmp3.replace(reg1, "");
+
         tmp3 = tmp3.replace("<div", "");
+        tmp3 = tmp3.replace("<iframe", "");
         tmp3 = tmp3.replace("}]}}]", "");
         tmp3 = tmp3.replaceAll("\\", "");
         tmp3 = tmp3.replaceAll(".,", ".");
@@ -296,9 +301,31 @@ export function convertToSmallData(param: IEventOfDayRoot) {
         tmp3 = tmp3.replaceAll(".", ". ");
         tmp3 = tmp3.replaceAll("предоставлено организатором", "");
         tmp3 = tmp3.replaceAll("предоставлены организатором", "");
+
+        //Убрать <strong><strong/>
+        reg1 = new RegExp("<strong>.*?</strong>", "gmi");
+        tmp3
+          .matchAll(reg1)
+          .forEach((item) => (tmp3 = tmp3.replace(item[0], "")));
+
+        //Вставить пробел с точкой перед заглавной буквой
+        reg1 = new RegExp(`([а-я)!?])([А-Я])`, "gm");
+        tmp3.matchAll(reg1).forEach((item) => {
+          if (item && item[0]) {
+            let temp1 = item[0].split("");
+            if (temp1.includes("?") || temp1.includes("!")) {
+              temp1.splice(1, 0, " ");
+            } else {
+              temp1.splice(1, 0, ". ");
+            }
+            let temp2 = temp1.join("");
+            tmp3 = tmp3.replace(item[0], temp2);
+          }
+        });
+
         tmp3 = tmp3.trim();
         if (tmp3[tmp3.length - 1] !== ".") {
-          tmp3 = tmp3 + ".";
+          tmp3 += ".";
         }
         tmp.body_text = tmp3;
       }

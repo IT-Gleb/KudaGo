@@ -31,7 +31,7 @@ for (let indx: number = 0; indx < PagesCount.value; indx++) {
         v-for="item in pages"
         :key="item"
         :tabindex="item"
-        class="w-[20px] h-[20px] md:w-[32px] md:h-[32px] overflow-hidden font-bold cursor-pointer active:scale-90 place-content-center focus:outline focus:outline-offset-2 focus:outline-indigo-900 focus:dark:outline-slate-200"
+        class="w-[20px] h-[20px] -inset-10 md:w-[32px] md:h-[32px] lg:inset-0 overflow-hidden font-bold cursor-pointer active:scale-90 place-content-center focus:outline focus:outline-offset-2 focus:outline-indigo-900 focus:dark:outline-slate-200"
         :class="
           props.activePage === item
             ? 'bg-indigo-400 text-yellow-100 dark:bg-yellow-500 dark:text-red-600 outline outline-offset-2 outline-indigo-900 dark:outline-slate-200'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
-import MainScreenMenu from "~/components/ui/buttons/MainScreenMenu/MainScreenMenu.vue";
+import MainScreenMenu from "~/components/ui/menus/MainScreenMenu/MainScreenMenu.vue";
 import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
 import EventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
 import DivObserveDataLoad from "~/components/ui/intersectObserve/DivObserveDataLoad.vue";
@@ -15,7 +15,7 @@ useHead({
   ],
 });
 
-const ViewComponentsArray = reactive([false, false]);
+const ViewComponentsArray = reactive<boolean[]>([false, false]);
 const handleObserve = (param1: number, param2: boolean) => {
   // console.log("index: ", param1, "value: ", param2);
   if (param2) {
