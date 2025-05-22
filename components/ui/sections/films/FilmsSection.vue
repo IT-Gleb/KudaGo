@@ -61,7 +61,7 @@ watch(films, () => {
       <button
         type="button"
         @click="handleRefresh"
-        class="bg-indigo-950 -inset-4 xl:inset-0 text-slate-300 dark:bg-slate-300 cursor-pointer active:scale-90 p-1 place-content-center overflow-hidden rounded-md"
+        class="bg-indigo-950 -inset-4 xl:inset-0 text-slate-300 dark:bg-slate-300 dark:text-indigo-900 cursor-pointer active:scale-90 p-1 place-content-center overflow-hidden rounded-md"
       >
         <small>Обновить</small>
       </button>
@@ -81,18 +81,18 @@ watch(films, () => {
         v-if="(films as IFilmsRoot).previous"
         type="button"
         @click="handlerPrev"
-        class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+        class="p-1 w-[40px] h-[40px] inset-10 -scale-100 place-content-center text-indigo-900 dark:text-slate-300 active:scale-90 rounded-sm cursor-pointer"
       >
-        <small>Назад</small>
+        <UiSvgNextSvg />
       </button>
       <span>Страница - {{ paramPage }}</span>
       <button
         v-if="(films as IFilmsRoot).next"
         type="button"
         @click="handlerNext"
-        class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+        class="p-1 w-[40px] h-[40px] inset-10 place-content-center text-indigo-900 dark:text-slate-300 active:scale-90 rounded-sm cursor-pointer"
       >
-        <small>Вперед</small>
+        <UiSvgNextSvg />
       </button>
     </div>
 
@@ -106,7 +106,11 @@ watch(films, () => {
           class="w-[200px] h-[240px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
         >
           <img
-            :src="item.poster.image"
+            :src="
+              item.poster !== null && typeof item.poster.image !== undefined
+                ? item.poster.image
+                : ''
+            "
             alt=""
             loading="lazy"
             decoding="async"
@@ -140,24 +144,24 @@ watch(films, () => {
       </article>
       <div
         v-if="status === 'success' && !error"
-        class="flex flex-row items-center justify-center gap-4 mb-5"
+        class="flex flex-row items-center justify-center gap-4 my-5"
       >
         <button
           v-if="(films as IFilmsRoot).previous"
           type="button"
           @click="handlerPrev"
-          class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+          class="p-1 w-[40px] h-[40px] inset-10 -scale-100 place-content-center text-indigo-900 dark:text-slate-300 active:scale-90 rounded-sm cursor-pointer"
         >
-          <small>Назад</small>
+          <UiSvgNextSvg />
         </button>
         <span>Страница - {{ paramPage }}</span>
         <button
           v-if="(films as IFilmsRoot).next"
           type="button"
           @click="handlerNext"
-          class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+          class="p-1 w-[40px] h-[40px] inset-10 place-content-center text-indigo-900 dark:text-slate-300 active:scale-90 rounded-sm cursor-pointer"
         >
-          <small>Вперед</small>
+          <UiSvgNextSvg />
         </button>
       </div>
     </div>
