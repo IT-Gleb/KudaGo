@@ -308,7 +308,13 @@ export function convertToSmallData(param: IEventOfDayRoot) {
           .matchAll(reg1)
           .forEach((item) => (tmp3 = tmp3.replace(item[0], "")));
 
-        //Вставить пробел с точкой перед заглавной буквой
+        //Убрать <script и все после
+        reg1 = new RegExp("<script.*script>", "gmi");
+        tmp3
+          .matchAll(reg1)
+          .forEach((item) => (tmp3 = tmp3.replace(item[0], "")));
+
+        //Вставить пробел с точкой перед заглавной буквой, если перед ней прописная буква
         reg1 = new RegExp(`([а-я)!?])([А-Я])`, "gm");
         tmp3.matchAll(reg1).forEach((item) => {
           if (item && item[0]) {
