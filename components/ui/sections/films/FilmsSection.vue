@@ -1,0 +1,165 @@
+<script async setup lang="ts">
+import type { IFilmsRoot } from "~/types/filmTypes";
+import { FilmsController } from "./controllers/FilmsController";
+import { ref } from "vue";
+
+const paramPage = ref<number>(1);
+const totalPage = ref<number>(-1);
+
+const filmsRef = ref<HTMLDivElement | null>(null);
+let urlStr = ref<string>(
+  `https://kudago.com/public-api/v1.4/movies/?page_size=10&page=${paramPage.value}&expand=poster,description&fields=id,title,description,poster,year,country,budget,budget_currency,imdb_rating`
+);
+
+const { status, films, error } = await FilmsController(paramPage);
+
+const handleRefresh = async () => {
+  checkPage(0);
+  paramPage.value = 1;
+};
+
+watch(paramPage, () => {
+  paramPage.value = Math.min(
+    paramPage.value,
+    Math.ceil((films.value as IFilmsRoot).count / 10)
+  );
+  paramPage.value = Math.max(1, paramPage.value);
+});
+
+const checkPage = (param: -1 | 0 | 1) => {
+  (filmsRef.value as HTMLElement).scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "start",
+  });
+
+  paramPage.value += param;
+};
+
+const handlerNext = async () => {
+  checkPage(1);
+};
+
+const handlerPrev = async () => {
+  checkPage(-1);
+};
+
+watch(films, () => {
+  if (films.value) {
+    totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
+  }
+});
+</script>
+
+<template>
+  <section class="w-[96%] xl:w-[80%] mx-auto min-h-screen p-1">
+    <div ref="filmsRef" class="p-1 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <h4 class="my-5">Фильмы</h4>
+        <span>[Страница - {{ paramPage }} из {{ totalPage }}]</span>
+      </div>
+      <button
+        type="button"
+        @click="handleRefresh"
+        class="bg-indigo-950 -inset-4 xl:inset-0 text-slate-300 dark:bg-slate-300 cursor-pointer active:scale-90 p-1 place-content-center overflow-hidden rounded-md"
+      >
+        <small>Обновить</small>
+      </button>
+    </div>
+
+    <div
+      v-if="status === 'pending' && !error"
+      class="w-[50px] h-[50px] mx-auto mt-5"
+    >
+      <LoaderComponent />
+    </div>
+    <div
+      v-if="status === 'success' && !error"
+      class="flex flex-row items-center justify-center gap-4 mb-5"
+    >
+      <button
+        v-if="(films as IFilmsRoot).previous"
+        type="button"
+        @click="handlerPrev"
+        class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+      >
+        <small>Назад</small>
+      </button>
+      <span>Страница - {{ paramPage }}</span>
+      <button
+        v-if="(films as IFilmsRoot).next"
+        type="button"
+        @click="handlerNext"
+        class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+      >
+        <small>Вперед</small>
+      </button>
+    </div>
+
+    <div v-if="status !== 'pending' && !error" class="w-fit mx-auto">
+      <article
+        v-for="item in (films as IFilmsRoot).results"
+        :key="item.id"
+        class="w-[99%] mx-auto grid grid-cols-[220px_1fr] gap-2 odd:bg-slate-50 dark:odd:bg-slate-950"
+      >
+        <div
+          class="w-[200px] h-[240px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
+        >
+          <img
+            :src="item.poster.image"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="block w-full h-full"
+          />
+        </div>
+        <div>
+          <h5 class="mb-5">{{ item.title }}</h5>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
+            <div>{{ item.imdb_rating }}</div>
+            <div class="font-bold"><small>Год выпуска:</small></div>
+            <div>{{ item.year }}</div>
+            <div class="font-bold"><small>Страна:</small></div>
+            <div>{{ item.country }}</div>
+            <div v-if="item.budget as number > 0" class="font-bold">
+              <small>Бюджет фильма:</small>
+            </div>
+            <div v-if="item.budget as number > 0">
+              {{
+                Intl.NumberFormat("en-EN", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(item.budget as number)
+              }}
+            </div>
+            <div class="font-bold"><small>Описание:</small></div>
+            <p class="indent-2">{{ item.description }}</p>
+          </div>
+        </div>
+      </article>
+      <div
+        v-if="status === 'success' && !error"
+        class="flex flex-row items-center justify-center gap-4 mb-5"
+      >
+        <button
+          v-if="(films as IFilmsRoot).previous"
+          type="button"
+          @click="handlerPrev"
+          class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+        >
+          <small>Назад</small>
+        </button>
+        <span>Страница - {{ paramPage }}</span>
+        <button
+          v-if="(films as IFilmsRoot).next"
+          type="button"
+          @click="handlerNext"
+          class="p-1 place-content-center bg-indigo-900 text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+        >
+          <small>Вперед</small>
+        </button>
+      </div>
+    </div>
+  </section>
+</template>

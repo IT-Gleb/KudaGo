@@ -6,6 +6,7 @@ import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
 import EventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
 import DivObserveDataLoad from "~/components/ui/intersectObserve/DivObserveDataLoad.vue";
 import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
+import FilmsSection from "~/components/ui/sections/films/FilmsSection.vue";
 
 useHead({
   title: "Новости:[Kuda Go]",
@@ -15,7 +16,7 @@ useHead({
   ],
 });
 
-const ViewComponentsArray = reactive<boolean[]>([false, false]);
+const ViewComponentsArray = reactive<boolean[]>([false, false, false]);
 const handleObserve = (param1: number, param2: boolean) => {
   // console.log("index: ", param1, "value: ", param2);
   if (param2) {
@@ -84,6 +85,14 @@ const handleObserve = (param1: number, param2: boolean) => {
     <Suspense>
       <NuxtErrorBoundary>
         <NewsBlock v-if="ViewComponentsArray[1]" />
+        <template #error="{ error, clearError }">
+          <MyErrorComponent :err-object="error" :err-fn="clearError" />
+        </template>
+      </NuxtErrorBoundary>
+    </Suspense>
+    <Suspense>
+      <NuxtErrorBoundary>
+        <FilmsSection v-if="ViewComponentsArray[2]" />
         <template #error="{ error, clearError }">
           <MyErrorComponent :err-object="error" :err-fn="clearError" />
         </template>

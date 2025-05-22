@@ -32,6 +32,7 @@ export default defineNuxtConfig({
       //   maxAge: 10,
       // },
     },
+    "/api/films": { prerender: true },
     "/api/cityes": {
       swr: true,
       cache: {
