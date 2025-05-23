@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { markRaw } from "vue";
+import { markRaw, type Component } from "vue";
 import Museum from "~/components/svg/Museum.vue";
 import RaveConcert from "~/components/svg/RaveConcert.vue";
 import MainScreenMenu from "~/components/ui/menus/MainScreenMenu/MainScreenMenu.vue";
@@ -17,7 +17,9 @@ useHead({
   ],
 });
 
-const ViewComponentsArray = ref<{ inview: boolean; component: any }[]>([
+const ViewComponentsArray = reactive<
+  { inview: boolean; component: Component }[]
+>([
   { inview: false, component: markRaw(EventOfDay) },
   { inview: false, component: markRaw(NewsBlock) },
   { inview: false, component: markRaw(FilmsSection) },
@@ -25,7 +27,7 @@ const ViewComponentsArray = ref<{ inview: boolean; component: any }[]>([
 const handleObserve = (param1: number, param2: boolean) => {
   // console.log("index: ", param1, "value: ", param2);
   if (param2) {
-    ViewComponentsArray.value[param1].inview = param2;
+    ViewComponentsArray[param1].inview = param2;
   }
 };
 </script>
