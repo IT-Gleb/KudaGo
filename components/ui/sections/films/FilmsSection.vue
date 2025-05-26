@@ -121,7 +121,7 @@ watch(films, () => {
           <h5 class="mb-5">{{ item.title }}</h5>
           <div class="grid grid-cols-2 gap-2">
             <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
-            <div>{{ item.imdb_rating }}</div>
+            <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
             <div class="font-bold"><small>Год выпуска:</small></div>
             <div>{{ item.year }}</div>
             <div class="font-bold"><small>Страна:</small></div>
@@ -137,8 +137,15 @@ watch(films, () => {
                 }).format(item.budget as number)
               }}
             </div>
-            <div class="font-bold"><small>Описание:</small></div>
-            <p class="indent-2">{{ item.description }}</p>
+            <div v-if="item.description" class="font-bold">
+              <small>Описание:</small>
+            </div>
+            <p
+              v-if="item.description && item.description?.length > 0"
+              class="indent-2"
+            >
+              {{ item.description }}
+            </p>
           </div>
         </div>
       </article>
