@@ -7,7 +7,7 @@ import type { TNewsImages } from "../../../types/myTypes";
 //import type { TemplateRefsList } from "@vueuse/core";
 
 const itemsRef = ref<HTMLDivElement[]>([]);
-const ActiveIndex = ref<number>(0);
+const ActiveIndex = ref<number>(-1);
 
 const props = defineProps<{ images: TNewsImages }>();
 const targetIsVisible = shallowRef(true);
@@ -32,12 +32,23 @@ const ItemInView = (paramIndex: number) => {
 const handleNext = (param: TImageNextPrevParam) => {
   const { length } = itemsRef.value;
   if (length > 0) {
+    let ImageIndex: number = ActiveIndex.value + param;
+
     //ActiveIndex.value += 1;
-    ActiveIndex.value = Math.min(ActiveIndex.value + param, length - 1);
-    if (ActiveIndex.value < 0) {
-      ActiveIndex.value = 0;
+    // ActiveIndex.value = Math.min(ActiveIndex.value + param, length - 1);
+    ImageIndex = Math.min(ImageIndex, length - 1);
+    // if (ActiveIndex.value < 0) {
+    //   ActiveIndex.value = 0;
+    // }
+    if (ImageIndex < 0) {
+      ImageIndex = 0;
     }
-    ItemInView(ActiveIndex.value);
+
+    // ItemInView(ActiveIndex.value);
+    ItemInView(ImageIndex);
+    ActiveIndex.value !== ImageIndex
+      ? (ActiveIndex.value = ImageIndex)
+      : (ActiveIndex.value = ActiveIndex.value);
   }
 };
 
@@ -100,7 +111,11 @@ onMounted(() => {
             class="w-[320px] sm:w-[480px] lg:w-[640px] object-left-top object-cover"
             v-intersection-observer="[
               onIntersectionObserver,
-              { root, rootMargin: '0px 100% 100% 50%', threshold: [0.5, 1] },
+              {
+                root,
+                rootMargin: '0px 100% 100% 50%',
+                threshold: [0.75, 1],
+              },
             ]"
           >
             <img
