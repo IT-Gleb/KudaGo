@@ -104,14 +104,14 @@ const handleUp = () => {
           <small>К началу</small>
         </button>
 
-        <button
+        <!-- <button
           type="button"
           @click="handleClose"
           class="hover:underline cursor-pointer active:scale-90 font-bold"
           inert
         >
           <small> Свернуть </small>
-        </button>
+        </button> -->
       </div>
     </article>
   </details>
