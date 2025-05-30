@@ -361,3 +361,10 @@ export function ExtractParagraphData(param: string): string {
 
   return txt;
 }
+
+export function randomIntegerFromMinMax(
+  paramMin: number,
+  paramMax: number
+): number {
+  return Math.floor(paramMin + Math.random() * (paramMax + 1 - paramMin));
+}

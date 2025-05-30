@@ -5,7 +5,6 @@ import { vIntersectionObserver } from "@vueuse/components";
 const DateStr = ref<string>();
 const timerRef = ref<number>(-1);
 const delayTimer: number = 1200;
-const spanRef = ref<HTMLSpanElement>();
 
 function formatDate(): string {
   const dt: number = Date.now();
@@ -47,8 +46,7 @@ onUnmounted(() => {
 
 <template>
   <span
-    ref="spanRef"
-    v-intersection-observer="[onVisible, { root: spanRef, threshold: [1] }]"
+    v-intersection-observer="[onVisible, { threshold: [1] }]"
     class="font-mono font-bold whitespace-nowrap"
     ><small>{{ DateStr }}</small></span
   >

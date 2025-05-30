@@ -1,23 +1,24 @@
 <script async setup lang="ts">
 import type { IFilmsRoot } from "~/types/filmTypes";
 import { FilmsController } from "./controllers/FilmsController";
+import { randomIntegerFromMinMax } from "#imports";
+
 import { ref } from "vue";
 
 type TPageParam = -1 | 0 | 1;
 
-const paramPage = ref<number>(1);
+const paramPage = ref<number>(randomIntegerFromMinMax(1, 500));
 const totalPage = ref<number>(-1);
 
 const filmsRef = ref<HTMLDivElement | null>(null);
-let urlStr = ref<string>(
-  `https://kudago.com/public-api/v1.4/movies/?page_size=10&page=${paramPage.value}&expand=poster,description&fields=id,title,description,poster,year,country,budget,budget_currency,imdb_rating`
-);
 
 const { status, films, error } = await FilmsController(paramPage);
 
 const handleRefresh = async () => {
   checkPage(0);
-  paramPage.value = 1;
+  const total: number =
+    totalPage.value !== null && totalPage.value > 1 ? totalPage.value : 1;
+  paramPage.value = randomIntegerFromMinMax(1, total);
 };
 
 watch(paramPage, () => {

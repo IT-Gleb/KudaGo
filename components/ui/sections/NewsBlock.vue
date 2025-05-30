@@ -8,6 +8,7 @@ import { useCityes } from "../../../store/cityStore";
 import CitysComponent from "../cityesComponent/citysComponent.vue";
 import { getParamsToObject } from "../../../utils/functions";
 import type { TGetParamsObject, TNewsItem, TNewsData } from "~/types/myTypes";
+import NewsError from "../NewsError.vue";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
@@ -180,7 +181,7 @@ watch(SelectedItem, () => {
         <loaderComponent />
       </div>
       <div v-if="error">
-        {{ error + " Попробуйте обновить позже 8-)" }}
+        <NewsError :error-msg="error.message" />
       </div>
 
       <NewsBlockItem
