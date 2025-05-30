@@ -28,13 +28,6 @@ type TSelectGroups = {
 
 const selectedData = ref<TSelectGroups>({ groups: [] });
 
-// const handleChange = (event: Event) => {
-//   const { value } = <HTMLSelectElement>event.target;
-
-//   //console.log(value);
-//   SetItem(value);
-// };
-
 watch(SelectedItem, () => {
   //console.log("Selected: ", SelectedItem.value?.slug);
   City.value = SelectedItem.value;

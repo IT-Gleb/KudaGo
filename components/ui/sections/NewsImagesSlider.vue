@@ -27,6 +27,9 @@ const ItemInView = (paramIndex: number) => {
     block: "nearest",
     inline: "center",
   });
+  ActiveIndex.value !== paramIndex
+    ? (ActiveIndex.value = paramIndex)
+    : (ActiveIndex.value = ActiveIndex.value);
 };
 
 const handleNext = (param: TImageNextPrevParam) => {
@@ -46,9 +49,6 @@ const handleNext = (param: TImageNextPrevParam) => {
 
     // ItemInView(ActiveIndex.value);
     ItemInView(ImageIndex);
-    ActiveIndex.value !== ImageIndex
-      ? (ActiveIndex.value = ImageIndex)
-      : (ActiveIndex.value = ActiveIndex.value);
   }
 };
 
@@ -63,7 +63,7 @@ function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
   targetIsVisible.value = entry?.isIntersecting || false;
   if (targetIsVisible.value) {
     const item: number = Number((entry.target as HTMLDivElement).dataset.item);
-    if (ActiveIndex.value !== item) {
+    if (ActiveIndex.value !== item && !isNaN(item)) {
       ActiveIndex.value = item;
     }
   }

@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { vIntersectionObserver } from "@vueuse/components";
+
 const DateStr = ref<string>();
-const timerRef = ref<number>(0);
-const delayTimer: number = 1500;
+const timerRef = ref<number>(-1);
+const delayTimer: number = 1200;
+const spanRef = ref<HTMLSpanElement>();
 
 function formatDate(): string {
   const dt: number = Date.now();
   return Intl.DateTimeFormat("ru-RU", {
     day: "2-digit",
-    month: "2-digit",
+    month: "long",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
@@ -18,19 +21,35 @@ function formatDate(): string {
 
 DateStr.value = formatDate();
 
-onMounted(() => {
-  timerRef.value = window.setInterval(() => {
-    DateStr.value = formatDate();
-  }, delayTimer);
-});
+function clearTimer() {
+  if (timerRef.value !== -1) {
+    window.clearInterval(timerRef.value);
+    timerRef.value = -1;
+  }
+}
+
+function onVisible([entry]: IntersectionObserverEntry[]) {
+  const isVisible: boolean = entry.isIntersecting ?? false;
+  if (isVisible) {
+    clearTimer();
+    timerRef.value = window.setInterval(() => {
+      DateStr.value = formatDate();
+    }, delayTimer);
+  } else {
+    clearTimer();
+  }
+}
 
 onUnmounted(() => {
-  window.clearInterval(timerRef.value);
+  clearTimer();
 });
 </script>
 
 <template>
-  <span class="font-mono font-bold whitespace-nowrap"
+  <span
+    ref="spanRef"
+    v-intersection-observer="[onVisible, { root: spanRef, threshold: [1] }]"
+    class="font-mono font-bold whitespace-nowrap"
     ><small>{{ DateStr }}</small></span
   >
 </template>

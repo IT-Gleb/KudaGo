@@ -3,6 +3,8 @@ import type { IFilmsRoot } from "~/types/filmTypes";
 import { FilmsController } from "./controllers/FilmsController";
 import { ref } from "vue";
 
+type TPageParam = -1 | 0 | 1;
+
 const paramPage = ref<number>(1);
 const totalPage = ref<number>(-1);
 
@@ -26,7 +28,7 @@ watch(paramPage, () => {
   paramPage.value = Math.max(1, paramPage.value);
 });
 
-const checkPage = (param: -1 | 0 | 1) => {
+const checkPage = (param: TPageParam) => {
   (filmsRef.value as HTMLElement).scrollIntoView({
     behavior: "smooth",
     block: "start",
