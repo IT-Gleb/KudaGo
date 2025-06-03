@@ -356,7 +356,7 @@ export function convertToSmallData(param: IEventOfDayRoot) {
 export function ExtractParagraphData(param: string): string {
   let txt: string = param;
 
-  let reg1 = new RegExp("([<p/>])", "gmi");
+  let reg1 = new RegExp("([<p/>])", "gm");
   txt.matchAll(reg1).forEach((item) => (txt = txt.replace(item[0], "")));
 
   return txt;

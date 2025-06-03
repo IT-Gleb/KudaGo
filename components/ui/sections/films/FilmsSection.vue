@@ -121,7 +121,7 @@ watch(films, () => {
           />
         </div>
         <div>
-          <h5 class="mb-5">{{ item.title }}</h5>
+          <h5 class="mb-5 text-balance">{{ item.title }}</h5>
           <div class="grid grid-cols-2 gap-2">
             <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
             <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
