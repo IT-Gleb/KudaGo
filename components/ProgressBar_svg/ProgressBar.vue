@@ -1,4 +1,5 @@
 <script setup lang="ts">
+export type TKindBar = "normal" | "dashboard";
 export type TProgresBar =
   | { type: "in-progress"; color: "#60a5fa" }
   | { type: "success"; color: "#87c500" }
@@ -17,12 +18,22 @@ const maxStep: number = 30;
 const stepDefault: number = 10;
 const stepDelay = 200;
 
+const pTypeBar = ref<TKindBar>("dashboard");
+
 const pBar = ref<TProgresBar>(props.progressType);
 
 const radius =
   Math.min(props.width, props.height ? props.height : props.width) / 2 - 8;
 const radiusStr: string = `${radius}`;
-const total = 2 * (Math.PI * radius);
+let total: number = 0;
+if (pTypeBar.value === "normal") {
+  total = 2 * (Math.PI * radius);
+}
+
+if (pTypeBar.value === "dashboard") {
+  total = 350;
+}
+
 const step = ref<number>(
   props.step ? Math.min(Math.max(1, props.step), maxStep) : stepDefault
 );
@@ -82,6 +93,7 @@ onMounted(() => {
 
 <template>
   <svg
+    v-if="pTypeBar === 'normal'"
     xmlns="http://www.w3.org/2000/svg"
     version="1.1"
     :width="props.width"
@@ -235,10 +247,130 @@ onMounted(() => {
       ></animate>
     </svg>
   </svg>
+
+  <svg
+    v-if="pTypeBar === 'dashboard'"
+    xmlns="http://www.w3.org/2000/svg"
+    :height="props.height ? props.height : props.width"
+    :width="props.width"
+    viewBox="0 0 200 200"
+    data-value="40"
+    fill="none"
+    @click="handleProgress"
+    @dblclick="handleEsc"
+    class="cursor-pointer"
+  >
+    <defs>
+      <linearGradient
+        id="redGreenGradient"
+        gradientUnits="userSpaceOnUse"
+        spreadMethod="reflect"
+        x1="100%"
+        y1="0%"
+        x2="0%"
+        y2="0%"
+      >
+        <stop offset="0%" stop-color="#87c500"></stop>
+        <stop offset="60%" :stop-color="pBar.color"></stop>
+        <stop offset="98%" stop-color="#ec2424"></stop>
+      </linearGradient>
+    </defs>
+    <path
+      stroke="#ccc"
+      stroke-width="12"
+      d="M41 149.5a77 77 0 1 1 117.93 0"
+      fill="none"
+    />
+    <path
+      stroke="url(#redGreenGradient)"
+      stroke-width="12"
+      d="M41 149.5a77 77 0 1 1 117.93 0"
+      fill="none"
+      :stroke-dasharray="strokeDashArray"
+      :stroke-offset="total"
+    />
+    <path
+      v-if="pBar.type === 'success'"
+      :stroke="pBar.color"
+      stroke-width="12"
+      d="M41 149.5a77 77 0 1 1 117.93 0"
+      fill="none"
+    />
+
+    <text
+      v-if="pBar.type === 'in-progress'"
+      x="50%"
+      :y="props.width > maxWidth ? '58%' : '55%'"
+      :font-size="props.width > maxWidth ? 40 : 20"
+      font-family="Verdana,Tahoma"
+      text-anchor="middle"
+      :fill="
+        progress > total - total / 5
+          ? '#87c500'
+          : progress < total / 4
+          ? '#ec2424'
+          : pBar.color
+      "
+    >
+      {{ textProgress }}
+    </text>
+    <svg
+      v-if="
+        pBar.type === 'success' ||
+        pBar.type === 'warning' ||
+        pBar.type === 'error'
+      "
+      id="svg3"
+      :width="pBar.type === 'success' ? props.width / 3 : props.width / 4"
+      :height="props.height ? props.height / 3 : props.width / 3"
+      :x="
+        pBar.type === 'success'
+          ? '26%'
+          : pBar.type === 'warning'
+          ? '29%'
+          : '28%'
+      "
+      y="20%"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      fill-opacity="0"
+    >
+      <path
+        v-if="pBar.type === 'success'"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M17.0303 8.78039L8.99993 16.8107L5.4696 13.2804L6.53026 12.2197L8.99993 14.6894L15.9696 7.71973L17.0303 8.78039Z"
+        :fill="pBar.color"
+      />
+      <path
+        v-if="pBar.type === 'warning'"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
+        :fill="pBar.color"
+      />
+      <path
+        v-if="pBar.type === 'error'"
+        d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"
+        :fill="pBar.color"
+      />
+      <animate
+        attributeName="fill-opacity"
+        dur="3s"
+        begin="2s"
+        values="0;1;0;"
+        fill="freeze"
+        repeatCount="indefinite"
+      ></animate>
+    </svg>
+  </svg>
 </template>
 
 <!-- repeatCount="indefinite" -->
 <!-- stroke-linecap="round" -->
+
+<!-- stroke-dashoffset="300" -->
 
 <style lang="css" scoped>
 svg circle {
@@ -253,5 +385,6 @@ svg text {
 }
 svg path {
   transform-origin: center center;
+  transition: stroke-dasharray 240ms linear;
 }
 </style>
