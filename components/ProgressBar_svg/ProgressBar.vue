@@ -104,9 +104,14 @@ watch(
 watch(
   () => props.width,
   (newValue) => {
-    circleStrokeWidth.value = newValue < maxWidth ? 8 : 20;
+    circleStrokeWidth.value =
+      newValue < maxWidth ? (newValue < maxWidth / 2 ? 4 : 8) : 16;
     circleRadius.value = Math.round(newValue / 2 - circleStrokeWidth.value);
-    newValue < maxWidth ? (fontSize.value = 14) : (fontSize.value = 20);
+    newValue < maxWidth
+      ? newValue < maxWidth / 2
+        ? (fontSize.value = 10)
+        : (fontSize.value = 14)
+      : (fontSize.value = 20);
 
     if (innerView.value === "dashboard") {
       total.value = calculateLength();
@@ -169,8 +174,11 @@ onUpdated(() => {
         x2="0%"
         y2="100%"
       >
-        <stop offset="0%" :stop-color="progressOptions['success'].color"></stop>
-        <stop offset="100%" :stop-color="progressOptions['error'].color"></stop>
+        <stop
+          offset="35%"
+          :stop-color="progressOptions['success'].color"
+        ></stop>
+        <stop offset="65%" :stop-color="progressOptions['error'].color"></stop>
       </linearGradient>
       <clipPath id="cutLeft">
         <rect x="0%" y="50%" width="100%" height="100%"></rect>
@@ -188,6 +196,7 @@ onUpdated(() => {
       :stroke-width="circleStrokeWidth"
       stroke-linecap="square"
     ></circle>
+
     <circle
       cx="50%"
       cy="50%"
@@ -202,31 +211,9 @@ onUpdated(() => {
       stroke-linecap="square"
       :stroke-dasharray="animateStrokeArray"
     ></circle>
-
-    <circle
-      cx="50%"
-      cy="50%"
-      :r="circleRadius"
-      fill="none"
-      :stroke="
-        innerState === 'in-progress'
-          ? 'url(#greenRedGradient)'
-          : innerState === 'warning'
-          ? progressOptions[innerState].color
-          : innerState === 'success'
-          ? progressOptions[innerState].color
-          : innerState === 'error'
-          ? progressOptions[innerState].color
-          : 'url(#greenRedGradient)'
-      "
-      :stroke-width="circleStrokeWidth"
-      stroke-linecap="square"
-      :stroke-dasharray="animateStrokeArray"
-      clip-path="url(#cutLeft)"
-    ></circle>
     <text
       v-if="innerState === 'in-progress'"
-      y="52%"
+      :y="props.width / 2 + 4"
       :x="textX"
       font-family="Tahoma,Verdana"
       font-weight="500"
@@ -243,9 +230,9 @@ onUpdated(() => {
       {{ value }}%
     </text>
     <svg
-      version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
+      version="1.1"
       width="100%"
       height="100%"
       fill="none"
@@ -321,20 +308,20 @@ onUpdated(() => {
     <defs>
       <linearGradient
         id="greenRedGradient2"
-        gradientUnits="userSpaceOnUse"
+        gradientUnits="objectBoundingBox"
         spreadMethod="pad"
         x1="0%"
-        y1="0%"
+        y1="100%"
         x2="100%"
-        y2="0%"
+        y2="100%"
       >
         <stop offset="0%" :stop-color="progressOptions['error'].color"></stop>
         <stop
-          offset="50%"
+          offset="65%"
           :stop-color="progressOptions['in-progress'].color"
         ></stop>
         <stop
-          offset="100%"
+          offset="85%"
           :stop-color="progressOptions['success'].color"
         ></stop>
       </linearGradient>
@@ -365,8 +352,8 @@ onUpdated(() => {
     </g>
     <text
       v-if="innerState === 'in-progress'"
-      y="52%"
       :x="textX"
+      :y="props.width / 2 + 4"
       font-family="Tahoma,Verdana"
       font-weight="500"
       text-anchor="middle"
@@ -446,6 +433,8 @@ onUpdated(() => {
     </svg>
   </svg>
 </template>
+
+<!-- gradientUnits="userSpaceOnUse" -->
 
 <style lang="css" scoped>
 svg circle {
