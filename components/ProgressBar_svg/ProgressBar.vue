@@ -1,392 +1,455 @@
 <script setup lang="ts">
-export type TKindBar = "normal" | "dashboard";
-export type TProgressBar = "in-progress" | "success" | "warning" | "error";
-export type TColorBar = Record<TProgressBar, { color: string }>;
+import { ref, watch, onUpdated } from "vue";
+const maxWidth: number = 200;
 
-const Colors: TColorBar = {
+export type TProgressView = "normal" | "dashboard";
+export type TProgressState = "in-progress" | "success" | "warning" | "error";
+export type TColorBar = Record<TProgressState, { color: string }>;
+
+const progressOptions: TColorBar = {
   "in-progress": { color: "#60a5fa" },
   success: { color: "#87c500" },
   warning: { color: "#f97316" },
   error: { color: "#ec2424" },
 };
 
-// | { type: "in-progress"; color: "#60a5fa" }
-// | { type: "success"; color: "#87c500" }
-// | { type: "warning"; color: "#f97316" }
-// | { type: "error"; color: "#ec2424" };
-
 const props = withDefaults(
   defineProps<{
-    kindBar: TKindBar;
     width: number;
-    height?: number;
-    step?: number;
-    progressType: TProgressBar;
-    progress?: number;
+    value: number;
+    max?: number;
+    view: TProgressView;
+    state?: TProgressState;
   }>(),
   {
-    kindBar: "normal",
     width: 200,
-    height: 200,
-    step: 10,
-    progress: 0,
-    progressType: "in-progress",
+    max: 100,
+    value: 0,
+    view: "normal",
+    state: "in-progress",
   }
 );
 
-const progressEmit = defineEmits(["handleProgress"]);
+const innerView = ref<TProgressView>(props.view);
 
-const maxWidth: number = 160;
-const maxStep: number = 30;
-const stepDefault: number = 10;
-const stepDelay = 200;
+const calculateRadius = (paramRadius: number): number => {
+  return Math.round(2 * (Math.PI * paramRadius));
+};
 
-const pTypeBar = ref<TKindBar>(props.kindBar);
+const groupRef = ref<HTMLElement>();
+const pathRef = ref<SVGPathElement>();
 
-const pBar = ref<TProgressBar>(props.progressType);
-
-const radius =
-  Math.min(props.width, props.height ? props.height : props.width) / 2 - 8;
-const radiusStr: string = `${radius}`;
-let total: number = 0;
-if (pTypeBar.value === "normal") {
-  total = 2 * (Math.PI * radius);
-}
-
-if (pTypeBar.value === "dashboard") {
-  total = 350;
-}
-
-const step = ref<number>(
-  props.step ? Math.min(Math.max(1, props.step), maxStep) : stepDefault
+const circleStrokeWidth = ref<number>(props.width <= maxWidth ? 7 : 10);
+const circleRadius = ref<number>(
+  Math.round(props.width / 2 - circleStrokeWidth.value)
 );
-const timerRef = ref<number>(-1);
 
-const calculateText = (): string => {
-  return `${Math.round((progress.value * 100) / total)}%`;
+const value = ref<number>(props.value);
+const max = ref<number>(props.max);
+const textX = ref<string>("50%");
+const fontSize = ref<number>(20);
+const total = ref<number>(calculateRadius(circleRadius.value));
+
+const animateStrokeArray = ref<string>("");
+const innerState = ref<TProgressState>(props.state);
+
+const calculateTextX = (paramWidth: number): string => {
+  return `${paramWidth / 2 - value.value.toString().length / 2}`;
 };
 
-const calculatePercent = () => {
-  let percent: number = props.progress ? props.progress : 0;
-  percent = Math.round((percent * total) / 100);
-  return percent;
-};
-
-const progress = ref<number>(calculatePercent());
-const textProgress = ref<string>(props.progress ? calculateText() : "0%");
-const strokeDashArray = ref<string>(`${progress.value} ${total}`);
-const fullDashArray = ref<string>(`${total} ${total}`);
-
-const stopProgress = () => {
-  if (timerRef.value > -1) {
-    window.clearInterval(timerRef.value);
-    timerRef.value = -1;
+const calculateScale = (paramWidth: number) => {
+  let scaleFactor = (((paramWidth * 100) / maxWidth) * 0.01).toFixed(2);
+  //console.log(scaleFactor);
+  if (groupRef.value) {
+    groupRef.value.setAttribute("style", "transform-origin: 0 0"); //style.setProperty("transform-origin", "0 0");
+    groupRef.value.setAttribute("style", `transform: scale(${scaleFactor})`); //style.setProperty("transform", "scale(0.48)");
+  }
+  if (pathRef.value) {
+    pathRef.value.setAttribute(
+      "style",
+      "transition: stroke-dasharray 240ms linear"
+    );
   }
 };
 
-const handleProgress = () => {
-  pBar.value = "in-progress";
-  if (timerRef.value != -1) {
-    stopProgress();
-    pBar.value = "warning";
-    return;
+const calculateLength = () => {
+  let len: number = 0;
+  if (pathRef.value) {
+    len = pathRef.value.getTotalLength();
   }
 
-  timerRef.value = window.setInterval(() => {
-    progress.value += step.value;
-    if (progress.value >= total) {
-      stopProgress();
-      pBar.value = "success";
-      progress.value = 0;
+  return len;
+};
+
+watch(
+  () => props.state,
+  (newValue) => {
+    innerState.value = newValue;
+    innerView.value === "normal"
+      ? (total.value = calculateRadius(circleRadius.value))
+      : (total.value = calculateLength());
+  }
+);
+
+watch(
+  () => props.view,
+  (newValue) => {
+    innerView.value = newValue;
+    innerView.value === "normal"
+      ? (total.value = calculateRadius(circleRadius.value))
+      : (total.value = calculateLength());
+  }
+);
+
+watch(
+  () => props.width,
+  (newValue) => {
+    circleStrokeWidth.value = newValue < maxWidth ? 8 : 20;
+    circleRadius.value = Math.round(newValue / 2 - circleStrokeWidth.value);
+    newValue < maxWidth ? (fontSize.value = 14) : (fontSize.value = 20);
+
+    if (innerView.value === "dashboard") {
+      total.value = calculateLength();
+    } else {
+      total.value = calculateRadius(circleRadius.value);
     }
-    strokeDashArray.value = `${progress.value} ${total}`;
-    textProgress.value = calculateText();
-  }, stepDelay);
-};
 
-const handleEsc = () => {
-  pBar.value = "error";
-  stopProgress();
-};
+    textX.value = calculateTextX(newValue);
+    let tmp: number = (value.value * total.value) / 100;
+    animateStrokeArray.value = `${tmp} ${total.value}`;
+    //calculateScale(newValue);
+  }
+);
 
-onMounted(() => {
-  pBar.value === "in-progress" ? handleProgress() : null;
+watch(
+  () => props.value,
+  (newValue) => {
+    if (innerState.value !== "in-progress") {
+      return;
+    }
+    if (innerView.value === "dashboard") {
+      total.value = calculateLength();
+    }
+
+    value.value = Math.min(newValue, max.value);
+    textX.value = calculateTextX(props.width);
+    let tmp: number = (value.value * total.value) / 100;
+    if (innerState.value === "in-progress" || innerState.value === "success") {
+      animateStrokeArray.value = `${tmp} ${total.value}`;
+    }
+    value.value >= max.value
+      ? (innerState.value = "success")
+      : (innerState.value = "in-progress");
+  }
+);
+
+onUpdated(() => {
+  calculateScale(props.width);
 });
 </script>
 
 <template>
   <svg
-    v-if="pTypeBar === 'normal'"
+    v-if="innerView === 'normal'"
     xmlns="http://www.w3.org/2000/svg"
     version="1.1"
-    :width="props.width"
-    :height="props.height ? props.height : props.width"
     view-box="0 0 200 200"
     fill="none"
-    class="cursor-pointer"
+    :width="props.width"
+    :height="props.width"
+    class="cursor-pointer border-indigo-900"
   >
     <defs>
-      <filter id="blurFilter" y="-5" height="40">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="3" y="-" />
-      </filter>
+      <linearGradient
+        id="greenRedGradient"
+        gradientUnits="userSpaceOnUse"
+        spreadMethod="pad"
+        x1="0%"
+        y1="0%"
+        x2="0%"
+        y2="100%"
+      >
+        <stop offset="0%" :stop-color="progressOptions['success'].color"></stop>
+        <stop offset="100%" :stop-color="progressOptions['error'].color"></stop>
+      </linearGradient>
       <clipPath id="cutLeft">
         <rect x="0%" y="50%" width="100%" height="100%"></rect>
       </clipPath>
       <clipPath id="cutRight">
         <rect x="0%" y="0%" width="100%" height="50%"></rect>
       </clipPath>
-      <linearGradient
-        id="redGreenGradient"
-        gradientUnits="userSpaceOnUse"
-        spreadMethod="reflect"
-        x1="0%"
-        y1="0%"
-        x2="100%"
-        y2="0%"
-      >
-        <stop offset="0%" :stop-color="Colors[pBar].color"></stop>
-        <stop offset="80%" stop-color="#ec2424"></stop>
-        <stop offset="100%" stop-color="#ec2424"></stop>
-      </linearGradient>
-      <linearGradient
-        id="GreenGreenGradient"
-        gradientUnits="userSpaceOnUse"
-        spreadMethod="reflect"
-        x1="0%"
-        y1="0%"
-        x2="100%"
-        y2="0%"
-      >
-        <stop offset="0%" :stop-color="Colors[pBar].color"></stop>
-        <stop offset="95%" stop-color="#87c500"></stop>
-      </linearGradient>
     </defs>
     <circle
-      :r="radiusStr"
       cx="50%"
       cy="50%"
+      :r="circleRadius"
       fill="none"
-      :stroke-width="props.width > maxWidth ? 12 : 8"
       stroke="#ccc"
-      :opacity="pBar === 'success' ? 0 : 1"
+      :stroke-width="circleStrokeWidth"
+      stroke-linecap="square"
     ></circle>
     <circle
-      v-if="progress > total / 3 && pBar === 'in-progress'"
-      :r="radiusStr"
       cx="50%"
       cy="50%"
+      :r="circleRadius"
       fill="none"
-      :stroke-width="props.width > maxWidth ? 12 : 8"
-      stroke="url(#GreenGreenGradient)"
-      clip-path="url(#cutRight)"
-      :stroke-dasharray="strokeDashArray"
+      :stroke="
+        innerState === 'in-progress'
+          ? 'url(#greenRedGradient)'
+          : progressOptions[innerState].color
+      "
+      :stroke-width="circleStrokeWidth"
+      stroke-linecap="square"
+      :stroke-dasharray="animateStrokeArray"
     ></circle>
+
     <circle
-      v-if="progress > 0 && pBar === 'in-progress'"
-      :r="radiusStr"
       cx="50%"
       cy="50%"
+      :r="circleRadius"
       fill="none"
-      :stroke-width="props.width > maxWidth ? 12 : 8"
-      stroke="url(#redGreenGradient)"
+      :stroke="
+        innerState === 'in-progress'
+          ? 'url(#greenRedGradient)'
+          : innerState === 'warning'
+          ? progressOptions[innerState].color
+          : innerState === 'success'
+          ? progressOptions[innerState].color
+          : innerState === 'error'
+          ? progressOptions[innerState].color
+          : 'url(#greenRedGradient)'
+      "
+      :stroke-width="circleStrokeWidth"
+      stroke-linecap="square"
+      :stroke-dasharray="animateStrokeArray"
       clip-path="url(#cutLeft)"
-      :stroke-dasharray="strokeDashArray"
     ></circle>
     <text
-      v-if="pBar === 'in-progress'"
-      x="50%"
-      :y="props.width > maxWidth ? '58%' : '55%'"
-      :font-size="props.width > maxWidth ? 40 : 20"
-      font-family="Verdana,Tahoma"
+      v-if="innerState === 'in-progress'"
+      y="52%"
+      :x="textX"
+      font-family="Tahoma,Verdana"
+      font-weight="500"
       text-anchor="middle"
+      :font-size="fontSize"
       :fill="
-        progress > total - total / 5
-          ? '#87c500'
-          : progress < total / 4
-          ? '#ec2424'
-          : Colors[pBar].color
+        value < max * 0.35
+          ? progressOptions['error'].color
+          : value <= max * 0.75
+          ? progressOptions['in-progress'].color
+          : progressOptions['success'].color
       "
     >
-      {{ textProgress }}
+      {{ value }}%
     </text>
-    <circle
-      v-if="pBar === 'success' || pBar === 'warning' || pBar === 'error'"
-      :r="radiusStr"
-      cx="50%"
-      cy="50%"
-      fill="none"
-      :stroke-width="props.width > maxWidth ? 12 : 8"
-      :stroke="Colors[pBar].color"
-      :stroke-dasharray="progress !== 0 ? strokeDashArray : fullDashArray"
-    ></circle>
     <svg
-      v-if="pBar === 'success' || pBar === 'warning' || pBar === 'error'"
-      id="svg2"
-      :width="pBar === 'success' ? props.width / 2 : props.width / 4"
-      :height="props.height ? props.height / 2 : props.width / 2"
-      :x="pBar === 'success' ? '30%' : '38%'"
-      y="25%"
-      viewBox="0 0 24 24"
-      fill="none"
+      version="1.1"
       xmlns="http://www.w3.org/2000/svg"
-      fill-opacity="0"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="100%"
+      height="100%"
+      fill="none"
+      view-box="0 0 24 24"
+      :x="props.width / 2 - 12"
+      :y="props.width / 2 - 12"
     >
       <path
-        v-if="pBar === 'success'"
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M17.0303 8.78039L8.99993 16.8107L5.4696 13.2804L6.53026 12.2197L8.99993 14.6894L15.9696 7.71973L17.0303 8.78039Z"
-        :fill="Colors[pBar].color"
+        v-if="innerState === 'success'"
+        id="success1"
+        fill="none"
+        :stroke="progressOptions[innerState].color"
+        :stroke-width="props.width < maxWidth ? 4 : 6"
+        stroke-linejoin="round"
+        d="M 6.135 13.901 C 8.112 16.068 12.067 20.400 12.067 20.400 C 12.068 20.398 20.367 2.466 20.367 2.466 "
       />
-      <path
-        v-if="pBar === 'warning'"
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
-        :fill="Colors[pBar].color"
-      />
-      <path
-        v-if="pBar === 'error'"
-        d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"
-        :fill="Colors[pBar].color"
-      />
-      <animate
-        attributeName="fill-opacity"
-        dur="3s"
-        begin="2s"
-        values="0;1;0;"
-        fill="freeze"
-        repeatCount="indefinite"
-      ></animate>
+      <g v-if="innerState === 'error'">
+        <path
+          id="cross1"
+          fill="none"
+          :stroke="progressOptions[innerState].color"
+          :stroke-width="props.width < maxWidth ? 5 : 6"
+          stroke-linejoin="round"
+          d="M 4.000 4.000 C 9.333 9.333 19.999 19.999 20.000 20.000 "
+        />
+        <path
+          id="cross2"
+          fill="none"
+          :stroke="progressOptions[innerState].color"
+          :stroke-width="props.width < maxWidth ? 5 : 6"
+          stroke-linejoin="round"
+          d="M 20.000 4.000 C 14.667 9.333 4.001 19.999 4.000 20.000 "
+        />
+      </g>
+      <g v-if="innerState === 'warning'">
+        <path
+          id="warning1"
+          :fill="progressOptions[innerState].color"
+          fill-rule="evenodd"
+          stroke="none"
+          d="M 11.950 0.861 C 5.848 0.861 0.800 5.743 0.800 11.955 C 0.800 18.168 5.848 23.049 11.950 23.049 C 18.051 23.049 23.099 18.168 23.099 11.955 C 23.099 5.743 18.051 0.861 11.950 0.861 Z"
+        />
+        <path
+          id="warning2"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="4"
+          stroke-linejoin="round"
+          d="M 11.887 4.136 C 11.919 7.614 11.983 14.570 11.983 14.570 "
+        />
+        <path
+          id="warning3"
+          fill="#ffffff"
+          fill-rule="evenodd"
+          stroke="none"
+          d="M 10.791 16.651 C 10.791 16.651 13.242 16.651 13.242 16.651 C 13.242 16.651 13.242 19.059 13.242 19.059 C 13.242 19.059 10.791 19.059 10.791 19.059 C 10.791 19.059 10.791 16.651 10.791 16.651 Z"
+        />
+      </g>
     </svg>
   </svg>
 
   <svg
-    v-if="pTypeBar === 'dashboard'"
+    v-if="innerView === 'dashboard'"
     xmlns="http://www.w3.org/2000/svg"
-    :height="props.height ? props.height : props.width"
+    version="1.1"
+    id="db"
     :width="props.width"
-    viewBox="0 0 200 200"
-    data-value="40"
+    :height="props.width"
+    view-box="0 0 200 200"
     fill="none"
-    class="cursor-pointer"
+    class="cursor-pointer border-indigo-900"
   >
     <defs>
       <linearGradient
-        id="redGreenGradient"
+        id="greenRedGradient2"
         gradientUnits="userSpaceOnUse"
-        spreadMethod="reflect"
-        x1="100%"
+        spreadMethod="pad"
+        x1="0%"
         y1="0%"
-        x2="0%"
+        x2="100%"
         y2="0%"
       >
-        <stop offset="0%" stop-color="#87c500"></stop>
-        <stop offset="60%" :stop-color="Colors[pBar].color"></stop>
-        <stop offset="98%" stop-color="#ec2424"></stop>
+        <stop offset="0%" :stop-color="progressOptions['error'].color"></stop>
+        <stop
+          offset="50%"
+          :stop-color="progressOptions['in-progress'].color"
+        ></stop>
+        <stop
+          offset="100%"
+          :stop-color="progressOptions['success'].color"
+        ></stop>
       </linearGradient>
     </defs>
-    <path
-      stroke="#ccc"
-      stroke-width="12"
-      d="M41 149.5a77 77 0 1 1 117.93 0"
-      fill="none"
-    />
-    <path
-      stroke="url(#redGreenGradient)"
-      stroke-width="12"
-      d="M41 149.5a77 77 0 1 1 117.93 0"
-      fill="none"
-      :stroke-dasharray="strokeDashArray"
-      :stroke-offset="total"
-    />
-    <path
-      v-if="pBar === 'success'"
-      :stroke="Colors[pBar].color"
-      stroke-width="12"
-      d="M41 149.5a77 77 0 1 1 117.93 0"
-      fill="none"
-    />
-
+    <g id="S1" ref="groupRef">
+      <path
+        fill="none"
+        stroke="#ccc"
+        stroke-width="12"
+        stroke-linejoin="round"
+        d="M 152.372 175.109 C 152.374 175.107 167.162 162.336 172.107 155.652 C 178.296 147.288 185.098 134.806 187.951 124.799 C 190.749 114.983 191.566 101.062 190.730 90.889 C 190.091 83.108 187.496 72.851 184.615 65.595 C 181.818 58.548 176.772 49.612 172.107 43.636 C 167.353 37.546 159.762 30.351 153.484 25.847 C 147.666 21.672 139.037 17.318 132.360 14.729 C 126.250 12.360 117.741 9.958 111.235 9.170 C 103.452 8.227 92.833 8.390 85.107 9.725 C 75.649 11.360 63.217 15.378 54.810 20.010 C 47.225 24.189 38.240 31.779 32.296 38.077 C 27.498 43.159 21.975 50.817 18.676 56.978 C 15.188 63.491 11.691 72.843 10.059 80.048 C 8.654 86.255 7.945 94.811 8.113 101.173 C 8.308 108.506 9.668 118.315 11.727 125.355 C 13.519 131.482 17.197 139.257 20.344 144.812 C 23.205 149.865 27.667 156.261 31.462 160.655 C 35.510 165.343 46.470 174.830 46.471 174.831 "
+      />
+      <path
+        ref="pathRef"
+        fill="none"
+        :stroke="
+          innerState === 'in-progress'
+            ? 'url(#greenRedGradient2)'
+            : progressOptions[innerState].color
+        "
+        :stroke-dasharray="animateStrokeArray"
+        :stroke-dashoffset="0"
+        stroke-width="12"
+        stroke-linejoin="round"
+        d="M 46.471 175.109 C 46.469 175.107 31.682 162.336 26.737 155.652 C 20.548 147.288 13.746 134.806 10.893 124.799 C 8.095 114.983 7.277 101.062 8.113 90.889 C 8.753 83.108 11.348 72.851 14.228 65.595 C 17.026 58.548 22.072 49.612 26.737 43.636 C 31.490 37.546 39.082 30.351 45.359 25.847 C 51.178 21.672 59.807 17.318 66.484 14.729 C 72.594 12.360 81.103 9.958 87.609 9.170 C 95.392 8.227 106.011 8.390 113.737 9.725 C 123.195 11.360 135.627 15.378 144.034 20.010 C 151.619 24.189 160.604 31.779 166.548 38.077 C 171.346 43.159 176.869 50.817 180.168 56.978 C 183.656 63.491 187.153 72.843 188.785 80.048 C 190.190 86.255 190.899 94.811 190.730 101.173 C 190.536 108.506 189.176 118.315 187.117 125.355 C 185.325 131.482 181.646 139.257 178.500 144.812 C 175.639 149.865 171.177 156.261 167.382 160.655 C 163.334 165.343 152.374 174.830 152.372 174.831 "
+      />
+      />
+    </g>
     <text
-      v-if="pBar === 'in-progress'"
-      x="50%"
-      :y="props.width > maxWidth ? '58%' : '55%'"
-      :font-size="props.width > maxWidth ? 40 : 20"
-      font-family="Verdana,Tahoma"
+      v-if="innerState === 'in-progress'"
+      y="52%"
+      :x="textX"
+      font-family="Tahoma,Verdana"
+      font-weight="500"
       text-anchor="middle"
+      :font-size="fontSize"
       :fill="
-        progress > total - total / 5
-          ? '#87c500'
-          : progress < total / 4
-          ? '#ec2424'
-          : Colors[pBar].color
+        value < max * 0.35
+          ? progressOptions['error'].color
+          : value <= max * 0.75
+          ? progressOptions['in-progress'].color
+          : progressOptions['success'].color
       "
     >
-      {{ textProgress }}
+      {{ value }}%
     </text>
     <svg
-      v-if="pBar === 'success' || pBar === 'warning' || pBar === 'error'"
-      id="svg3"
-      :width="pBar === 'success' ? props.width / 3 : props.width / 4"
-      :height="props.height ? props.height / 3 : props.width / 3"
-      :x="
-        props.width < maxWidth
-          ? pBar === 'success'
-            ? '40%'
-            : pBar === 'warning'
-            ? '40%'
-            : pBar === 'error'
-            ? '40%'
-            : '36%'
-          : '34%'
-      "
-      :y="props.width < maxWidth ? '30%' : '30%'"
-      viewBox="0 0 24 24"
-      fill="none"
+      version="1.1"
       xmlns="http://www.w3.org/2000/svg"
-      fill-opacity="0"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="100%"
+      height="100%"
+      fill="none"
+      view-box="0 0 24 24"
+      :x="props.width / 2 - 12"
+      :y="props.width / 2 - 12"
     >
       <path
-        v-if="pBar === 'success'"
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M17.0303 8.78039L8.99993 16.8107L5.4696 13.2804L6.53026 12.2197L8.99993 14.6894L15.9696 7.71973L17.0303 8.78039Z"
-        :fill="Colors[pBar].color"
+        v-if="innerState === 'success'"
+        id="success1"
+        fill="none"
+        :stroke="progressOptions[innerState].color"
+        :stroke-width="props.width < maxWidth ? 4 : 6"
+        stroke-linejoin="round"
+        d="M 6.135 13.901 C 8.112 16.068 12.067 20.400 12.067 20.400 C 12.068 20.398 20.367 2.466 20.367 2.466 "
       />
-      <path
-        v-if="pBar === 'warning'"
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75ZM12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
-        :fill="Colors[pBar].color"
-      />
-      <path
-        v-if="pBar === 'error'"
-        d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"
-        :fill="Colors[pBar].color"
-      />
-      <animate
-        attributeName="fill-opacity"
-        dur="3s"
-        begin="2s"
-        values="0;1;0;"
-        fill="freeze"
-        repeatCount="indefinite"
-      ></animate>
+      <g v-if="innerState === 'error'">
+        <path
+          id="cross1"
+          fill="none"
+          :stroke="progressOptions[innerState].color"
+          :stroke-width="props.width < maxWidth ? 5 : 6"
+          stroke-linejoin="round"
+          d="M 4.000 4.000 C 9.333 9.333 19.999 19.999 20.000 20.000 "
+        />
+        <path
+          id="cross2"
+          fill="none"
+          :stroke="progressOptions[innerState].color"
+          :stroke-width="props.width < maxWidth ? 5 : 6"
+          stroke-linejoin="round"
+          d="M 20.000 4.000 C 14.667 9.333 4.001 19.999 4.000 20.000 "
+        />
+      </g>
+      <g v-if="innerState === 'warning'">
+        <path
+          id="warning1"
+          :fill="progressOptions[innerState].color"
+          fill-rule="evenodd"
+          stroke="none"
+          d="M 11.950 0.861 C 5.848 0.861 0.800 5.743 0.800 11.955 C 0.800 18.168 5.848 23.049 11.950 23.049 C 18.051 23.049 23.099 18.168 23.099 11.955 C 23.099 5.743 18.051 0.861 11.950 0.861 Z"
+        />
+        <path
+          id="warning2"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="4"
+          stroke-linejoin="round"
+          d="M 11.887 4.136 C 11.919 7.614 11.983 14.570 11.983 14.570 "
+        />
+        <path
+          id="warning3"
+          fill="#ffffff"
+          fill-rule="evenodd"
+          stroke="none"
+          d="M 10.791 16.651 C 10.791 16.651 13.242 16.651 13.242 16.651 C 13.242 16.651 13.242 19.059 13.242 19.059 C 13.242 19.059 10.791 19.059 10.791 19.059 C 10.791 19.059 10.791 16.651 10.791 16.651 Z"
+        />
+      </g>
     </svg>
   </svg>
 </template>
 
-<!-- repeatCount="indefinite" -->
-<!-- stroke-linecap="round" -->
-
-<!-- stroke-dashoffset="300" -->
-
 <style lang="css" scoped>
 svg circle {
   will-change: auto;
-  /* stroke-width: 12px; */
   transform-origin: center center;
   transform: rotate(-90deg);
   transition: stroke-dasharray 240ms linear;
@@ -394,8 +457,8 @@ svg circle {
 svg text {
   user-select: none;
 }
-svg path {
-  transform-origin: center center;
-  transition: stroke-dasharray 240ms linear;
-}
+/* #S1 {
+  transform: scale(0.48);
+  transform-origin: 0 0;
+} */
 </style>
