@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, onUpdated } from "vue";
 const maxWidth: number = 200;
+const strokeWidthInit: number = 12;
+
+import { ref, watch, onUpdated } from "vue";
 
 export type TProgressView = "normal" | "dashboard";
 export type TProgressState = "in-progress" | "success" | "warning" | "error";
@@ -17,13 +19,11 @@ const props = withDefaults(
   defineProps<{
     width: number;
     value: number;
-    max?: number;
     view: TProgressView;
     state?: TProgressState;
   }>(),
   {
     width: 200,
-    max: 100,
     value: 0,
     view: "normal",
     state: "in-progress",
@@ -45,7 +45,7 @@ const circleRadius = ref<number>(
 );
 
 const value = ref<number>(props.value);
-const max = ref<number>(props.max);
+const max = ref<number>(100);
 const textX = ref<string>("50%");
 const fontSize = ref<number>(20);
 const total = ref<number>(calculateRadius(circleRadius.value));
@@ -57,8 +57,18 @@ const calculateTextX = (paramWidth: number): string => {
   return `${paramWidth / 2 - value.value.toString().length / 2}`;
 };
 
+const calculateScaleFactor = (
+  paramWidth: number,
+  isNumber = true
+): string | number => {
+  let scaleFactor = isNumber
+    ? ((paramWidth * 100) / maxWidth) * 0.01
+    : (((paramWidth * 100) / maxWidth) * 0.01).toFixed(2);
+  return scaleFactor;
+};
+
 const calculateScale = (paramWidth: number) => {
-  let scaleFactor = (((paramWidth * 100) / maxWidth) * 0.01).toFixed(2);
+  let scaleFactor = calculateScaleFactor(paramWidth, false);
   //console.log(scaleFactor);
   if (groupRef.value) {
     groupRef.value.setAttribute("style", "transform-origin: 0 0"); //style.setProperty("transform-origin", "0 0");
@@ -78,16 +88,36 @@ const calculateLength = () => {
     len = pathRef.value.getTotalLength();
   }
 
+  len < 1 ? (len = 550) : (len += 0.01);
   return len;
+};
+
+const calculateVars = (paramWidth: number) => {
+  textX.value = calculateTextX(paramWidth);
+  let scaleFactor = calculateScaleFactor(paramWidth) as number;
+  circleStrokeWidth.value = strokeWidthInit * scaleFactor;
+
+  paramWidth < maxWidth
+    ? paramWidth < maxWidth / 2
+      ? (fontSize.value = 10)
+      : (fontSize.value = 14)
+    : (fontSize.value = 20);
+
+  circleRadius.value = Math.round(paramWidth / 2 - circleStrokeWidth.value);
+  innerView.value === "normal"
+    ? (total.value = calculateRadius(circleRadius.value))
+    : (total.value = calculateLength());
+
+  value.value = Math.min(value.value, max.value);
+  let tmp: number = (value.value * total.value) / 100;
+  animateStrokeArray.value = `${tmp} ${total.value}`;
 };
 
 watch(
   () => props.state,
   (newValue) => {
     innerState.value = newValue;
-    innerView.value === "normal"
-      ? (total.value = calculateRadius(circleRadius.value))
-      : (total.value = calculateLength());
+    calculateVars(props.width);
   }
 );
 
@@ -95,33 +125,14 @@ watch(
   () => props.view,
   (newValue) => {
     innerView.value = newValue;
-    innerView.value === "normal"
-      ? (total.value = calculateRadius(circleRadius.value))
-      : (total.value = calculateLength());
+    calculateVars(props.width);
   }
 );
 
 watch(
   () => props.width,
   (newValue) => {
-    circleStrokeWidth.value =
-      newValue < maxWidth ? (newValue < maxWidth / 2 ? 4 : 8) : 16;
-    circleRadius.value = Math.round(newValue / 2 - circleStrokeWidth.value);
-    newValue < maxWidth
-      ? newValue < maxWidth / 2
-        ? (fontSize.value = 10)
-        : (fontSize.value = 14)
-      : (fontSize.value = 20);
-
-    if (innerView.value === "dashboard") {
-      total.value = calculateLength();
-    } else {
-      total.value = calculateRadius(circleRadius.value);
-    }
-
-    textX.value = calculateTextX(newValue);
-    let tmp: number = (value.value * total.value) / 100;
-    animateStrokeArray.value = `${tmp} ${total.value}`;
+    calculateVars(newValue);
     //calculateScale(newValue);
   }
 );
@@ -132,12 +143,8 @@ watch(
     if (innerState.value !== "in-progress") {
       return;
     }
-    if (innerView.value === "dashboard") {
-      total.value = calculateLength();
-    }
-
+    calculateVars(props.width);
     value.value = Math.min(newValue, max.value);
-    textX.value = calculateTextX(props.width);
     let tmp: number = (value.value * total.value) / 100;
     if (innerState.value === "in-progress" || innerState.value === "success") {
       animateStrokeArray.value = `${tmp} ${total.value}`;
@@ -147,6 +154,10 @@ watch(
       : (innerState.value = "in-progress");
   }
 );
+
+onMounted(() => {
+  calculateVars(props.width);
+});
 
 onUpdated(() => {
   calculateScale(props.width);
@@ -162,7 +173,7 @@ onUpdated(() => {
     fill="none"
     :width="props.width"
     :height="props.width"
-    class="cursor-pointer border-indigo-900"
+    class="cursor-pointer border-indigo-900 visibleAnimateSvg"
   >
     <defs>
       <linearGradient
@@ -242,6 +253,7 @@ onUpdated(() => {
     >
       <path
         v-if="innerState === 'success'"
+        class="visibleAnimate"
         id="success1"
         fill="none"
         :stroke="progressOptions[innerState].color"
@@ -249,7 +261,7 @@ onUpdated(() => {
         stroke-linejoin="round"
         d="M 6.135 13.901 C 8.112 16.068 12.067 20.400 12.067 20.400 C 12.068 20.398 20.367 2.466 20.367 2.466 "
       />
-      <g v-if="innerState === 'error'">
+      <g v-if="innerState === 'error'" class="visibleAnimate">
         <path
           id="cross1"
           fill="none"
@@ -267,7 +279,7 @@ onUpdated(() => {
           d="M 20.000 4.000 C 14.667 9.333 4.001 19.999 4.000 20.000 "
         />
       </g>
-      <g v-if="innerState === 'warning'">
+      <g v-if="innerState === 'warning'" class="visibleAnimate">
         <path
           id="warning1"
           :fill="progressOptions[innerState].color"
@@ -303,7 +315,7 @@ onUpdated(() => {
     :height="props.width"
     view-box="0 0 200 200"
     fill="none"
-    class="cursor-pointer border-indigo-900"
+    class="cursor-pointer border-indigo-900 visibleAnimateSvg"
   >
     <defs>
       <linearGradient
@@ -330,7 +342,7 @@ onUpdated(() => {
       <path
         fill="none"
         stroke="#ccc"
-        stroke-width="12"
+        :stroke-width="strokeWidthInit"
         stroke-linejoin="round"
         d="M 152.372 175.109 C 152.374 175.107 167.162 162.336 172.107 155.652 C 178.296 147.288 185.098 134.806 187.951 124.799 C 190.749 114.983 191.566 101.062 190.730 90.889 C 190.091 83.108 187.496 72.851 184.615 65.595 C 181.818 58.548 176.772 49.612 172.107 43.636 C 167.353 37.546 159.762 30.351 153.484 25.847 C 147.666 21.672 139.037 17.318 132.360 14.729 C 126.250 12.360 117.741 9.958 111.235 9.170 C 103.452 8.227 92.833 8.390 85.107 9.725 C 75.649 11.360 63.217 15.378 54.810 20.010 C 47.225 24.189 38.240 31.779 32.296 38.077 C 27.498 43.159 21.975 50.817 18.676 56.978 C 15.188 63.491 11.691 72.843 10.059 80.048 C 8.654 86.255 7.945 94.811 8.113 101.173 C 8.308 108.506 9.668 118.315 11.727 125.355 C 13.519 131.482 17.197 139.257 20.344 144.812 C 23.205 149.865 27.667 156.261 31.462 160.655 C 35.510 165.343 46.470 174.830 46.471 174.831 "
       />
@@ -344,7 +356,7 @@ onUpdated(() => {
         "
         :stroke-dasharray="animateStrokeArray"
         :stroke-dashoffset="0"
-        stroke-width="12"
+        :stroke-width="strokeWidthInit"
         stroke-linejoin="round"
         d="M 46.471 175.109 C 46.469 175.107 31.682 162.336 26.737 155.652 C 20.548 147.288 13.746 134.806 10.893 124.799 C 8.095 114.983 7.277 101.062 8.113 90.889 C 8.753 83.108 11.348 72.851 14.228 65.595 C 17.026 58.548 22.072 49.612 26.737 43.636 C 31.490 37.546 39.082 30.351 45.359 25.847 C 51.178 21.672 59.807 17.318 66.484 14.729 C 72.594 12.360 81.103 9.958 87.609 9.170 C 95.392 8.227 106.011 8.390 113.737 9.725 C 123.195 11.360 135.627 15.378 144.034 20.010 C 151.619 24.189 160.604 31.779 166.548 38.077 C 171.346 43.159 176.869 50.817 180.168 56.978 C 183.656 63.491 187.153 72.843 188.785 80.048 C 190.190 86.255 190.899 94.811 190.730 101.173 C 190.536 108.506 189.176 118.315 187.117 125.355 C 185.325 131.482 181.646 139.257 178.500 144.812 C 175.639 149.865 171.177 156.261 167.382 160.655 C 163.334 165.343 152.374 174.830 152.372 174.831 "
       />
@@ -381,6 +393,7 @@ onUpdated(() => {
     >
       <path
         v-if="innerState === 'success'"
+        class="visibleAnimate"
         id="success1"
         fill="none"
         :stroke="progressOptions[innerState].color"
@@ -388,7 +401,7 @@ onUpdated(() => {
         stroke-linejoin="round"
         d="M 6.135 13.901 C 8.112 16.068 12.067 20.400 12.067 20.400 C 12.068 20.398 20.367 2.466 20.367 2.466 "
       />
-      <g v-if="innerState === 'error'">
+      <g v-if="innerState === 'error'" class="visibleAnimate">
         <path
           id="cross1"
           fill="none"
@@ -406,7 +419,7 @@ onUpdated(() => {
           d="M 20.000 4.000 C 14.667 9.333 4.001 19.999 4.000 20.000 "
         />
       </g>
-      <g v-if="innerState === 'warning'">
+      <g v-if="innerState === 'warning'" class="visibleAnimate">
         <path
           id="warning1"
           :fill="progressOptions[innerState].color"
@@ -450,4 +463,40 @@ svg text {
   transform: scale(0.48);
   transform-origin: 0 0;
 } */
+.visibleAnimate {
+  opacity: 0;
+  animation: animateOpacity 600ms ease-in-out forwards;
+}
+
+.visibleAnimateSvg {
+  opacity: 0;
+  animation: animateOpacitySvg 500ms ease-in-out forwards;
+}
+
+@keyframes animateOpacitySvg {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  50% {
+    transform-origin: 50% 50%;
+    transform: scale(1.1);
+  }
+  70% {
+    transform-origin: 50% 50%;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes animateOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 </style>
