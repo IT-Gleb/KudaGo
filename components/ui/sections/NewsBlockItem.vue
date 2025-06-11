@@ -70,7 +70,8 @@ const handleUp = () => {
     </summary>
 
     <article
-      class="pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700"
+      class="pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700 mb-2 shadow-md shadow-slate-500 dark:shadow-black"
+      :class="opened ? 'mb-2 shadow-md shadow-slate-500 dark:shadow-black' : ''"
       :aria-hidden="!opened"
     >
       <div>

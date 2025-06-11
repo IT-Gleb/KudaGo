@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const maxWidth: number = 200;
-const strokeWidthInit: number = 12;
+const strokeWidthInit: number = 16;
 
 import { ref, watch, onUpdated } from "vue";
 
@@ -103,7 +103,9 @@ const calculateVars = (paramWidth: number) => {
       : (fontSize.value = 14)
     : (fontSize.value = 20);
 
-  circleRadius.value = Math.round(paramWidth / 2 - circleStrokeWidth.value);
+  circleRadius.value = Math.round(
+    paramWidth / 2 - circleStrokeWidth.value - scaleFactor
+  );
   innerView.value === "normal"
     ? (total.value = calculateRadius(circleRadius.value))
     : (total.value = calculateLength());

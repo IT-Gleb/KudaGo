@@ -77,16 +77,17 @@ const handleType = () => {
           <select
             id="selectWidth"
             v-model="widthBar"
-            class="outline-none border border-indigo-900 p-1"
+            class="outline-none border border-indigo-900 p-1 dark:bg-slate-950 dark:text-slate-300"
           >
-            <option value="50">50x50</option>
-            <option value="100">100x100</option>
-            <option value="140">140x140</option>
-            <option value="180">180x180</option>
-            <option value="220">220x220</option>
-            <option value="260">260x260</option>
-            <option value="300">300x300</option>
-            <option value="360">360x360</option>
+            <option :value="50">50x50</option>
+            <option :value="75">75x75</option>
+            <option :value="100">100x100</option>
+            <option :value="140">140x140</option>
+            <option :value="180">180x180</option>
+            <option :value="220">220x220</option>
+            <option :value="260">260x260</option>
+            <option :value="300">300x300</option>
+            <option :value="360">360x360</option>
           </select>
         </label>
 
@@ -102,19 +103,19 @@ const handleType = () => {
           <span>Значения:</span>
           <select
             id="progressValues"
-            class="outline-none border border-indigo-900 p-1"
+            class="outline-none border border-indigo-900 p-1 dark:bg-slate-950 dark:text-slate-300"
             v-model="valuesBar"
           >
-            <option value="0">0</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="33">33</option>
-            <option value="50">50</option>
-            <option value="77">77</option>
-            <option value="85">85</option>
-            <option value="99">99</option>
-            <option value="100">100</option>
+            <option :value="0">0</option>
+            <option :value="5">5</option>
+            <option :value="10">10</option>
+            <option :value="20">20</option>
+            <option :value="33">33</option>
+            <option :value="50">50</option>
+            <option :value="77">77</option>
+            <option :value="85">85</option>
+            <option :value="99">99</option>
+            <option :value="100">100</option>
           </select>
         </label>
 
@@ -122,7 +123,7 @@ const handleType = () => {
           <span>Состояние:</span>
           <select
             id="selState"
-            class="outline-none border border-indigo-900 p-1"
+            class="outline-none border border-indigo-900 p-1 dark:bg-slate-950 dark:text-slate-300"
             v-model="stateVar"
           >
             <option value="in-progress">in-progress</option>
