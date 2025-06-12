@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script async setup lang="ts">
 import NewsBlockItem from "./NewsBlockItem.vue";
 import NewsImagesBlock from "./NewsImagesSlider.vue";
 import { countOnPage } from "../../../utils/urls";
@@ -6,9 +6,15 @@ import NewsPagination from "./NewsPagination.vue";
 import loaderComponent from "../../loader/loaderComponent.vue";
 import { useCityes } from "../../../store/cityStore";
 import CitysComponent from "../cityesComponent/citysComponent.vue";
-import { getParamsToObject } from "../../../utils/functions";
+import {
+  getParamsToObject,
+  deleteNonUsedSymbols,
+} from "../../../utils/functions";
 import type { TGetParamsObject, TNewsItem, TNewsData } from "~/types/myTypes";
 import NewsError from "../NewsError.vue";
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useLazyAsyncData, useHead } from "#app";
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);

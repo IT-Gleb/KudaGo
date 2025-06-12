@@ -46,7 +46,14 @@ const handleUp = () => {
 </script>
 
 <template>
-  <details ref="detailsRef" :open="opened">
+  <details
+    ref="detailsRef"
+    :open="opened"
+    class="mb-2 shadow-sm shadow-slate-500 dark:shadow-black overflow-hidden"
+    :class="
+      opened ? 'border-2 md:border-4 border-blue-400 dark:border-green-600' : ''
+    "
+  >
     <summary
       class="flex flex-row items-start gap-x-2 justify-between p-2"
       :class="
@@ -70,8 +77,7 @@ const handleUp = () => {
     </summary>
 
     <article
-      class="pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700 mb-2 shadow-md shadow-slate-500 dark:shadow-black"
-      :class="opened ? 'mb-2 shadow-md shadow-slate-500 dark:shadow-black' : ''"
+      class="p-1 lg:pt-4 px-2 flex flex-col items-start bg-white dark:bg-slate-700"
       :aria-hidden="!opened"
     >
       <div>

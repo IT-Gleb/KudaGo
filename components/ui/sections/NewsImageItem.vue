@@ -6,7 +6,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="w-[320px] sm:w-[480px] lg:w-[640px] object-left-top object-cover">
+  <div class="w-[300px] sm:w-[480px] lg:w-[640px] object-left-top object-cover">
     <img
       :src="props.imageSrc"
       :alt="props.imageAlt"

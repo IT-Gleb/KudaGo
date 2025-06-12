@@ -95,7 +95,7 @@ onMounted(() => {
       </button>
       <div
         ref="root"
-        class="w-[320px] h-[214px] sm:w-[480px] sm:h-[320px] lg:w-[640px] lg:h-[384px] overflow-y-hidden overflow-x-scroll relative"
+        class="w-[300px] h-[200px] sm:w-[480px] sm:h-[320px] lg:w-[640px] lg:h-[384px] overflow-y-hidden overflow-x-scroll relative"
         style="
           scroll-snap-type: x mandatory;
           scroll-snap-align: center;

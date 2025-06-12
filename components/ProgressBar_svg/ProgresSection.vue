@@ -61,7 +61,9 @@ const handleType = () => {
           :view="progresType"
         />
       </div>
-      <div class="w-fit mx-auto p-2 place-content-center flex gap-x-5">
+      <div
+        class="w-fit mx-auto p-2 place-content-center flex flex-wrap gap-5 justify-baseline"
+      >
         <label class="flex gap-2">
           <span>Тип: </span>
           <button
