@@ -3,6 +3,8 @@ import ProgressBar, {
   type TProgressState,
   type TProgressView,
 } from "./ProgressBar.vue";
+import PieGraph from "../graphChartjs/PieGraph.vue";
+
 const widthBar = ref<number>(180);
 const valuesBar = ref<number>(0);
 const stateVar = ref<TProgressState>("in-progress");
@@ -135,6 +137,9 @@ const handleType = () => {
           </select>
         </label>
       </div>
+    </div>
+    <div class="w-fit mx-auto my-10">
+      <PieGraph />
     </div>
   </section>
 </template>
