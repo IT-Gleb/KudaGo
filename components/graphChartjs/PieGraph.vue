@@ -3,6 +3,7 @@ import {
   Chart as ChartJS,
   Legend,
   Title,
+  SubTitle,
   Tooltip,
   ArcElement,
   PieController,
@@ -12,8 +13,9 @@ import { ref, reactive, watch } from "vue";
 import { PieStore } from "~/store/pieStore";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
+import { getNowYear } from "#imports";
 
-ChartJS.register(PieController, Legend, Title, Tooltip, ArcElement);
+ChartJS.register(PieController, Legend, Title, SubTitle, Tooltip, ArcElement);
 
 const ChartRef = ref();
 const PieChart = ref<ChartJS>();
@@ -60,21 +62,36 @@ const ChartConfig: ChartConfiguration = {
     plugins: {
       title: {
         display: true,
-        position: "top",
         text: "Какой-то график".toUpperCase(),
+        align: "center",
         padding: { top: 5, bottom: 10 },
         color: "#1976d2",
         font: { size: 24, family: "Tahoma" },
+        position: "top",
+        fullSize: true,
+      },
+      subtitle: {
+        display: true,
+        text: `данные за ${getNowYear()} г.`,
+        align: "center",
+        font: { family: "Tahoma", size: 18 },
+        color: "#1976d2",
+        fullSize: true,
+        padding: {
+          bottom: 10,
+        },
       },
       legend: {
         display: true,
         position: "top",
+        fullSize: true,
         labels: {
           color: "#3e2723",
           font: { weight: 600, family: "Tahoma,Verdana" },
         },
       },
       tooltip: {
+        enabled: true,
         backgroundColor: "#fff176a9",
         titleColor: "#1a237e",
         displayColors: true,
@@ -140,19 +157,34 @@ watch(
   () => {
     isUpdate.value = !isUpdate.value;
 
-    ChartConfig.data.datasets[0].data = Items.value.map((item) => item.value);
-    ChartConfig.data.labels = Items.value.map((item) => item.label);
-    ChartConfig.data.datasets[0].backgroundColor = Items.value.map(
-      (item) => item.bgColor
-    );
+    // ChartConfig.data.datasets[0].data = Items.value.map((item) => item.value);
+    // ChartConfig.data.labels = Items.value.map((item) => item.label);
+    // ChartConfig.data.datasets[0].backgroundColor = Items.value.map(
+    //   (item) => item.bgColor
+    // );
 
-    const w = isUpdate.value
-      ? (PieChart.value as ChartJS).width - 0.1
-      : (PieChart.value as ChartJS).width + 0.1;
-    const h = !isUpdate.value
-      ? (PieChart.value as ChartJS).height - 0.1
-      : (PieChart.value as ChartJS).height + 0.1;
-    (PieChart.value as ChartJS).resize(w, h);
+    (PieChart.value as ChartJS).data.datasets[0].data = Items.value.map(
+      (item) => item.value
+    );
+    (PieChart.value as ChartJS).data.labels = Items.value.map(
+      (item) => item.label
+    );
+    (PieChart.value as ChartJS).data.datasets[0].backgroundColor =
+      Items.value.map((item) => item.bgColor);
+
+    try {
+      (PieChart.value as ChartJS).update();
+    } catch (err) {
+      console.log(err);
+      const w = isUpdate.value
+        ? (PieChart.value as ChartJS).width - 0.1
+        : (PieChart.value as ChartJS).width + 0.1;
+      const h = !isUpdate.value
+        ? (PieChart.value as ChartJS).height - 0.1
+        : (PieChart.value as ChartJS).height + 0.1;
+      (PieChart.value as ChartJS).resize(w, h);
+    } finally {
+    }
   },
   { deep: true }
 );

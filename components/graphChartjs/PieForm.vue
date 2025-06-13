@@ -158,8 +158,22 @@ onMounted(() => {
 
         <label class="flex flex-col items-start gap-2">
           Выберите цвет:
-          <input type="color" v-model="PColor" class="cursor-pointer" />
+          <input
+            type="color"
+            v-model="PColor"
+            list="pieBgcolors"
+            class="cursor-pointer outline-none border focus:border-2 focus:border-blue-800"
+          />
         </label>
+        <datalist id="pieBgcolors" name="pieBgcolors">
+          <option
+            v-for="item in PieColors"
+            :key="item.color"
+            :value="item.color"
+          >
+            {{ item.color }}
+          </option>
+        </datalist>
       </fieldset>
     </legend>
     <div class="mt-10 text-right">
