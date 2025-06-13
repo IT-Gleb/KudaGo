@@ -4,6 +4,7 @@ import ProgressBar, {
   type TProgressView,
 } from "./ProgressBar.vue";
 import PieGraph from "../graphChartjs/PieGraph.vue";
+import PieForm from "../graphChartjs/PieForm.vue";
 
 const widthBar = ref<number>(180);
 const valuesBar = ref<number>(0);
@@ -138,8 +139,11 @@ const handleType = () => {
         </label>
       </div>
     </div>
-    <div class="w-fit mx-auto my-10">
-      <PieGraph />
+    <div class="w-fit mx-auto my-20">
+      <div class="flex flex-wrap-reverse items-stretch gap-4">
+        <PieGraph />
+        <PieForm />
+      </div>
     </div>
   </section>
 </template>
