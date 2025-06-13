@@ -16,7 +16,7 @@ function onCheckerVisible([entry]: IntersectionObserverEntry[]) {
 
 watch(isChecked, () => {
   isChecked.value ? objIndex.value++ : (objIndex.value += 0);
-  objIndex.value = Math.min(objIndex.value, props.compsLength - 1);
+  objIndex.value = Math.min(...[objIndex.value, props.compsLength - 1]);
   observeEmit("onObserve", objIndex.value, isChecked.value);
 });
 </script>

@@ -46,7 +46,7 @@ const pTypeBar = ref<TKindBar>(props.kindBar);
 const pBar = ref<TProgressBar>(props.progressType);
 
 const radius =
-  Math.min(props.width, props.height ? props.height : props.width) / 2 - 8;
+  Math.min(...[props.width, props.height ? props.height : props.width]) / 2 - 8;
 const radiusStr: string = `${radius}`;
 let total: number = 0;
 if (pTypeBar.value === "normal") {
@@ -58,7 +58,9 @@ if (pTypeBar.value === "dashboard") {
 }
 
 const step = ref<number>(
-  props.step ? Math.min(Math.max(1, props.step), maxStep) : stepDefault
+  props.step
+    ? Math.min(...[Math.max(...[1, props.step]), maxStep])
+    : stepDefault
 );
 const timerRef = ref<number>(-1);
 

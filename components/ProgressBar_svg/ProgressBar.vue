@@ -110,7 +110,7 @@ const calculateVars = (paramWidth: number) => {
     ? (total.value = calculateRadius(circleRadius.value))
     : (total.value = calculateLength());
 
-  value.value = Math.min(value.value, max.value);
+  value.value = Math.min(...[value.value, max.value]);
   let tmp: number = (value.value * total.value) / 100;
   animateStrokeArray.value = `${tmp} ${total.value}`;
 };
@@ -146,7 +146,7 @@ watch(
       return;
     }
     calculateVars(props.width);
-    value.value = Math.min(newValue, max.value);
+    value.value = Math.min(...[newValue, max.value]);
     let tmp: number = (value.value * total.value) / 100;
     if (innerState.value === "in-progress" || innerState.value === "success") {
       animateStrokeArray.value = `${tmp} ${total.value}`;

@@ -68,19 +68,21 @@ export const PieStore = defineStore("pieStore", () => {
 
   const addItem = (param: TPieChartItem) => {
     Items.value.push(param);
+    ActiveIndex.value = Math.max(...[0, Items.value.length - 1]);
   };
   const setItem = (param: TPieChartItem) => {
     Item.value = Object.assign({}, param);
   };
 
   function setActiveIndex(param: number) {
-    ActiveIndex.value = Math.min(param, Items.value.length - 1);
-    Item.value = Items.value[ActiveIndex.value];
+    ActiveIndex.value = Math.min(...[param, Items.value.length - 1]);
+    Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
   }
 
   function deleteItem() {
     Items.value.splice(ActiveIndex.value, 1);
-    ActiveIndex.value = Math.min(0, Items.value.length - 1);
+    ActiveIndex.value = Math.max(...[0, Items.value.length - 1]);
+    Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
   }
   function setItemInArray(param: TPieChartItem) {
     Items.value[ActiveIndex.value] = Object.assign({}, param);

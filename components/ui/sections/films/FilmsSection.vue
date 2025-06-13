@@ -23,10 +23,9 @@ const handleRefresh = async () => {
 
 watch(paramPage, () => {
   paramPage.value = Math.min(
-    paramPage.value,
-    Math.ceil((films.value as IFilmsRoot).count / 10)
+    ...[paramPage.value, Math.ceil((films.value as IFilmsRoot).count / 10)]
   );
-  paramPage.value = Math.max(1, paramPage.value);
+  paramPage.value = Math.max(...[1, paramPage.value]);
 });
 
 const checkPage = (param: TPageParam) => {

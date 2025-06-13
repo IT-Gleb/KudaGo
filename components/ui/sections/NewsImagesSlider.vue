@@ -39,7 +39,7 @@ const handleNext = (param: TImageNextPrevParam) => {
 
     //ActiveIndex.value += 1;
     // ActiveIndex.value = Math.min(ActiveIndex.value + param, length - 1);
-    ImageIndex = Math.min(ImageIndex, length - 1);
+    ImageIndex = Math.min(...[ImageIndex, length - 1]);
     // if (ActiveIndex.value < 0) {
     //   ActiveIndex.value = 0;
     // }
