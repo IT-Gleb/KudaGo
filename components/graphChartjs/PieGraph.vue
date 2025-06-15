@@ -49,7 +49,7 @@ const PieItem = reactive<TPieChartItem>({
 
 const store = PieStore();
 const { Items } = storeToRefs(store);
-const { setItem, setActiveIndex } = store;
+const { setActiveIndex } = store;
 
 const ChartConfig: ChartConfiguration = {
   type: "pie",
@@ -156,7 +156,7 @@ watch(
   () => PieItem,
   () => {
     PieItem.id === "" ? (PieItem.id = nanoid()) : null;
-    setItem(PieItem);
+    // setItem(PieItem);
   },
   { deep: true }
 );
@@ -197,11 +197,18 @@ watch(
   },
   { deep: true }
 );
+
+const ClearChart = () => {
+  (PieChart.value as ChartJS).clear();
+  Items.value = [];
+};
+
+defineExpose({ ClearChart });
 </script>
 
 <template>
   <div
-    class="w-[320px] md:w-[480px] md:h-[320px] lg:w-[900px] lg:h-[600px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
+    class="w-[320px] md:w-[480px] md:h-[320px] lg:w-[1000px] lg:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
   >
     <canvas
       ref="ChartRef"

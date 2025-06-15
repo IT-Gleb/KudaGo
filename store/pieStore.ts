@@ -41,46 +41,51 @@ export const PieColors = ref<{ color: string }[]>([
   { color: "#536dfe" },
 ]);
 
-const calculateColor = () => {
+export const calculateColor = () => {
   const indx: number = randomIntegerFromMinMax(0, PieColors.value.length - 1);
   return PieColors.value[indx].color;
 };
 
 export const PieStore = defineStore("pieStore", () => {
-  const Items = ref<TPieChartData>([
-    {
+  const Items = ref<TPieChartData>(
+    Array.from({ length: 10 }).map((_, index) => ({
       id: nanoid(),
-      label: "Unknown",
-      value: 20,
+      value: randomIntegerFromMinMax(20, 80),
+      label: `Value ${index + 1}`,
       bgColor: calculateColor(),
-    },
-  ]);
-  const Item = ref<TPieChartItem>({
-    id: nanoid(),
-    label: "Unknown",
-    value: 20,
-    bgColor: calculateColor(),
-  });
+    }))
+  );
 
   const ActiveIndex = ref<number>(0);
+  // const Item =  ref<TPieChartItem>(Items.value[ActiveIndex.value]);
+  const Item = computed<TPieChartItem>(() => Items.value[ActiveIndex.value]);
 
   const addItem = (param: TPieChartItem) => {
     Items.value.push(param);
     ActiveIndex.value = Math.max(...[0, Items.value.length - 1]);
   };
-  const setItem = (param: TPieChartItem) => {
-    Item.value = Object.assign({}, param);
-  };
+  // const setItem = (param: TPieChartItem) => {
+  //   Item.value = Object.assign({}, param);
+  // };
+
+  function SetRandomValues() {
+    Items.value = Array.from({ length: 10 }).map((_, index) => ({
+      id: nanoid(),
+      value: randomIntegerFromMinMax(20, 80),
+      label: `Value ${index + 1}`,
+      bgColor: calculateColor(),
+    }));
+  }
 
   function setActiveIndex(param: number) {
     ActiveIndex.value = Math.min(...[param, Items.value.length - 1]);
-    Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
+    // Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
   }
 
   function deleteItem() {
     Items.value.splice(ActiveIndex.value, 1);
     ActiveIndex.value = Math.max(...[0, Items.value.length - 1]);
-    Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
+    // Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
   }
   function setItemInArray(param: TPieChartItem) {
     Items.value[ActiveIndex.value] = Object.assign({}, param);
@@ -90,9 +95,10 @@ export const PieStore = defineStore("pieStore", () => {
     Item,
     Items,
     addItem,
-    setItem,
+    // setItem,
     setActiveIndex,
     deleteItem,
     setItemInArray,
+    SetRandomValues,
   };
 });

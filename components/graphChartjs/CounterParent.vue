@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import counter from "./counter.vue";
 
-const counterRef = ref();
+const counterRef = ref<InstanceType<typeof counter> | null>(null);
 
 const handlePlus = () => {
   counterRef.value?.increment();

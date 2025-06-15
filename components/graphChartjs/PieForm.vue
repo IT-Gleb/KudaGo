@@ -4,11 +4,9 @@ import type { TPieChartItem } from "./PieGraph.vue";
 import { ref, type Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
+import { calculateColor } from "~/store/pieStore";
 
-const calculateColor = () => {
-  const indx: number = randomIntegerFromMinMax(0, PieColors.value.length - 1);
-  return PieColors.value[indx].color;
-};
+const props = defineProps<{ clearFn?: () => void }>();
 
 type TStateRadio = "add" | "edit" | "delete";
 
@@ -21,7 +19,7 @@ const LabelRef = ref<HTMLInputElement>();
 const ValueRef = ref<HTMLInputElement>();
 
 const store = PieStore();
-const { addItem, setItem, deleteItem, setItemInArray } = store;
+const { addItem, deleteItem, setItemInArray, SetRandomValues } = store;
 const { Item } = storeToRefs(store);
 const FormError = ref<{ errorLabel: string; errorValue: string }>({
   errorLabel: "",
@@ -58,7 +56,7 @@ const handleSubmit = () => {
   switch (PState.value) {
     case "add":
       addItem(tmp as TPieChartItem);
-      setItem(tmp as TPieChartItem);
+      // setItem(tmp as TPieChartItem);
       break;
     case "delete":
       deleteItem();
@@ -66,7 +64,7 @@ const handleSubmit = () => {
       break;
     case "edit":
       setItemInArray(tmp as TPieChartItem);
-      setItem(tmp as TPieChartItem);
+      // setItem(tmp as TPieChartItem);
       PState.value = "add";
       break;
   }
@@ -101,7 +99,7 @@ onMounted(() => {
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="w-full md:max-w-[70%] md:mx-auto xl:max-w-[25%]"
+    class="w-full md:max-w-[70%] md:mx-auto xl:max-w-[30%]"
   >
     <legend class="border border-slate-500 p-2">
       <fieldset
@@ -179,12 +177,26 @@ onMounted(() => {
         </datalist>
       </fieldset>
     </legend>
-    <div class="mt-10 text-right">
+    <div class="mt-10 flex items-start justify-between gap-2 p-1">
+      <button
+        type="button"
+        class="cursor-pointer min-w-[100px] min-h-[40px] active:scale-90 bg-indigo-900 dark:bg-slate-400 text-slate-50 dark:text-indigo-950 font-semibold p-1 disabled:bg-slate-200 disabled:text-slate-400"
+        @click.prevent="SetRandomValues"
+      >
+        Сформировать
+      </button>
+      <button
+        type="button"
+        class="cursor-pointer min-w-[100px] min-h-[40px] active:scale-90 bg-indigo-900 dark:bg-slate-400 text-slate-50 dark:text-indigo-950 font-semibold p-1 disabled:bg-slate-200 disabled:text-slate-400"
+        @click.prevent="props.clearFn"
+      >
+        Очистить
+      </button>
       <button
         type="submit"
         class="cursor-pointer min-w-[100px] min-h-[40px] active:scale-90 bg-indigo-900 dark:bg-slate-400 text-slate-50 dark:text-indigo-950 font-semibold p-1 disabled:bg-slate-200 disabled:text-slate-400"
       >
-        OK
+        Выполнить
       </button>
     </div>
   </form>

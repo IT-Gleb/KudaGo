@@ -52,6 +52,12 @@ const handleType = () => {
     isType.value = true;
   }
 };
+
+const graphRef = ref<InstanceType<typeof PieGraph>>();
+
+const handleClearGraph = () => {
+  graphRef.value?.ClearChart();
+};
 </script>
 
 <template>
@@ -142,9 +148,9 @@ const handleType = () => {
       </div>
     </div>
     <div class="w-fit mx-auto my-20">
-      <div class="flex flex-wrap-reverse items-stretch gap-4">
-        <PieGraph />
-        <PieForm />
+      <div class="flex flex-wrap-reverse items-stretch gap-2">
+        <PieGraph ref="graphRef" />
+        <PieForm :clear-fn="handleClearGraph" />
       </div>
     </div>
   </section>
