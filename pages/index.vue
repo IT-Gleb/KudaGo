@@ -8,7 +8,6 @@ import EventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
 import DivObserveDataLoad from "~/components/ui/intersectObserve/DivObserveDataLoad.vue";
 import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
 import FilmsSection from "~/components/ui/sections/films/FilmsSection.vue";
-import ProgresSection from "~/components/ProgressBar_svg/ProgresSection.vue";
 
 useHead({
   title: "Новости:[Kuda Go]",
@@ -21,7 +20,6 @@ useHead({
 const ViewComponentsArray = reactive<
   { inview: boolean; component: Component }[]
 >([
-  { inview: false, component: markRaw(ProgresSection) },
   { inview: false, component: markRaw(EventOfDay) },
   { inview: false, component: markRaw(NewsBlock) },
   { inview: false, component: markRaw(FilmsSection) },
