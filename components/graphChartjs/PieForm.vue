@@ -134,7 +134,8 @@ onMounted(() => {
           type="text"
           maxlength="25"
           placeholder="введите наименование"
-          class="outline-none border p-1 w-full bg-slate-200 dark:bg-slate-700 focus:bg-transparent focus:border-2 focus:border-blue-800"
+          :disabled="PState === 'delete'"
+          class="outline-none border p-1 w-full bg-slate-200 dark:bg-slate-700 focus:bg-transparent focus:border-2 focus:border-blue-800 disabled:border-none disabled:bg-slate-200 disabled:text-slate-300"
           v-model="PLabel"
         />
         <p
@@ -147,7 +148,8 @@ onMounted(() => {
           ref="ValueRef"
           type="number"
           v-model="PValue"
-          class="outline-none border p-1 w-full bg-slate-200 dark:bg-slate-700 focus:bg-transparent focus:border-2 focus:border-blue-800"
+          :disabled="PState === 'delete'"
+          class="outline-none border p-1 w-full bg-slate-200 dark:bg-slate-700 focus:bg-transparent focus:border-2 focus:border-blue-800 disabled:border-none disabled:bg-slate-200 disabled:text-slate-300"
         />
         <p
           v-if="PValue < 1 && FormError.errorValue.trim().length > 5"
@@ -162,7 +164,8 @@ onMounted(() => {
             type="color"
             v-model="PColor"
             list="pieBgcolors"
-            class="cursor-pointer outline-none border focus:border-2 focus:border-blue-800"
+            :disabled="PState === 'delete'"
+            class="cursor-pointer outline-none border focus:border-2 focus:border-blue-800 disabled:opacity-10 disabled:text-slate-300"
           />
         </label>
         <datalist id="pieBgcolors" name="pieBgcolors">

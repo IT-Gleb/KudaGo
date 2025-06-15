@@ -5,6 +5,7 @@ import {
   Title,
   SubTitle,
   Tooltip,
+  plugins,
   ArcElement,
   PieController,
   type ChartConfiguration,
@@ -15,7 +16,15 @@ import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import { getNowYear } from "#imports";
 
-ChartJS.register(PieController, Legend, Title, SubTitle, Tooltip, ArcElement);
+ChartJS.register(
+  PieController,
+  Legend,
+  Title,
+  SubTitle,
+  Tooltip,
+  plugins,
+  ArcElement
+);
 
 const ChartRef = ref();
 const PieChart = ref<ChartJS>();
@@ -64,7 +73,7 @@ const ChartConfig: ChartConfiguration = {
         display: true,
         text: "Какой-то график".toUpperCase(),
         align: "center",
-        padding: { top: 5, bottom: 10 },
+        padding: { top: 5, bottom: 2 },
         color: "#1976d2",
         font: { size: 24, family: "Tahoma" },
         position: "top",
@@ -199,7 +208,7 @@ watch(
       id="pieGraph"
       width="100%"
       height="100%"
-      class="cursor-pointer"
+      class="block w-full h-full cursor-pointer"
       @click="handleClick"
     ></canvas>
   </div>

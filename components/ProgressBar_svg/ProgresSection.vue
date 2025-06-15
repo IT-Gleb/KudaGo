@@ -5,6 +5,7 @@ import ProgressBar, {
 } from "./ProgressBar.vue";
 import PieGraph from "../graphChartjs/PieGraph.vue";
 import PieForm from "../graphChartjs/PieForm.vue";
+import CounterParent from "../graphChartjs/CounterParent.vue";
 
 const widthBar = ref<number>(180);
 const valuesBar = ref<number>(0);
@@ -55,6 +56,7 @@ const handleType = () => {
 
 <template>
   <section class="min-h-screen p-1 py-10">
+    <CounterParent />
     <div class="flex flex-col gap-5">
       <div class="w-fit mx-auto mt-5">
         <ProgressBar

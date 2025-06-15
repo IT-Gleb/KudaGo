@@ -59,9 +59,7 @@ export const PieStore = defineStore("pieStore", () => {
     id: nanoid(),
     label: "Unknown",
     value: 20,
-    bgColor:
-      PieColors.value[randomIntegerFromMinMax(0, PieColors.value.length - 1)]
-        .color,
+    bgColor: calculateColor(),
   });
 
   const ActiveIndex = ref<number>(0);
