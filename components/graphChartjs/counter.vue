@@ -13,5 +13,5 @@ defineExpose({ increment, decrement });
 </script>
 
 <template>
-  <div class="w-fit mx-auto my-5">{{ count }}</div>
+  <div class="w-fit mx-auto my-5 p-2 bg-slate-100">{{ count }}</div>
 </template>

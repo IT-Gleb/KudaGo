@@ -129,7 +129,7 @@ const handleClick = (event: MouseEvent) => {
     true
   );
   if (activeElements.length > 0) {
-    isUpdate.value = !isUpdate.value;
+    // isUpdate.value = !isUpdate.value;
 
     const datasetIndex = activeElements[0].datasetIndex;
 
