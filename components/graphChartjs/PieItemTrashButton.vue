@@ -1,8 +1,22 @@
+<script setup lang="ts">
+import { PieStore } from "~/store/pieStore";
+
+const props = defineProps<{ deleteIndex: number }>();
+
+const store = PieStore();
+const { deleteItem } = store;
+
+const handleDeleteItem = () => {
+  deleteItem(props.deleteIndex);
+};
+</script>
+
 <template>
   <button
     type="button"
-    class="w-[24px] h-[24px] cursor-pointer active:scale-90"
+    class="w-[18px] h-[18px] md:w-[24px] md:h-[24px] cursor-pointer active:scale-90"
     title="Удалить"
+    @click="handleDeleteItem"
   >
     <svg
       width="100%"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProgresSection from "~/components/ProgressBar_svg/ProgresSection.vue";
+import "@cyhnkckali/vue3-color-picker/dist/style.css";
 </script>
 
 <template>

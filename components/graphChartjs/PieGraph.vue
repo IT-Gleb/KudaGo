@@ -56,6 +56,7 @@ const chartConfigOptions: ChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   layout: { autoPadding: true },
+  animation: { duration: 500, delay: 100, loop: false, easing: "easeOutQuart" },
 
   plugins: {
     title: {
@@ -168,36 +169,43 @@ watch(
 );
 
 function updateChartData(paramChart: ChartJS) {
-  if (Items.value.length < 1) {
-    return;
-  }
   paramChart.data.labels = Items.value.map((item) => item.label);
   paramChart.data.datasets[0].data = Items.value.map((item) => item.value);
   paramChart.data.datasets[0].backgroundColor = Items.value.map(
     (item) => item.bgColor
   );
 
-  paramChart.update("none");
+  paramChart.update();
+}
+
+function resizeChart(err?: Error) {
+  if (err) {
+    console.clear();
+    console.log(err);
+  }
+  const w = isUpdate.value
+    ? (PieChart.value as ChartJS).width - 0.1
+    : (PieChart.value as ChartJS).width + 0.1;
+  const h = !isUpdate.value
+    ? (PieChart.value as ChartJS).height - 0.1
+    : (PieChart.value as ChartJS).height + 0.1;
+  (PieChart.value as ChartJS).resize(w, h);
 }
 
 watch(
   () => Items,
   () => {
-    isUpdate.value = !isUpdate.value;
+    //console.log("update chart");
+    if (Items.value.length < 1) {
+      (PieChart.value as ChartJS).clear();
+    }
 
     try {
       updateChartData(PieChart.value as ChartJS);
     } catch (err) {
-      console.clear();
-      console.log(err);
-      const w = isUpdate.value
-        ? (PieChart.value as ChartJS).width - 0.1
-        : (PieChart.value as ChartJS).width + 0.1;
-      const h = !isUpdate.value
-        ? (PieChart.value as ChartJS).height - 0.1
-        : (PieChart.value as ChartJS).height + 0.1;
-      (PieChart.value as ChartJS).resize(w, h);
+      resizeChart(err as Error);
     } finally {
+      resizeChart();
     }
   },
   { deep: true }
@@ -216,9 +224,9 @@ defineExpose({ ClearChart });
 </script>
 
 <template>
-  <div class="w-fit">
+  <div class="w-fit mx-auto">
     <div
-      class="min-w-[320px] md:w-[480px] md:h-[320px] lg:w-[1000px] lg:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
+      class="min-w-[320px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[1000px] xl:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
     >
       <canvas
         ref="ChartRef"

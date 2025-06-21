@@ -1,8 +1,18 @@
+<script setup lang="ts">
+const props = defineProps<{ run: () => void }>();
+
+const handleClick = (event: MouseEvent) => {
+  event.preventDefault();
+  props.run();
+};
+</script>
+
 <template>
   <button
     type="button"
-    class="w-[24px] h-[24px] cursor-pointer active:scale-90"
+    class="w-[18px] h-[18px] md:w-[24px] md:h-[24px] cursor-pointer active:scale-90"
     title="Изменить"
+    @click="handleClick"
   >
     <svg
       width="100%"

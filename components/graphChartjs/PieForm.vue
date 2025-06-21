@@ -59,7 +59,7 @@ const handleSubmit = () => {
       // setItem(tmp as TPieChartItem);
       break;
     case "delete":
-      deleteItem();
+      deleteItem(0);
       PState.value = "add";
       break;
     case "edit":

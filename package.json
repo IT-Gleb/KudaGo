@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@cyhnkckali/vue3-color-picker": "^2.1.2",
     "@nuxt/fonts": "^0.11.1",
     "@pinia/nuxt": "^0.11.0",
     "@tailwindcss/vite": "^4.1.4",

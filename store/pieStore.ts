@@ -81,10 +81,14 @@ export const PieStore = defineStore("pieStore", () => {
 
   function setActiveIndex(param: number) {
     ActiveIndex.value = Math.min(...[param, Items.value.length - 1]);
-    // Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
+    //Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
   }
 
-  function deleteItem() {
+  function deleteItem(paramIndex: number) {
+    ActiveIndex.value = paramIndex;
+    ActiveIndex.value = Math.min(
+      ...[ActiveIndex.value, Items.value.length - 1]
+    );
     Items.value.splice(ActiveIndex.value, 1);
     ActiveIndex.value = Math.max(...[0, Items.value.length - 1]);
     // Item.value = Object.assign({}, Items.value[ActiveIndex.value]);
