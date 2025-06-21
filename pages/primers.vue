@@ -7,7 +7,9 @@ import ProgresSection from "~/components/ProgressBar_svg/ProgresSection.vue";
     <div class="my-5 place-content-center lg:w-[60%] text-left">
       <NuxtLink to="/" class="my-5"><small>На главную</small></NuxtLink>
     </div>
-    <ProgresSection />
+    <Suspense>
+      <ProgresSection />
+    </Suspense>
     <div class="my-5 place-content-center text-right">
       <NuxtLink to="/"><small>На главную</small></NuxtLink>
     </div>

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import {
   Chart as ChartJS,
-  Legend,
-  Title,
-  SubTitle,
+  // Decimation,
+  // Legend,
+  // Title,
+  // SubTitle,
   Tooltip,
-  plugins,
   ArcElement,
   PieController,
   type ChartConfiguration,
+  type ChartOptions,
 } from "chart.js";
 import { ref, reactive, watch } from "vue";
 import { PieStore } from "~/store/pieStore";
@@ -18,11 +19,11 @@ import { getNowYear } from "#imports";
 
 ChartJS.register(
   PieController,
-  Legend,
-  Title,
-  SubTitle,
+  // Legend,
+  // Decimation,
+  // Title,
+  // SubTitle,
   Tooltip,
-  plugins,
   ArcElement
 );
 
@@ -51,6 +52,56 @@ const store = PieStore();
 const { Items } = storeToRefs(store);
 const { setActiveIndex } = store;
 
+const chartConfigOptions: ChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  layout: { autoPadding: true },
+
+  plugins: {
+    title: {
+      display: true,
+      text: "Какой-то график".toUpperCase(),
+      align: "center",
+      padding: { top: 5, bottom: 2 },
+      color: "#1976d2",
+      font: { size: 24, family: "Tahoma" },
+      position: "top",
+      fullSize: false,
+    },
+    subtitle: {
+      display: true,
+      text: `данные за ${getNowYear()} г.`,
+      align: "center",
+      font: { family: "Tahoma", size: 18 },
+      color: "#1976d2",
+      fullSize: true,
+      padding: {
+        bottom: 10,
+      },
+    },
+    legend: {
+      display: true,
+      position: "bottom",
+      fullSize: true,
+      labels: {
+        color: "#3e2723",
+        font: { weight: 600, family: "Tahoma,Verdana" },
+        useBorderRadius: true,
+        borderRadius: 10,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      backgroundColor: "#fff176a9",
+      titleColor: "#1a237e",
+      displayColors: true,
+      borderColor: "black",
+      borderWidth: 1,
+      bodyColor: "#004d40",
+    },
+  },
+};
+
 const ChartConfig: ChartConfiguration = {
   type: "pie",
   data: {
@@ -63,53 +114,8 @@ const ChartConfig: ChartConfiguration = {
       },
     ],
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    layout: { autoPadding: true },
 
-    plugins: {
-      title: {
-        display: true,
-        text: "Какой-то график".toUpperCase(),
-        align: "center",
-        padding: { top: 5, bottom: 2 },
-        color: "#1976d2",
-        font: { size: 24, family: "Tahoma" },
-        position: "top",
-        fullSize: true,
-      },
-      subtitle: {
-        display: true,
-        text: `данные за ${getNowYear()} г.`,
-        align: "center",
-        font: { family: "Tahoma", size: 18 },
-        color: "#1976d2",
-        fullSize: true,
-        padding: {
-          bottom: 10,
-        },
-      },
-      legend: {
-        display: true,
-        position: "top",
-        fullSize: true,
-        labels: {
-          color: "#3e2723",
-          font: { weight: 600, family: "Tahoma,Verdana" },
-        },
-      },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "#fff176a9",
-        titleColor: "#1a237e",
-        displayColors: true,
-        borderColor: "black",
-        borderWidth: 1,
-        bodyColor: "#004d40",
-      },
-    },
-  },
+  options: chartConfigOptions,
 };
 
 onMounted(() => {
@@ -161,29 +167,28 @@ watch(
   { deep: true }
 );
 
+function updateChartData(paramChart: ChartJS) {
+  if (Items.value.length < 1) {
+    return;
+  }
+  paramChart.data.labels = Items.value.map((item) => item.label);
+  paramChart.data.datasets[0].data = Items.value.map((item) => item.value);
+  paramChart.data.datasets[0].backgroundColor = Items.value.map(
+    (item) => item.bgColor
+  );
+
+  paramChart.update("none");
+}
+
 watch(
-  () => Items.value,
+  () => Items,
   () => {
     isUpdate.value = !isUpdate.value;
 
-    // ChartConfig.data.datasets[0].data = Items.value.map((item) => item.value);
-    // ChartConfig.data.labels = Items.value.map((item) => item.label);
-    // ChartConfig.data.datasets[0].backgroundColor = Items.value.map(
-    //   (item) => item.bgColor
-    // );
-
-    (PieChart.value as ChartJS).data.datasets[0].data = Items.value.map(
-      (item) => item.value
-    );
-    (PieChart.value as ChartJS).data.labels = Items.value.map(
-      (item) => item.label
-    );
-    (PieChart.value as ChartJS).data.datasets[0].backgroundColor =
-      Items.value.map((item) => item.bgColor);
-
     try {
-      (PieChart.value as ChartJS).update();
+      updateChartData(PieChart.value as ChartJS);
     } catch (err) {
+      console.clear();
       console.log(err);
       const w = isUpdate.value
         ? (PieChart.value as ChartJS).width - 0.1
@@ -199,7 +204,11 @@ watch(
 );
 
 const ClearChart = () => {
-  (PieChart.value as ChartJS).clear();
+  try {
+    (PieChart.value as ChartJS).clear();
+  } catch (err) {
+    console.log(err);
+  }
   Items.value = [];
 };
 
@@ -207,16 +216,34 @@ defineExpose({ ClearChart });
 </script>
 
 <template>
-  <div
-    class="w-[320px] md:w-[480px] md:h-[320px] lg:w-[1000px] lg:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
-  >
-    <canvas
-      ref="ChartRef"
-      id="pieGraph"
-      width="100%"
-      height="100%"
-      class="block w-full h-full cursor-pointer"
-      @click="handleClick"
-    ></canvas>
+  <div class="w-fit">
+    <div
+      class="min-w-[320px] md:w-[480px] md:h-[320px] lg:w-[1000px] lg:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
+    >
+      <canvas
+        ref="ChartRef"
+        id="pieGraph"
+        width="100%"
+        height="100%"
+        class="block w-full h-full cursor-pointer"
+        @click="handleClick"
+      ></canvas>
+    </div>
+    <div class="w-fit mx-auto mt-10 flex items-center gap-x-[30px]">
+      <div v-for="item in Items" class="flex items-center gap-x-3">
+        <div
+          class="w-[14px] h-[14px] rounded-full"
+          :style="{ backgroundColor: `${item.bgColor}` }"
+        ></div>
+        <div class="textFont text-[15px]/[24px]">{{ item.label }}</div>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.textFont {
+  font-family: "Inter";
+  font-weight: 400;
+}
+</style>

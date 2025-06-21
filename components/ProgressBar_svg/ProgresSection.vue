@@ -4,7 +4,8 @@ import ProgressBar, {
   type TProgressView,
 } from "./ProgressBar.vue";
 import PieGraph from "../graphChartjs/PieGraph.vue";
-import PieForm from "../graphChartjs/PieForm.vue";
+//import PieForm from "../graphChartjs/PieForm.vue";
+import TestGraphComponent from "../graphChartjs/TestGraphComponent.vue";
 import CounterParent from "../graphChartjs/CounterParent.vue";
 
 const widthBar = ref<number>(180);
@@ -156,14 +157,15 @@ const handleClearGraph = () => {
       <hr />
     </article>
     <article class="flex flex-col gap-2 p-4">
-      <h4>Круговая диаграмма на chart.js</h4>
+      <TestGraphComponent />
+      <!-- <h4>Круговая диаграмма на chart.js</h4>
       <div class="w-fit mx-auto my-20">
         <div class="flex flex-wrap-reverse items-stretch gap-2">
           <PieGraph ref="graphRef" />
           <PieForm :clear-fn="handleClearGraph" />
         </div>
       </div>
-      <hr />
+      <hr /> -->
     </article>
   </section>
 </template>
