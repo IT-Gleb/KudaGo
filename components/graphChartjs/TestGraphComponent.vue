@@ -10,13 +10,20 @@ import type { TDialogMode } from "./DialogSector.vue";
 
 const dRef = ref<InstanceType<typeof DialogSector> | null>(null);
 const dialogMode = ref<TDialogMode>("none");
+const aRef = ref<HTMLSpanElement>();
 
 const store = PieStore();
 const { Items } = storeToRefs(store);
-const { setActiveIndex } = store;
+const { setActiveIndex, SetRandomValues } = store;
 
 const handleAddDialog = () => {
+  aRef.value?.scrollIntoView(true);
   dialogMode.value = "add";
+};
+
+const handleRandomValues = () => {
+  aRef.value?.scrollIntoView(true);
+  SetRandomValues();
 };
 
 const handleEditDialog = (paramIndex: number) => {
@@ -38,7 +45,7 @@ watch(dialogMode, () => {
 
 <template>
   <div class="mb-10">
-    <span class="header1 font-[600] text-[32px]/[32px]"
+    <span ref="aRef" class="header1 font-[600] text-[32px]/[32px]"
       >Круговая диаграмма</span
     >
   </div>
@@ -80,6 +87,15 @@ watch(dialogMode, () => {
           @click.prevent="handleAddDialog"
         >
           Добавить сектор
+        </button>
+      </li>
+      <li class="mt-[30px]">
+        <button
+          type="button"
+          class="w-full bg-[#1B84FF] header1 text-white font-[400] text-[16px]/[24px] rounded-[10px] cursor-pointer active:scale-90 p-[18px_36px_18px_36px]"
+          @click.prevent="handleRandomValues"
+        >
+          Сформировать график(случайные значения)
         </button>
       </li>
     </ul>

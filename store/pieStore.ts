@@ -46,15 +46,19 @@ export const calculateColor = () => {
   return PieColors.value[indx].color;
 };
 
-export const PieStore = defineStore("pieStore", () => {
-  const Items = ref<TPieChartData>(
-    Array.from({ length: randomIntegerFromMinMax(3, 4) }).map((_, index) => ({
+const calculateRandomArray = (): Array<TPieChartItem> => {
+  return Array.from({ length: randomIntegerFromMinMax(3, 12) }).map(
+    (_, index) => ({
       id: nanoid(),
       value: randomIntegerFromMinMax(12, 25),
       label: `Сектор-${index + 1}`,
       bgColor: calculateColor(),
-    }))
+    })
   );
+};
+
+export const PieStore = defineStore("pieStore", () => {
+  const Items = ref<TPieChartData>(calculateRandomArray());
 
   const ActiveIndex = ref<number>(0);
   // const Item =  ref<TPieChartItem>(Items.value[ActiveIndex.value]);
@@ -69,14 +73,8 @@ export const PieStore = defineStore("pieStore", () => {
   // };
 
   function SetRandomValues() {
-    Items.value = Array.from({ length: randomIntegerFromMinMax(2, 4) }).map(
-      (_, index) => ({
-        id: nanoid(),
-        value: randomIntegerFromMinMax(12, 25),
-        label: `Сектор-${index + 1}`,
-        bgColor: calculateColor(),
-      })
-    );
+    Items.value = [];
+    Items.value = calculateRandomArray();
   }
 
   function setActiveIndex(param: number) {

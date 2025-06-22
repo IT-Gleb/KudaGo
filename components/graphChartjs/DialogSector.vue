@@ -19,6 +19,10 @@ const Colour = ref<string>("#fa76c2");
 const colourShow = ref<boolean>(false);
 const Label = ref<string>("");
 const nValue = ref<number>(20);
+const dataErrors = ref<{ nameErr: string; valueErr: string }>({
+  nameErr: "",
+  valueErr: "",
+});
 
 const store = PieStore();
 const { Item } = storeToRefs(store);
@@ -39,9 +43,27 @@ const handleShowColorDialog = () => {
   colourShow.value = !colourShow.value;
 };
 
+const checkForValues = (): boolean => {
+  let res: boolean = true;
+  if (Label.value.trim().length < 3) {
+    dataErrors.value.nameErr = "Не введено наименование!";
+    res = false;
+  }
+  if (nValue.value < 1) {
+    dataErrors.value.valueErr = "Значение должно быть больше 0!";
+    res = res && false;
+  }
+
+  return res;
+};
+
 const handleSubmit = () => {
   colourShow.value = false;
   let tmp: Partial<TPieChartItem> = {};
+
+  if (!checkForValues()) {
+    return;
+  }
 
   switch (props.mode) {
     case "add": {
@@ -70,6 +92,9 @@ const handleSubmit = () => {
 };
 
 const setDialogItems = () => {
+  dataErrors.value.nameErr = "";
+  dataErrors.value.valueErr = "";
+
   switch (props.mode) {
     case "add":
       Label.value = "";
@@ -91,6 +116,18 @@ watch(
   },
   { deep: true }
 );
+
+watch(Label, () => {
+  if (Label.value.trim().length > 3) {
+    dataErrors.value.nameErr = "";
+  }
+});
+
+watch(nValue, () => {
+  if (nValue.value > 0) {
+    dataErrors.value.valueErr = "";
+  }
+});
 </script>
 
 <template>
@@ -106,9 +143,19 @@ watch(
         class="flex flex-col"
         @submit.prevent="handleSubmit"
       >
-        <span class="head1 text-[#252F4A] font-[500] text-[20px]">{{
-          props.mode === "add" ? "Добавление сектора" : "Изменение сектора"
-        }}</span>
+        <div class="w-full flex items-center justify-between">
+          <span class="head1 text-[#252F4A] font-[500] text-[20px]">{{
+            props.mode === "add" ? "Добавление сектора" : "Изменение сектора"
+          }}</span>
+          <button
+            type="button"
+            title="Закрыть"
+            class="w-[21px] h-[21px] overflow-hidden place-content-center bg-[#1B84FF] text-white text-[16px]/[18px] font-sans cursor-pointer select-none active:scale-90"
+            @click="() => diagRef?.close()"
+          >
+            x
+          </button>
+        </div>
         <fieldset class="flex flex-col items-start gap-y-5 mt-5">
           <div
             class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
@@ -129,6 +176,11 @@ watch(
               />
             </label>
           </div>
+          <span
+            v-if="dataErrors.nameErr.length > 3"
+            class="w-full p-1 bg-red-500 text-white place-content-center text-[14px]/[18px] font-['Inter'] font-[400]"
+            >{{ dataErrors.nameErr }}</span
+          >
           <div
             class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
           >
@@ -147,6 +199,11 @@ watch(
               />
             </label>
           </div>
+          <span
+            v-if="dataErrors.valueErr.length > 3"
+            class="w-full p-1 bg-red-500 text-white place-content-center text-[14px]/[18px] font-['Inter'] font-[400]"
+            >{{ dataErrors.valueErr }}</span
+          >
           <div
             class="w-full rounded-[10px] border border-[#DBDFE9] px-[20px] pt-[18px]"
             :class="colourShow ? 'h-fit' : 'h-[60px]'"
