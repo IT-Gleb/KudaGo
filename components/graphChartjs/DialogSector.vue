@@ -44,7 +44,7 @@ const handleSubmit = () => {
   let tmp: Partial<TPieChartItem> = {};
 
   switch (props.mode) {
-    case "add":
+    case "add": {
       tmp = {
         id: nanoid(),
         value: nValue.value,
@@ -53,6 +53,7 @@ const handleSubmit = () => {
       };
       addItem(tmp as TPieChartItem);
       break;
+    }
     case "edit": {
       tmp = {
         label: Label.value,
@@ -110,10 +111,10 @@ watch(
         }}</span>
         <fieldset class="flex flex-col items-start gap-y-5 mt-5">
           <div
-            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px] pt-[10px]"
+            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
           >
             <label for="nameSector">
-              <span class="text-[12px] font-[400] font-['Inter']"
+              <span class="text-[12px] font-[400] font-['Inter'] pt-2"
                 >Наименование</span
               >
               <input
@@ -123,15 +124,16 @@ watch(
                 v-model="Label"
                 maxlength="50"
                 placeholder=""
+                autocomplete="off"
                 class="w-full h-[24px] textFont text-[14px]/[24px] outline-none"
               />
             </label>
           </div>
           <div
-            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px] pt-[10px]"
+            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
           >
             <label for="namberValue">
-              <span class="text-[12px] font-[400] font-['Inter']"
+              <span class="text-[12px] font-[400] font-['Inter'] pt-2"
                 >Значение</span
               >
               <input

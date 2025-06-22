@@ -226,7 +226,7 @@ defineExpose({ ClearChart });
 <template>
   <div class="w-fit mx-auto">
     <div
-      class="min-w-[320px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[1000px] xl:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
+      class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[1000px] xl:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
     >
       <canvas
         ref="ChartRef"
@@ -237,13 +237,24 @@ defineExpose({ ClearChart });
         @click="handleClick"
       ></canvas>
     </div>
-    <div class="w-fit mx-auto mt-10 flex items-center gap-x-[30px]">
-      <div v-for="item in Items" class="flex items-center gap-x-3">
+    <div
+      class="w-fit mx-auto mt-10 grid grid-cols-[150px_150px]"
+      :class="
+        Items.length > 4
+          ? 'lg:grid-cols-[150px_150px_150px_150px_150px] lg:gap-2'
+          : 'lg:flex lg:items-center lg:gap-x-4'
+      "
+    >
+      <div v-for="item in Items" class="flex items-center gap-x-2">
         <div
           class="w-[14px] h-[14px] rounded-full"
           :style="{ backgroundColor: `${item.bgColor}` }"
         ></div>
-        <div class="textFont text-[15px]/[24px]">{{ item.label }}</div>
+        <div
+          class="textFont text-[15px]/[24px] whitespace-nowrap overflow-hidden"
+        >
+          {{ item.label }}
+        </div>
       </div>
     </div>
   </div>

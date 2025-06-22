@@ -38,31 +38,33 @@ watch(dialogMode, () => {
 
 <template>
   <div class="mb-10">
-    <span class="header1 font-[600] text-[32px]">Круговая диаграмма</span>
+    <span class="header1 font-[600] text-[32px]/[32px]"
+      >Круговая диаграмма</span
+    >
   </div>
   <DialogSector ref="dRef" :mode="dialogMode" :onClose="setNoneMode" />
   <section class="w-fit mx-auto flex flex-wrap gap-x-2 gap-y-4">
-    <ul class="w-[65%] lg:w-[541px] lg:mx-auto overflow-hidden">
+    <ul class="w-[99%] md:w-[541px] lg:mx-auto overflow-hidden">
       <li
         v-for="(item, index) in Items"
         :key="item.id"
         class="flex flex-row gap-x-10 lg:gap-x-[50px] bg-[#DBDFE933] py-[20px] px-[18px] mb-[5px]"
       >
         <div
-          class="w-fit lg:w-[253px] h-[24px] flex items-center justify-between"
+          class="w-fit lg:w-[253px] h-[24px] grid grid-cols-[100px_83px_1fr]"
         >
           <div
-            class="lg:w-[120px] overflow-hidden whitespace-nowrap border-r-2 border-r-[#DBDFE9] header1"
+            class="overflow-hidden whitespace-nowrap border-r-2 border-r-[#DBDFE9] text-[16px]/[24px] header1"
           >
             {{ item.label }}
           </div>
           <div
-            class="px-4 lg:min-w-[83px] border-r-2 border-r-[#DBDFE9] text-center header1"
+            class="border-r-2 border-r-[#DBDFE9] text-center text-[16px]/[24px] header1"
           >
             {{ item.value }}%
           </div>
           <div
-            class="w-[18px] h-[18px] md:w-[20px] md:h-[20px] rounded-full ml-5"
+            class="w-[16px] h-[16px] md:w-[20px] md:h-[20px] rounded-full ml-5"
             :style="{ backgroundColor: `${item.bgColor}` }"
           ></div>
         </div>
@@ -87,6 +89,6 @@ watch(dialogMode, () => {
 
 <style scoped>
 .header1 {
-  font-family: Inter;
+  font-family: "Inter";
 }
 </style>
