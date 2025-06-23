@@ -51,7 +51,7 @@ watch(dialogMode, () => {
   </div>
   <DialogSector ref="dRef" :mode="dialogMode" :onClose="setNoneMode" />
   <section class="w-fit mx-auto flex flex-wrap gap-x-2 gap-y-4">
-    <ul class="w-[99%] md:w-[541px] lg:mx-auto overflow-hidden">
+    <ul class="w-[99%] md:w-[541px] mx-auto overflow-hidden">
       <li
         v-for="(item, index) in Items"
         :key="item.id"
@@ -92,7 +92,7 @@ watch(dialogMode, () => {
       <li class="mt-[30px]">
         <button
           type="button"
-          class="w-full bg-[#1B84FF] header1 text-white font-[400] text-[16px]/[24px] rounded-[10px] cursor-pointer active:scale-90 p-[18px_36px_18px_36px]"
+          class="w-full bg-[#1B84FF] header1 text-white text-balance font-[400] text-[16px]/[24px] rounded-[10px] cursor-pointer active:scale-90 p-[18px_36px_18px_36px]"
           @click.prevent="handleRandomValues"
         >
           Сформировать график(случайные значения)

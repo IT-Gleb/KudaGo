@@ -134,7 +134,7 @@ watch(nValue, () => {
   <ClientOnly>
     <dialog
       ref="diagRef"
-      class="w-[390px] mx-auto bg-white rounded-2xl overflow-hidden p-5"
+      class="max-[390px]:w-[98%] max-[639px]:w-[75%] sm:w-[390px] mx-auto bg-white rounded-2xl overflow-hidden p-5"
       :class="colourShow ? 'mt-[18%] md:mt-[3%]' : 'mt-[45%] md:mt-[12%]'"
       @close.prevent="() => props.onClose()"
     >
@@ -144,23 +144,22 @@ watch(nValue, () => {
         @submit.prevent="handleSubmit"
       >
         <div class="w-full flex items-center justify-between">
-          <span class="head1 text-[#252F4A] font-[500] text-[20px]">{{
+          <span class="head1 text-[#252F4A] font-[500] text-[20px]/[24px]">{{
             props.mode === "add" ? "Добавление сектора" : "Изменение сектора"
           }}</span>
           <button
             type="button"
             title="Закрыть"
-            class="w-[21px] h-[21px] overflow-hidden place-content-center bg-[#1B84FF] text-white text-[16px]/[18px] font-sans cursor-pointer select-none active:scale-90"
+            data-text="x"
+            class="w-[18px] h-[18px] overflow-hidden place-content-center bg-[#1B84FF] text-white text-[18px]/[20px] font-sans cursor-pointer select-none active:scale-90 relative before:absolute before:content-[attr(data-text)] before:left-[55%] before:top-[55%] before:translate-[-65%]"
             @click="() => diagRef?.close()"
-          >
-            x
-          </button>
+          ></button>
         </div>
         <fieldset class="flex flex-col items-start gap-y-5 mt-5">
           <div
             class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
           >
-            <label for="nameSector">
+            <label for="nameSector" class="cursor-pointer">
               <span class="text-[12px] font-[400] font-['Inter'] pt-2"
                 >Наименование</span
               >
@@ -172,7 +171,7 @@ watch(nValue, () => {
                 maxlength="50"
                 placeholder=""
                 autocomplete="off"
-                class="w-full h-[24px] textFont text-[14px]/[24px] outline-none"
+                class="w-full h-[24px] mt-[5px] textFont text-[14px]/[24px] outline-none focus:border-b"
               />
             </label>
           </div>
@@ -184,7 +183,7 @@ watch(nValue, () => {
           <div
             class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
           >
-            <label for="namberValue">
+            <label for="namberValue" class="cursor-pointer">
               <span class="text-[12px] font-[400] font-['Inter'] pt-2"
                 >Значение</span
               >
@@ -195,7 +194,7 @@ watch(nValue, () => {
                 min="0"
                 max="100"
                 v-model="nValue"
-                class="w-full h-[24px] textFont text-[16px]/[24px] outline-none"
+                class="w-full h-[24px] mt-[5px] textFont text-[16px]/[24px] outline-none focus:border-b"
               />
             </label>
           </div>
@@ -210,11 +209,16 @@ watch(nValue, () => {
           >
             <label
               for="ColorValue"
-              class="flex items-center justify-between w-full"
+              class="flex items-center justify-between w-full cursor-pointer"
             >
-              <span class="text-[12px] font-[400] font-['Inter']">Цвет</span>
+              <span
+                v-if="!colourShow"
+                class="text-[12px] font-[400] font-['Inter']"
+                >Цвет</span
+              >
               <Vue3ColorPicker
                 id="ColorValue"
+                name="ColorValue"
                 v-if="colourShow"
                 v-model="Colour"
                 mode="solid"

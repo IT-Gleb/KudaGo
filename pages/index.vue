@@ -30,6 +30,21 @@ const handleObserve = (param1: number, param2: boolean) => {
     ViewComponentsArray[param1].inview = param2;
   }
 };
+
+onMounted(() => {
+  window.onbeforeunload = (event: BeforeUnloadEvent) => {
+    event.stopPropagation();
+    let res: boolean = confirm(
+      "Вы собираетесь покинуть страницу. Все не сохраненные данные будут потеряны!"
+    );
+
+    return res;
+  };
+});
+
+onUnmounted(() => {
+  window.onbeforeunload = null;
+});
 </script>
 
 <template>

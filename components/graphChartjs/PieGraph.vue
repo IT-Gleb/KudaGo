@@ -226,7 +226,7 @@ defineExpose({ ClearChart });
 <template>
   <div class="w-fit mx-auto">
     <div
-      class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[1000px] xl:h-[667px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
+      class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[960px] xl:h-[640px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
     >
       <canvas
         ref="ChartRef"

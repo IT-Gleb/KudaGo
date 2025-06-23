@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import ProgresSection from "~/components/ProgressBar_svg/ProgresSection.vue";
 import "@cyhnkckali/vue3-color-picker/dist/style.css";
+
+useHead({ title: "Примеры: Counter, ProgressBar, Pie Chart" });
 </script>
 
 <template>
