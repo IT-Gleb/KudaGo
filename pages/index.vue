@@ -43,7 +43,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.onbeforeunload = null;
+  //window.onbeforeunload = null;
 });
 </script>
 
