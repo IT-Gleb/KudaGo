@@ -187,11 +187,16 @@ onUpdated(() => {
         x2="0%"
         y2="100%"
       >
-        <stop
+        <!-- <stop
           offset="35%"
           :stop-color="progressOptions['success'].color"
         ></stop>
-        <stop offset="65%" :stop-color="progressOptions['error'].color"></stop>
+        <stop offset="60%" :stop-color="progressOptions['error'].color"></stop> -->
+        <stop
+          offset="46%"
+          :stop-color="progressOptions['success'].color"
+        ></stop>
+        <stop offset="47%" :stop-color="progressOptions['error'].color"></stop>
       </linearGradient>
       <clipPath id="cutLeft">
         <rect x="0%" y="50%" width="100%" height="100%"></rect>
