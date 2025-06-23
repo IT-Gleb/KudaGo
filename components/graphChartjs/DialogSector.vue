@@ -171,6 +171,7 @@ watch(nValue, () => {
                 maxlength="50"
                 placeholder=""
                 autocomplete="off"
+                autofocus
                 class="w-full h-[24px] mt-[5px] textFont text-[14px]/[24px] outline-none focus:border-b"
               />
             </label>
@@ -257,13 +258,23 @@ watch(nValue, () => {
 <style scoped>
 ::backdrop {
   inset: 0;
+  /* background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, .85)
+  ); */
+
   background: linear-gradient(
     to right,
     rgba(0, 0, 0, 0.85),
     rgba(0, 0, 0, 0.65),
-    rgba(0, 0, 0, 85)
+    rgba(0, 0, 0, 0.85)
   );
+  background-size: 300% 300%;
+  animation: backAnimo 15s ease infinite;
 }
+
 .head1 {
   font-family: "Inter";
   font-weight: 500;
@@ -271,5 +282,17 @@ watch(nValue, () => {
 .textFont {
   font-family: "Inter";
   font-weight: 400;
+}
+
+@keyframes backAnimo {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>

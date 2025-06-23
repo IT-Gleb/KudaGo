@@ -61,12 +61,12 @@ watch(dialogMode, () => {
           class="w-fit lg:w-[253px] h-[24px] grid grid-cols-[100px_83px_1fr]"
         >
           <div
-            class="overflow-hidden whitespace-nowrap border-r-2 border-r-[#DBDFE9] text-[16px]/[24px] header1"
+            class="overflow-hidden whitespace-nowrap border-r-2 border-r-[#DBDFE9] text-[16px]/[24px] font-['Inter']"
           >
             {{ item.label }}
           </div>
           <div
-            class="border-r-2 border-r-[#DBDFE9] text-center text-[16px]/[24px] header1"
+            class="border-r-2 border-r-[#DBDFE9] text-center text-[16px]/[24px] font-['Inter']"
           >
             {{ item.value }}%
           </div>
@@ -102,9 +102,3 @@ watch(dialogMode, () => {
     <PieGraph />
   </section>
 </template>
-
-<style scoped>
-.header1 {
-  font-family: "Inter";
-}
-</style>

@@ -12,7 +12,7 @@ import {
   type ChartOptions,
 } from "chart.js";
 import { ref, reactive, watch } from "vue";
-import { PieStore } from "~/store/pieStore";
+import { calculateColor, PieStore } from "~/store/pieStore";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import { getNowYear } from "#imports";
@@ -112,6 +112,8 @@ const ChartConfig: ChartConfiguration = {
         label: "Значение: ",
         data: Items.value.map((item) => item.value),
         backgroundColor: Items.value.map((item) => item.bgColor),
+        borderColor: "#000000",
+        borderWidth: 2,
       },
     ],
   },
@@ -174,6 +176,7 @@ function updateChartData(paramChart: ChartJS) {
   paramChart.data.datasets[0].backgroundColor = Items.value.map(
     (item) => item.bgColor
   );
+  paramChart.data.datasets[0].borderColor = calculateColor();
 
   paramChart.update();
 }
@@ -245,7 +248,11 @@ defineExpose({ ClearChart });
           : 'lg:flex lg:items-center lg:gap-x-4'
       "
     >
-      <div v-for="item in Items" class="flex items-center gap-x-2">
+      <div
+        v-for="item in Items"
+        :key="item.id"
+        class="flex items-center gap-x-2"
+      >
         <div
           class="w-[14px] h-[14px] rounded-full"
           :style="{ backgroundColor: `${item.bgColor}` }"
