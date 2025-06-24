@@ -27,6 +27,8 @@ ChartJS.register(
   ArcElement
 );
 
+const props = defineProps<{ editOnClick?: (paramIndex: number) => void }>();
+
 const ChartRef = ref();
 const PieChart = ref<ChartJS>();
 const isUpdate = ref<boolean>(false);
@@ -158,6 +160,9 @@ const handleClick = (event: MouseEvent) => {
     ] as string;
 
     setActiveIndex(Index.value);
+    if (props.editOnClick) {
+      props.editOnClick(Index.value);
+    }
   }
 };
 
