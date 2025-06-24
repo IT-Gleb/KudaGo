@@ -17,6 +17,8 @@ export interface IFilmsResult {
   mpaa_rating: string | null;
   age_restriction: string | null;
   poster: IFilmPoster;
+  director: string | null;
+  stars: string | null;
 }
 
 export interface IFilmPoster {

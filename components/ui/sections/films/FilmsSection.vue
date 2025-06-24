@@ -133,6 +133,10 @@ watch(films, () => {
             <div>{{ item.year }}</div>
             <div class="font-bold"><small>Страна:</small></div>
             <div>{{ item.country }}</div>
+            <div class="font-bold"><small>Режиссер:</small></div>
+            <div>{{ item.director }}</div>
+            <div class="font-bold"><small>Актеры:</small></div>
+            <div class="text-balance">{{ item.stars }}</div>
             <div v-if="item.budget as number > 0" class="font-bold">
               <small>Бюджет фильма:</small>
             </div>
