@@ -14,7 +14,11 @@ export interface IFilmsResult {
   budget: string | number | null;
   budget_currency: string | null;
   imdb_rating: number | null;
+  mpaa_rating: string | null;
+  age_restriction: string | null;
   poster: IFilmPoster;
+  director: string | null;
+  stars: string | null;
 }
 
 export interface IFilmPoster {
@@ -28,3 +32,6 @@ export interface IFilmPoster {
     link: string;
   };
 }
+
+export type TResourceString<T extends string> =
+  T extends `name:${infer R} ${string}` ? R : never;

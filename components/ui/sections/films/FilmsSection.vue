@@ -4,6 +4,7 @@ import { FilmsController } from "./controllers/FilmsController";
 import { randomIntegerFromMinMax } from "#imports";
 
 import { ref } from "vue";
+import { getName } from "~/utils/functions";
 
 type TPageParam = -1 | 0 | 1;
 
@@ -55,6 +56,9 @@ watch(films, () => {
 
 <template>
   <section class="w-[96%] xl:w-[80%] mx-auto min-h-screen p-1">
+    <div class="w-fit mx-auto uppercase">
+      {{ getName("jdh jdh name:dd:mm:yyyy jfh jfh gjhgj") }}
+    </div>
     <div ref="filmsRef" class="p-1 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <h4 class="my-5">Фильмы</h4>
@@ -102,7 +106,7 @@ watch(films, () => {
       <article
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
-        class="w-[99%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 odd:bg-slate-50 dark:odd:bg-slate-950"
+        class="w-[99%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 mb-1 border-b border-b-slate-300 odd:bg-slate-50 dark:odd:bg-slate-950"
       >
         <div
           class="w-[120px] h-[180px] sm:w-[200px] sm:h-[260px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
@@ -128,6 +132,10 @@ watch(films, () => {
             <div>{{ item.year }}</div>
             <div class="font-bold"><small>Страна:</small></div>
             <div>{{ item.country }}</div>
+            <div class="font-bold"><small>Режиссер:</small></div>
+            <div>{{ item.director }}</div>
+            <div class="font-bold"><small>Актеры:</small></div>
+            <div class="text-balance">{{ item.stars }}</div>
             <div v-if="item.budget as number > 0" class="font-bold">
               <small>Бюджет фильма:</small>
             </div>
@@ -148,6 +156,16 @@ watch(films, () => {
             >
               {{ item.description }}
             </p>
+            <div v-if="item.mpaa_rating" class="font-bold">
+              <small>Рейтинг(MPAA):</small>
+            </div>
+            <p v-if="item.mpaa_rating" class="uppercase">
+              {{ item.mpaa_rating }}
+            </p>
+            <div v-if="item.age_restriction" class="font-bold">
+              <small>Возрастной рейтинг:</small>
+            </div>
+            <p v-if="item.age_restriction">{{ item.age_restriction }}</p>
           </div>
         </div>
       </article>

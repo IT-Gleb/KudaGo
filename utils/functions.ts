@@ -1,3 +1,4 @@
+import type { TResourceString } from "~/types/filmTypes";
 import type {
   IEventOfDayRoot,
   TEventOfDayObject,
@@ -367,4 +368,17 @@ export function randomIntegerFromMinMax(
   paramMax: number
 ): number {
   return Math.floor(paramMin + Math.random() * (paramMax + 1 - paramMin));
+}
+
+export function getName(param: string) {
+  let format: TResourceString<`name:dd:mm:yyyy `> = "dd:mm:yyyy";
+  let reg1 = new RegExp(`${format}`, "gmi");
+  if (param.match(reg1) !== null) {
+    let isValid = param.match(reg1)?.every((item) => item === format);
+    if (isValid) {
+      return param;
+    }
+    return "Error";
+  }
+  return "Error";
 }
