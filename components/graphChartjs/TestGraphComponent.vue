@@ -99,6 +99,6 @@ watch(dialogMode, () => {
         </button>
       </li>
     </ul>
-    <PieGraph />
+    <PieGraph :edit-on-click="handleEditDialog" />
   </section>
 </template>
