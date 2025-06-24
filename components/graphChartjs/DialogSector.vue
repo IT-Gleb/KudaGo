@@ -230,6 +230,7 @@ watch(nValue, () => {
                 :show-buttons="true"
                 :show-input-menu="false"
                 :show-picker-mode="true"
+                :show-alpha="false"
                 @on-save="handleOnSave"
                 @on-cancel="() => (colourShow = false)"
               />

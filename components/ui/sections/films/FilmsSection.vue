@@ -56,9 +56,9 @@ watch(films, () => {
 
 <template>
   <section class="w-[96%] xl:w-[80%] mx-auto min-h-screen p-1">
-    <div class="w-fit mx-auto uppercase">
+    <!-- <div class="w-fit mx-auto uppercase">
       {{ getName("jdh jdh name:dd:mm:yyyy jfh jfh gjhgj") }}
-    </div>
+    </div> -->
     <div ref="filmsRef" class="p-1 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <h4 class="my-5">Фильмы</h4>
