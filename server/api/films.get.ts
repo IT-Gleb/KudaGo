@@ -18,53 +18,55 @@ export default defineEventHandler(async (event) => {
     );
 
     try {
-      const req = await fetch(myUrl, {
+      const req = await $fetch<unknown, string>(myUrl.toString(), {
         method: "GET",
         headers: { "Content-Type": "application/json;utf-8" },
         signal: AbortSignal.timeout(4500),
+        retry: 3,
         cache: "force-cache",
       });
 
-      if (req.ok) {
-        const data: IFilmsRoot = (await req.json()) as IFilmsRoot;
+      // if (req.ok) {
+      // const data: IFilmsRoot = (await req.json()) as IFilmsRoot;
+      const data: IFilmsRoot = JSON.parse(await (req as Blob).text());
 
-        // const bb = data.results.sort((a, b) => {
-        //   if (a.imdb_rating === null && b.imdb_rating === null) {
-        //     if ((a.year as unknown as number) > (b.year as unknown as number)) {
-        //       return 1;
-        //     } else {
-        //       return -1;
-        //     }
-        //   }
-        //   if (
-        //     (a.imdb_rating as unknown as number) <=
-        //     (b.imdb_rating as unknown as number)
-        //   ) {
-        //     return 1;
-        //   } else {
-        //     return -1;
-        //   }
-        // });
+      // const bb = data.results.sort((a, b) => {
+      //   if (a.imdb_rating === null && b.imdb_rating === null) {
+      //     if ((a.year as unknown as number) > (b.year as unknown as number)) {
+      //       return 1;
+      //     } else {
+      //       return -1;
+      //     }
+      //   }
+      //   if (
+      //     (a.imdb_rating as unknown as number) <=
+      //     (b.imdb_rating as unknown as number)
+      //   ) {
+      //     return 1;
+      //   } else {
+      //     return -1;
+      //   }
+      // });
 
-        // bb.forEach(
-        //   (item) =>
-        //     (item.description = ExtractParagraphData(
-        //       item.description as string
-        //     ))
-        // );
+      // bb.forEach(
+      //   (item) =>
+      //     (item.description = ExtractParagraphData(
+      //       item.description as string
+      //     ))
+      // );
 
-        return {
-          count: data.count,
-          next: data.next,
-          previous: data.previous,
-          results: data.results,
-        };
-      } else {
-        throw createError({
-          statusMessage: "Не могу получить данные",
-          statusCode: 404,
-        });
-      }
+      return {
+        count: data.count,
+        next: data.next,
+        previous: data.previous,
+        results: data.results,
+      };
+      // } else {
+      //   throw createError({
+      //     statusMessage: "Не могу получить данные",
+      //     statusCode: 404,
+      //   });
+      // }
     } catch (err: unknown) {
       return (err as Error).message;
     }
