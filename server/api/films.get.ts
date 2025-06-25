@@ -60,12 +60,13 @@ export default defineEventHandler(async (event) => {
       //     ))
       // );
 
-      return {
-        count: data.count,
-        next: data.next,
-        previous: data.previous,
-        results: data.results,
-      };
+      return data;
+      // return {
+      //   count: data.count,
+      //   next: data.next,
+      //   previous: data.previous,
+      //   results: data.results,
+      // };
       // } else {
       //   throw createError({
       //     statusMessage: "Не могу получить данные",
