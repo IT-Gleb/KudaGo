@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         method: "GET",
         headers: { "Content-Type": "application/json;utf-8" },
         signal: AbortSignal.timeout(4500),
-        cache: "default",
+        cache: "force-cache",
       });
 
       if (req.ok) {
