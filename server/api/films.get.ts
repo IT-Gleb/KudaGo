@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
       //     ))
       // );
 
-      return data;
+      return data.results;
       // return {
       //   count: data.count,
       //   next: data.next,
