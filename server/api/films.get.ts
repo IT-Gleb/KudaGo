@@ -28,36 +28,36 @@ export default defineEventHandler(async (event) => {
       if (req.ok) {
         const data: IFilmsRoot = (await req.json()) as IFilmsRoot;
 
-        const bb = data.results.sort((a, b) => {
-          if (a.imdb_rating === null && b.imdb_rating === null) {
-            if ((a.year as unknown as number) > (b.year as unknown as number)) {
-              return 1;
-            } else {
-              return -1;
-            }
-          }
-          if (
-            (a.imdb_rating as unknown as number) <=
-            (b.imdb_rating as unknown as number)
-          ) {
-            return 1;
-          } else {
-            return -1;
-          }
-        });
+        // const bb = data.results.sort((a, b) => {
+        //   if (a.imdb_rating === null && b.imdb_rating === null) {
+        //     if ((a.year as unknown as number) > (b.year as unknown as number)) {
+        //       return 1;
+        //     } else {
+        //       return -1;
+        //     }
+        //   }
+        //   if (
+        //     (a.imdb_rating as unknown as number) <=
+        //     (b.imdb_rating as unknown as number)
+        //   ) {
+        //     return 1;
+        //   } else {
+        //     return -1;
+        //   }
+        // });
 
-        bb.forEach(
-          (item) =>
-            (item.description = ExtractParagraphData(
-              item.description as string
-            ))
-        );
+        // bb.forEach(
+        //   (item) =>
+        //     (item.description = ExtractParagraphData(
+        //       item.description as string
+        //     ))
+        // );
 
         return {
           count: data.count,
           next: data.next,
           previous: data.previous,
-          results: bb,
+          results: data.results,
         };
       } else {
         throw createError({
