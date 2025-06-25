@@ -87,6 +87,16 @@ const handleSubmit = () => {
       break;
     }
   }
+  // console.log(diagRef.value?.classList);
+  handleClose();
+};
+
+const handleClose = async () => {
+  diagRef.value?.classList.toggle("closeClass");
+  if (diagRef.value?.classList.contains("closeClass")) {
+    await Wait(300);
+    diagRef.value?.classList.toggle("closeClass");
+  }
   props.onClose();
   diagRef.value?.close();
 };
@@ -134,7 +144,7 @@ watch(nValue, () => {
   <ClientOnly>
     <dialog
       ref="diagRef"
-      class="max-[390px]:w-[98%] max-[639px]:w-[75%] sm:w-[390px] mx-auto bg-white rounded-2xl overflow-hidden p-5"
+      class="max-[390px]:w-[98%] max-[639px]:w-[75%] sm:w-[390px] mx-auto rounded-2xl overflow-hidden p-5 bg-white"
       :class="colourShow ? 'mt-[18%] md:mt-[3%]' : 'mt-[45%] md:mt-[12%]'"
       @close.prevent="() => props.onClose()"
     >
@@ -144,15 +154,18 @@ watch(nValue, () => {
         @submit.prevent="handleSubmit"
       >
         <div class="w-full flex items-center justify-between">
-          <span class="head1 text-[#252F4A] font-[500] text-[20px]/[24px]">{{
-            props.mode === "add" ? "Добавление сектора" : "Изменение сектора"
-          }}</span>
+          <span
+            class="font-['Inter'] text-[#252F4A] font-[500] text-[20px]/[24px]"
+            >{{
+              props.mode === "add" ? "Добавление сектора" : "Изменение сектора"
+            }}</span
+          >
           <button
             type="button"
             title="Закрыть"
             data-text="x"
             class="w-[18px] h-[18px] overflow-hidden place-content-center bg-[#1B84FF] text-white text-[18px]/[20px] font-sans cursor-pointer select-none active:scale-90 relative before:absolute before:content-[attr(data-text)] before:left-[55%] before:top-[55%] before:translate-[-65%]"
-            @click="() => diagRef?.close()"
+            @click="handleClose"
           ></button>
         </div>
         <fieldset class="flex flex-col items-start gap-y-5 mt-5">
@@ -172,7 +185,7 @@ watch(nValue, () => {
                 placeholder=""
                 autocomplete="off"
                 autofocus
-                class="w-full h-[24px] mt-[5px] textFont text-[14px]/[24px] outline-none focus:border-b"
+                class="w-full h-[24px] mt-[5px] font-['Inter'] font-[400] text-[14px]/[24px] outline-none focus:border-b"
               />
             </label>
           </div>
@@ -195,7 +208,7 @@ watch(nValue, () => {
                 min="0"
                 max="100"
                 v-model="nValue"
-                class="w-full h-[24px] mt-[5px] textFont text-[16px]/[24px] outline-none focus:border-b"
+                class="w-full h-[24px] mt-[5px] font-['Inter'] font-[400] text-[16px]/[24px] outline-none focus:border-b"
               />
             </label>
           </div>
@@ -276,13 +289,40 @@ watch(nValue, () => {
   animation: backAnimo 15s ease infinite;
 }
 
-.head1 {
-  font-family: "Inter";
-  font-weight: 500;
+dialog:open {
+  animation: bounce1 300ms ease-in forwards;
 }
-.textFont {
-  font-family: "Inter";
-  font-weight: 400;
+
+.closeClass {
+  /* background-color: green; */
+  width: 0px;
+  /* opacity: 0; */
+  transition: all 300ms ease-out;
+}
+
+@keyframes bounce1 {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scaleX(1.1);
+    opacity: 1;
+  }
+
+  75% {
+    transform: scaleX(0.85);
+  }
+
+  90% {
+    transform: scaleX(1.1);
+  }
+
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
 }
 
 @keyframes backAnimo {

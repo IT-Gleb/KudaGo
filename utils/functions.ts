@@ -368,3 +368,17 @@ export function randomIntegerFromMinMax(
 ): number {
   return Math.floor(paramMin + Math.random() * (paramMax + 1 - paramMin));
 }
+
+export async function Wait(paramMs: number) {
+  let timerId: NodeJS.Timeout | undefined = undefined;
+  const resolveT = () => {
+    clearTimeout(timerId);
+    timerId = undefined;
+  };
+  return await new Promise((resolve) => {
+    timerId = setTimeout(() => {
+      resolveT();
+      resolve("Wait...");
+    }, paramMs);
+  });
+}
