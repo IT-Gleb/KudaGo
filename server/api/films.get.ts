@@ -1,5 +1,8 @@
 import type { IFilmsRoot, IFilmsResult } from "~/types/filmTypes";
-import { ExtractParagraphData } from "~/utils/functions";
+import {
+  ExtractParagraphData,
+  randomIntegerFromMinMax,
+} from "~/utils/functions";
 
 export default defineEventHandler(async (event) => {
   let initUrl: string =
@@ -13,7 +16,7 @@ export default defineEventHandler(async (event) => {
     myUrl.searchParams.set(
       "page",
       typeof paramUrl.searchParams.get("page") !== "undefined"
-        ? (paramUrl.searchParams.get("page") as string)
+        ? randomIntegerFromMinMax(1, 500).toString()
         : "1"
     );
 
