@@ -370,6 +370,19 @@ export function randomIntegerFromMinMax(
   return Math.floor(paramMin + Math.random() * (paramMax + 1 - paramMin));
 }
 
+export function getName(param: string) {
+  let format: TResourceString<`name:dd:mm:yyyy `> = "dd:mm:yyyy";
+  let reg1 = new RegExp(`${format}`, "gmi");
+  if (param.match(reg1) !== null) {
+    let isValid = param.match(reg1)?.every((item) => item === format);
+    if (isValid) {
+      return param;
+    }
+    return "Error";
+  }
+  return "Error";
+}
+
 export async function Wait(paramMs: number) {
   let timerId: NodeJS.Timeout | undefined = undefined;
   const resolveT = () => {
