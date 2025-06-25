@@ -50,6 +50,8 @@ const handlerPrev = async () => {
 watch(films, () => {
   if (films.value) {
     totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
+  } else {
+    totalPage.value = 500;
   }
 });
 </script>
@@ -106,7 +108,7 @@ watch(films, () => {
       <article
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
-        class="w-[99%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 mb-1 border-b border-b-slate-300 odd:bg-slate-50 dark:odd:bg-slate-950"
+        class="w-[99%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 odd:bg-slate-50 dark:odd:bg-slate-950"
       >
         <div
           class="w-[120px] h-[180px] sm:w-[200px] sm:h-[260px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
@@ -119,6 +121,7 @@ watch(films, () => {
             "
             alt=""
             loading="lazy"
+            getName
             decoding="async"
             class="block w-full h-full"
           />
@@ -132,10 +135,6 @@ watch(films, () => {
             <div>{{ item.year }}</div>
             <div class="font-bold"><small>Страна:</small></div>
             <div>{{ item.country }}</div>
-            <div class="font-bold"><small>Режиссер:</small></div>
-            <div>{{ item.director }}</div>
-            <div class="font-bold"><small>Актеры:</small></div>
-            <div class="text-balance">{{ item.stars }}</div>
             <div v-if="item.budget as number > 0" class="font-bold">
               <small>Бюджет фильма:</small>
             </div>
@@ -156,16 +155,6 @@ watch(films, () => {
             >
               {{ item.description }}
             </p>
-            <div v-if="item.mpaa_rating" class="font-bold">
-              <small>Рейтинг(MPAA):</small>
-            </div>
-            <p v-if="item.mpaa_rating" class="uppercase">
-              {{ item.mpaa_rating }}
-            </p>
-            <div v-if="item.age_restriction" class="font-bold">
-              <small>Возрастной рейтинг:</small>
-            </div>
-            <p v-if="item.age_restriction">{{ item.age_restriction }}</p>
           </div>
         </div>
       </article>
