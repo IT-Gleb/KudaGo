@@ -4,7 +4,7 @@ import { FilmsController } from "./controllers/FilmsController";
 import { randomIntegerFromMinMax } from "#imports";
 
 import { ref } from "vue";
-import { getName } from "~/utils/functions";
+// import { getName } from "~/utils/functions";
 
 type TPageParam = -1 | 0 | 1;
 
