@@ -95,9 +95,11 @@ const handleClose = async () => {
   diagRef.value?.classList.toggle("closeClass");
   if (diagRef.value?.classList.contains("closeClass")) {
     await Wait(300);
-    diagRef.value?.classList.toggle("closeClass");
+    // diagRef.value?.classList.toggle("closeClass");
   }
+  colourShow.value = false;
   props.onClose();
+  diagRef.value?.classList.remove("closeClass");
   diagRef.value?.close();
 };
 
@@ -290,13 +292,13 @@ watch(nValue, () => {
 }
 
 dialog:open {
-  animation: bounce1 300ms ease-in forwards;
+  animation: bounce1 300ms ease-in;
 }
 
 .closeClass {
   /* background-color: green; */
   width: 0px;
-  /* opacity: 0; */
+  opacity: 0.15;
   transition: all 300ms ease-out;
 }
 

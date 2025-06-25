@@ -391,8 +391,8 @@ export async function Wait(paramMs: number) {
   };
   return await new Promise((resolve) => {
     timerId = setTimeout(() => {
-      resolveT();
       resolve("Wait...");
+      resolveT();
     }, paramMs);
   });
 }
