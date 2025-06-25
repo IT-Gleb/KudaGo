@@ -105,10 +105,7 @@ watch(films, () => {
     </div>
 
     <div>
-      <pre>
-    {{ films }}
-  </pre
-      >
+      {{ films }}
     </div>
 
     <div v-if="status !== 'pending' && !error" class="w-fit mx-auto">
