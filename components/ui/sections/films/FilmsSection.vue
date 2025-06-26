@@ -104,7 +104,7 @@ watch(films, () => {
       </button>
     </div>
 
-    <div v-if="status !== 'pending' && !error" class="w-fit mx-auto">
+    <div v-if="status !== 'pending' && !!error" class="w-fit mx-auto">
       <article
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
