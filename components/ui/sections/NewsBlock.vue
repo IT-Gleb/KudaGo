@@ -33,7 +33,7 @@ const {
   clear,
   error,
 } = await useLazyAsyncData(
-  `news-${(ActivePage.value + Math.random()).toString()}`,
+  `news-${ActivePage.value.toString()}`,
   () =>
     //@ts-ignore
     $fetch("/api/news", {
