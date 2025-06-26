@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
   css: ["~/assets/css/main.css"],
+  ssr: false,
   imports: {
     autoImport: true,
   },
@@ -32,7 +33,7 @@ export default defineNuxtConfig({
       //   maxAge: 10,
       // },
     },
-    "/api/films": { prerender: true },
+    // "/api/films": { prerender: true },
     "/api/cityes": {
       swr: true,
       cache: {

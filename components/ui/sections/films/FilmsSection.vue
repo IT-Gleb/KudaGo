@@ -18,7 +18,7 @@ const { status, films, error } = await FilmsController(paramPage);
 const handleRefresh = async () => {
   checkPage(0);
   const total: number =
-    totalPage.value !== null && totalPage.value > 1 ? totalPage.value : 1;
+    !isNaN(totalPage.value) && totalPage.value > 1 ? totalPage.value : 1;
   paramPage.value = randomIntegerFromMinMax(1, total);
 };
 

@@ -12,7 +12,7 @@ export const FilmsController = async (param: Ref<number>) => {
     refresh,
     clear,
   } = await useAsyncData(
-    `films-${param.value}`,
+    `films-${Math.floor(Math.random())}`,
     () =>
       $fetch<IFilmsRoot, string>("/api/films", {
         headers: { "Content-Type": "application/json;utf-8" },
