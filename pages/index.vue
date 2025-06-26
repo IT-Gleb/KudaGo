@@ -58,7 +58,7 @@ onUnmounted(() => {
         class="bg-slate-200 dark:bg-slate-950 w-full h-[48%] place-content-center flex flex-col lg:flex-row items-center justify-evenly"
       >
         <div
-          class="order-1 lg:order-0 w-full md:w-[55%] uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,12vw,11vw)] font-bold text-slate-800 dark:text-slate-300 pl-20"
+          class="order-1 lg:order-0 w-full md:w-[55%] uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,12vw,11vw)] font-['Inter'] font-bold text-slate-800 dark:text-slate-300 pl-20"
         >
           куда
         </div>
@@ -80,7 +80,7 @@ onUnmounted(() => {
           <RaveConcert />
         </div>
         <div
-          class="md:w-[70%] md:ml-[12%] md:text-left uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,11vw,11vw)] font-bold text-slate-200"
+          class="md:w-[70%] md:ml-[12%] md:text-left uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,11vw,11vw)] font-['Inter'] font-bold text-slate-200"
         >
           сходить
         </div>
