@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     myUrl.searchParams.set(
       "page",
       typeof paramUrl.searchParams.get("page") !== "undefined"
-        ? randomIntegerFromMinMax(1, 500).toString()
+        ? (paramUrl.searchParams.get("page") as string)
         : "1"
     );
 

@@ -12,7 +12,7 @@ export const FilmsController = async (param: Ref<number>) => {
     refresh,
     clear,
   } = await useAsyncData(
-    `films-${Math.floor(Math.random())}`,
+    `films-${param.value}`,
     () =>
       $fetch<IFilmsRoot, string>("/api/films", {
         headers: { "Content-Type": "application/json;utf-8" },
@@ -33,8 +33,6 @@ export const FilmsController = async (param: Ref<number>) => {
         if (input) {
           tmp = Object.assign({}, input as IFilmsRoot);
           //tmp.count = 5000;
-          tmp.next = "jfdhfgkjfhjgkdjfk";
-          tmp.previous = "jhdjshdj";
           if (tmp.results) {
             tmp.results.forEach(
               (item) =>
