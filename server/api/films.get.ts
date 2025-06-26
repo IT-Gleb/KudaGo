@@ -21,17 +21,18 @@ export default defineEventHandler(async (event) => {
     );
 
     try {
-      const req = await fetch(myUrl, {
+      const req = await $fetch<unknown, string>(myUrl.toString(), {
         method: "GET",
         headers: { "Content-Type": "application/json;utf-8" },
         signal: AbortSignal.timeout(4500),
+        retry: 3,
         cache: "force-cache",
       });
 
       // if (req.ok) {
       // const data: IFilmsRoot = (await req.json()) as IFilmsRoot;
 
-      const data: IFilmsRoot = await req.json();
+      const data: IFilmsRoot = JSON.parse(await (req as Blob).text());
 
       // const bb = data.results.sort((a, b) => {
       //   if (a.imdb_rating === null && b.imdb_rating === null) {
