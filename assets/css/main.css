@@ -3,15 +3,7 @@
 @custom-variant dark
   (&: where(.dark, .dark *));
 
-:root {
-  --textNum: 16;
-  --txtSize: calc(var(--textNum) * 1px);
-  --headingSize: calc((var(--textNum) * 2.1) * 1px);
-  --lengthT: calc(var(--txtSize)+2px);
-  --lengthH: calc(var(var(--headingSize))+2px);
-}
-
-/* @theme {
+/* :root {
   --textNum: 16;
   --txtSize: calc(var(--textNum) * 1px);
   --headingSize: calc((var(--textNum) * 2.1) * 1px);
@@ -19,7 +11,15 @@
   --lengthH: calc(var(var(--headingSize))+2px);
 } */
 
-@layer base {
+@theme static {
+  --textNum: 16;
+  --txtSize: calc(var(--textNum) * 1px);
+  --headingSize: calc((var(--textNum) * 2.1) * 1px);
+  --lengthT: calc(var(--txtSize)+2px);
+  --lengthH: calc(var(var(--headingSize))+2px);
+}
+
+@layer components {
   html,
   body {
     scroll-behavior: smooth;
