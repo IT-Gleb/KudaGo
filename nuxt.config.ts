@@ -25,14 +25,14 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    "/api/news": {
-      //ssr: true,
-      prerender: true,
-      // swr: true,
-      // cache: {
-      //   maxAge: 10,
-      // },
-    },
+    // "/api/news": {
+    //   //ssr: true,
+    //   prerender: true,
+    //   // swr: true,
+    //   // cache: {
+    //   //   maxAge: 10,
+    //   // },
+    // },
     // "/api/films": { prerender: true },
     "/api/cityes": {
       swr: true,
