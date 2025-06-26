@@ -234,7 +234,7 @@ defineExpose({ ClearChart });
 <template>
   <div class="w-fit mx-auto">
     <div
-      class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[960px] xl:h-[640px] mx-auto bg-white dark:bg-amber-500 object-cover object-left-top"
+      class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[960px] xl:h-[640px] mx-auto object-cover object-left-top"
     >
       <canvas
         ref="ChartRef"
@@ -263,7 +263,7 @@ defineExpose({ ClearChart });
           :style="{ backgroundColor: `${item.bgColor}` }"
         ></div>
         <div
-          class="textFont text-[15px]/[24px] whitespace-nowrap overflow-hidden"
+          class="font-['Inter'] font-[400] text-[15px]/[24px] whitespace-nowrap overflow-hidden"
         >
           {{ item.label }}
         </div>
@@ -271,10 +271,3 @@ defineExpose({ ClearChart });
     </div>
   </div>
 </template>
-
-<style scoped>
-.textFont {
-  font-family: "Inter";
-  font-weight: 400;
-}
-</style>

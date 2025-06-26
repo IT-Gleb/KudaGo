@@ -172,10 +172,13 @@ watch(nValue, () => {
         </div>
         <fieldset class="flex flex-col items-start gap-y-5 mt-5">
           <div
-            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
+            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px] overflow-hidden"
           >
-            <label for="nameSector" class="cursor-pointer">
-              <span class="text-[12px] font-[400] font-['Inter'] pt-2"
+            <label
+              for="nameSector"
+              class="cursor-pointer flex flex-col gap-y-1"
+            >
+              <span class="text-[12px]/[14px] font-[400] font-['Inter'] mt-2"
                 >Наименование</span
               >
               <input
@@ -187,7 +190,7 @@ watch(nValue, () => {
                 placeholder=""
                 autocomplete="off"
                 autofocus
-                class="w-full h-[24px] mt-[5px] font-['Inter'] font-[400] text-[14px]/[24px] outline-none focus:border-b"
+                class="w-full h-[24px] font-['Inter'] font-[400] text-[14px]/[24px] outline-none focus:border-b"
               />
             </label>
           </div>
@@ -197,10 +200,13 @@ watch(nValue, () => {
             >{{ dataErrors.nameErr }}</span
           >
           <div
-            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px]"
+            class="w-full h-[60px] rounded-[10px] border border-[#DBDFE9] px-[20px] overflow-hidden"
           >
-            <label for="namberValue" class="cursor-pointer">
-              <span class="text-[12px] font-[400] font-['Inter'] pt-2"
+            <label
+              for="namberValue"
+              class="cursor-pointer flex flex-col gap-y-1"
+            >
+              <span class="text-[12px]/[14px] font-[400] font-['Inter'] mt-2"
                 >Значение</span
               >
               <input
@@ -210,7 +216,7 @@ watch(nValue, () => {
                 min="0"
                 max="100"
                 v-model="nValue"
-                class="w-full h-[24px] mt-[5px] font-['Inter'] font-[400] text-[16px]/[24px] outline-none focus:border-b"
+                class="w-full h-[24px] font-['Inter'] font-[400] text-[16px]/[24px] outline-none focus:border-b"
               />
             </label>
           </div>
