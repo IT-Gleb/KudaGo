@@ -32,8 +32,8 @@ export const FilmsController = async (param: Ref<number>) => {
         let tmp: Partial<IFilmsRoot> = {};
         if (input) {
           tmp = Object.assign({}, input);
-          tmp.count = 5000;
-          tmp.previous = "jfdhfgkjfhjgkdjfk";
+          //tmp.count = 5000;
+          tmp.next = "jfdhfgkjfhjgkdjfk";
           tmp.previous = "jhdjshdj";
           tmp.results?.splice(5, 5);
         }
