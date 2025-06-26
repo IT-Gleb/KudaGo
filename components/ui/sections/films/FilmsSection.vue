@@ -89,7 +89,7 @@ watch(films, () => {
         v-if="(films as IFilmsRoot).previous"
         type="button"
         @click="handlerPrev"
-        class="p-1 w-[40px] h-[40px] inset-10 -scale-100 place-content-center text-indigo-900 dark:text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+        class="p-1 w-[40px] h-[40px] inset-10 -scale-100 place-content-center text-indigo-900 dark:text-slate-300 active:-scale-90 rounded-sm cursor-pointer"
       >
         <UiSvgNextSvg />
       </button>
@@ -111,7 +111,7 @@ watch(films, () => {
       <article
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
-        class="w-[99%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 odd:bg-slate-50 dark:odd:bg-slate-950"
+        class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 odd:bg-slate-50 dark:odd:bg-slate-950"
       >
         <div
           class="w-[120px] h-[180px] sm:w-[200px] sm:h-[260px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
@@ -131,7 +131,7 @@ watch(films, () => {
         </div>
         <div>
           <h5 class="mb-5 text-balance">{{ item.title }}</h5>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 sm:grid-cols-[200px_1fr] gap-2">
             <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
             <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
             <div class="font-bold"><small>Год выпуска:</small></div>
