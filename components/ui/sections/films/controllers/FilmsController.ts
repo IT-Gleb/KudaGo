@@ -1,4 +1,5 @@
 import { useAsyncData } from "#app";
+import type { IFilmsRoot } from "~/types/filmTypes";
 
 export const FilmsController = async (param: Ref<number>) => {
   //console.log(param.value);
@@ -13,7 +14,7 @@ export const FilmsController = async (param: Ref<number>) => {
   } = await useAsyncData(
     `films-${param.value}`,
     () =>
-      $fetch("/api/films", {
+      $fetch<IFilmsRoot, string>("/api/films", {
         headers: { "Content-Type": "application/json;utf-8" },
         method: "GET",
         retry: 3,
