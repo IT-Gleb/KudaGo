@@ -10,45 +10,47 @@
   --lengthH: calc(var(var(--headingSize))+2px);
 }
 
-html,
-body {
-  scroll-behavior: smooth;
-  font-family: "Inter", system-ui, -apple-system, serif;
-  /* @apply dark:bg-slate-900 min-h-[100%] text-[filter:invert(1)_grayscale(1)_contrast(1000)] bg-white text-[3vw]/[3.6vw] sm:text-[length:clamp(1.2vw,var(--txtSize),1.6vw)]/[var(--lengthT)] overflow-x-hidden; */
-  @apply dark:bg-slate-900 dark:text-slate-300 text-[contrast-color(theme(colors.slate.300))]  bg-white min-h-[100%] text-[3vw]/[3.6vw] sm:text-[length:clamp(1.2vw,var(--txtSize),1.6vw)]/[var(--lengthT)] overflow-x-hidden;
-}
-h1 {
-  font-family: "Roboto", system-ui, sans-serif;
-  @apply py-1 text-[length:clamp(4.5vw,var(--headingSize),5vw)]/[var(--lengthH)] uppercase font-semibold;
-}
+@layer base {
+  html,
+  body {
+    scroll-behavior: smooth;
+    font-family: "Inter", system-ui, -apple-system, serif;
+    /* @apply dark:bg-slate-900 min-h-[100%] text-[filter:invert(1)_grayscale(1)_contrast(1000)] bg-white text-[3vw]/[3.6vw] sm:text-[length:clamp(1.2vw,var(--txtSize),1.6vw)]/[var(--lengthT)] overflow-x-hidden; */
+    @apply dark:bg-slate-900 dark:text-slate-300 text-[contrast-color(theme(colors.slate.300))]  bg-white min-h-[100%] text-[3vw]/[3.6vw] sm:text-[length:clamp(1.2vw,var(--txtSize),1.6vw)]/[var(--lengthT)] overflow-x-hidden;
+  }
+  h1 {
+    font-family: "Roboto", system-ui, sans-serif;
+    @apply py-1 text-[length:clamp(4.5vw,var(--headingSize),5vw)]/[var(--lengthH)] uppercase font-semibold;
+  }
 
-h2 {
-  font-family: "Roboto", system-ui, sans-serif;
-  @apply py-1 text-[length:clamp(3.5vw,var(--headingSize),4.2vw)]/[var(--lengthH)] uppercase font-semibold;
-}
+  h2 {
+    font-family: "Roboto", system-ui, sans-serif;
+    @apply py-1 text-[length:clamp(3.5vw,var(--headingSize),4.2vw)]/[var(--lengthH)] uppercase font-semibold;
+  }
 
-h3 {
-  font-family: "Roboto", system-ui, sans-serif;
-  @apply py-1 text-[length:clamp(3vw,var(--headingSize),3.5vw)]/[var(--lengthH)] uppercase font-semibold;
-}
+  h3 {
+    font-family: "Roboto", system-ui, sans-serif;
+    @apply py-1 text-[length:clamp(3vw,var(--headingSize),3.5vw)]/[var(--lengthH)] uppercase font-semibold;
+  }
 
-h4 {
-  font-family: "Roboto", system-ui, sans-serif;
-  @apply py-1 text-[length:clamp(2.5vw,var(--headingSize),3vw)]/[var(--lengthH)] uppercase font-semibold;
-}
+  h4 {
+    font-family: "Roboto", system-ui, sans-serif;
+    @apply py-1 text-[length:clamp(2.5vw,var(--headingSize),3vw)]/[var(--lengthH)] uppercase font-semibold;
+  }
 
-h5 {
-  font-family: "Roboto", system-ui, sans-serif;
-  @apply py-1 text-[length:clamp(2vw,var(--headingSize),2.5vw)]/[var(--lengthH)] uppercase font-semibold;
-}
+  h5 {
+    font-family: "Roboto", system-ui, sans-serif;
+    @apply py-1 text-[length:clamp(2vw,var(--headingSize),2.5vw)]/[var(--lengthH)] uppercase font-semibold;
+  }
 
-h6 {
-  font-family: "Roboto", system-ui, sans-serif;
-  @apply py-1 text-[length:clamp(1.8vw,var(--headingSize),2vw)]/[var(--lengthH)] uppercase font-semibold;
-}
+  h6 {
+    font-family: "Roboto", system-ui, sans-serif;
+    @apply py-1 text-[length:clamp(1.8vw,var(--headingSize),2vw)]/[var(--lengthH)] uppercase font-semibold;
+  }
 
-mark {
-  @apply bg-green-300;
+  mark {
+    @apply bg-green-300;
+  }
 }
 
 @layer utilities {
