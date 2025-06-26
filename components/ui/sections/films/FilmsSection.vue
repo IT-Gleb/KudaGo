@@ -149,6 +149,10 @@ watch(films, () => {
                 }).format(item.budget as number)
               }}
             </div>
+            <div v-if="item.director"><small>Режиссер:</small></div>
+            <div v-if="item.director">{{ item.director }}</div>
+            <div v-if="item.stars"><small>Актеры:</small></div>
+            <div v-if="item.stars">{{ item.stars }}</div>
             <div v-if="item.description" class="font-bold">
               <small>Описание:</small>
             </div>
