@@ -23,7 +23,7 @@ for (let indx: number = 0; indx < PagesCount.value; indx++) {
       >
     </div>
     <div
-      class="w-full mb-5 flex flex-row flex-wrap items-center gap-x-3 gap-y-4"
+      class="w-full mb-5 font-['Inter'] flex flex-row flex-wrap items-center gap-x-3 gap-y-4"
     >
       <button
         type="button"
