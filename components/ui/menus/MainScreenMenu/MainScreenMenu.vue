@@ -15,7 +15,7 @@ const MainMenuItems = ref<TMainScreenItem[]>([
 
 <template>
   <div
-    class="text-[clamp(3vw,4vw,4vw)] sm:text-[clamp(2.4vw,3vw,2.8vw)] md:text-[clamp(1.25vw,2vw,1.8vw)] flex flex-row flex-wrap items-start md:items-center max-[915px]:text-slate-200 dark:max-[915px]:text-slate-300 lg:text-indigo-950 dark:lg:text-slate-300 gap-4 justify-center uppercase font-bold"
+    class="text-[clamp(3vw,4vw,4vw)]/[clamp(3vw,4vw,4vw)] sm:text-[clamp(2.4vw,3vw,2.8vw)]/[clamp(2.4vw,3vw,2.8vw)] md:text-[clamp(1.25vw,2vw,1.8vw)]/[clamp(1.25vw,2vw,1.8vw)] font-['Inter'] flex flex-row flex-wrap items-start md:items-center max-[915px]:text-slate-200 dark:max-[915px]:text-slate-300 lg:text-indigo-950 dark:lg:text-slate-300 gap-4 justify-center uppercase font-bold"
   >
     <NuxtLink
       rel="noopener"
