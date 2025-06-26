@@ -173,7 +173,7 @@ watch(films, () => {
           v-if="(films as IFilmsRoot).previous"
           type="button"
           @click="handlerPrev"
-          class="p-1 w-[40px] h-[40px] inset-10 -scale-100 place-content-center text-indigo-900 dark:text-slate-300 active:scale-90 rounded-sm cursor-pointer"
+          class="p-1 w-[40px] h-[40px] inset-10 -scale-100 place-content-center text-indigo-900 dark:text-slate-300 active:-scale-90 rounded-sm cursor-pointer"
         >
           <UiSvgNextSvg />
         </button>
