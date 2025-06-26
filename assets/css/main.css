@@ -40,12 +40,12 @@
 
   h5 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[length:clamp(2vw,2.3vw,2.5vw)]/[2.5vw] uppercase font-semibold;
+    @apply py-1 text-[clamp(2vw,2.3vw,2.5vw)]/[2.5vw] uppercase font-semibold;
   }
 
   h6 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[length:clamp(1.8vw,var(--headingSize),2vw)]/[var(--lengthH)] uppercase font-semibold;
+    @apply py-1 text-[clamp(1.8vw,1.9vw,2vw)]/[2vw] uppercase font-semibold;
   }
 
   mark {
