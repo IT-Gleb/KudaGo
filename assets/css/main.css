@@ -40,7 +40,7 @@
 
   h5 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[length:clamp(2vw,var(--headingSize),2.5vw)]/[var(--lengthH)] uppercase font-semibold;
+    @apply py-1 text-[length:clamp(2vw,--headingSize,2.5vw)]/[--lengthH] uppercase font-semibold;
   }
 
   h6 {
