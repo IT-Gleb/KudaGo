@@ -30,8 +30,8 @@ export default defineEventHandler(async (event) => {
 
       // if (req.ok) {
       // const data: IFilmsRoot = (await req.json()) as IFilmsRoot;
-      const json = await req.json();
-      const data: IFilmsRoot = json as IFilmsRoot;
+
+      const data: IFilmsRoot = await req.json();
 
       // const bb = data.results.sort((a, b) => {
       //   if (a.imdb_rating === null && b.imdb_rating === null) {

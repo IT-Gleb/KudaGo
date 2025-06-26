@@ -31,11 +31,18 @@ export const FilmsController = async (param: Ref<number>) => {
       transform: (input) => {
         let tmp: Partial<IFilmsRoot> = {};
         if (input) {
-          tmp = Object.assign({}, input);
+          tmp = Object.assign({}, input as IFilmsRoot);
           //tmp.count = 5000;
           tmp.next = "jfdhfgkjfhjgkdjfk";
           tmp.previous = "jhdjshdj";
-          tmp.results?.splice(5, 5);
+          if (tmp.results) {
+            tmp.results.forEach(
+              (item) =>
+                (item.description = ExtractParagraphData(
+                  item.description as string
+                ))
+            );
+          }
         }
         return tmp as IFilmsRoot;
       },
