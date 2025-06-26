@@ -28,6 +28,7 @@ export const FilmsController = async (param: Ref<number>) => {
 
     {
       dedupe: "cancel",
+      lazy: true,
       transform: (input) => {
         let tmp: Partial<IFilmsRoot> = {};
         if (input) {
