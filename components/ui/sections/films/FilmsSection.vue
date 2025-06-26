@@ -105,7 +105,7 @@ watch(films, () => {
     </div>
 
     <div>
-      {{ films }}
+      {{ (films as unknown as Blob)?.text() }}
     </div>
 
     <div v-if="status !== 'pending' && !error" class="w-fit mx-auto">
