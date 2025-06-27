@@ -2,6 +2,7 @@
 import type { IFilmsRoot } from "~/types/filmTypes";
 import { FilmsController } from "./controllers/FilmsController";
 import { randomIntegerFromMinMax } from "#imports";
+import FilmsFilterComponent from "./FilmsFilterComponent.vue";
 
 import { ref } from "vue";
 // import { getName } from "~/utils/functions";
@@ -81,6 +82,11 @@ watch(films, () => {
     >
       <LoaderComponent />
     </div>
+
+    <div class="my-4 p-1">
+      <FilmsFilterComponent />
+    </div>
+
     <div
       v-if="status === 'success' && !error"
       class="flex flex-row items-center justify-center gap-4 mb-5"
@@ -105,7 +111,9 @@ watch(films, () => {
     </div>
 
     <div
-      v-if="status !== 'pending' && (error === null || error === undefined)"
+      v-if="
+        status !== 'pending' && (error === null || typeof error === undefined)
+      "
       class="w-fit mx-auto"
     >
       <article
