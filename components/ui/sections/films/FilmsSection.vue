@@ -111,7 +111,7 @@ watch(films, () => {
       <article
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
-        class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 odd:bg-slate-50 dark:odd:bg-slate-950"
+        class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 mb-2 odd:bg-slate-50 dark:odd:bg-slate-950"
       >
         <div
           class="w-[120px] h-[180px] sm:w-[200px] sm:h-[260px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
@@ -131,7 +131,7 @@ watch(films, () => {
         </div>
         <div>
           <p
-            class="font-['Roboto'] font-bold text-[clamp(4vw,5vw,6vw)]/[clamp(4.2vw,5.5vw,6.5vw)] text-balance mb-5 md:hidden"
+            class="font-['Roboto'] font-bold text-[clamp(4vw,5vw,6vw)]/[clamp(4.2vw,5.5vw,6.5vw)] text-balance uppercase mb-5 md:hidden"
           >
             {{ item.title }}
           </p>
