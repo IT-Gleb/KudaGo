@@ -157,7 +157,10 @@ watch(films, () => {
               }}
             </div>
             <div v-if="item.director"><small>Режиссер:</small></div>
-            <div v-if="item.director" class="col-span-2 md:col-auto">
+            <div
+              v-if="item.director"
+              class="col-span-2 md:col-auto indent-5 text-right"
+            >
               {{ item.director }}
             </div>
             <div v-if="item.stars"><small>Актеры:</small></div>
