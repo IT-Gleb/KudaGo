@@ -156,14 +156,18 @@ watch(films, () => {
                 }).format(item.budget as number)
               }}
             </div>
-            <div v-if="item.director"><small>Режиссер:</small></div>
+            <div v-if="item.director" class="font-bold">
+              <small>Режиссер:</small>
+            </div>
             <div
               v-if="item.director"
-              class="col-span-2 md:col-auto indent-5 text-right"
+              class="col-span-2 md:col-auto indent-5 text-right text-pretty"
             >
               {{ item.director }}
             </div>
-            <div v-if="item.stars"><small>Актеры:</small></div>
+            <div v-if="item.stars" class="font-bold">
+              <small>Актеры:</small>
+            </div>
             <div v-if="item.stars" class="col-span-2 md:col-auto indent-5">
               {{ item.stars }}
             </div>
