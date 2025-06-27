@@ -138,7 +138,7 @@ watch(films, () => {
           <h5 class="hidden md:inline-block mb-5 text-balance">
             {{ item.title }}
           </h5>
-          <div class="grid grid-cols-2 sm:grid-cols-[200px_1fr] gap-2">
+          <div class="grid grid-cols-2 sm:grid-cols-[200px_1fr] gap-2 p-1">
             <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
             <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
             <div class="font-bold"><small>Год выпуска:</small></div>
@@ -161,7 +161,7 @@ watch(films, () => {
             </div>
             <div
               v-if="item.director"
-              class="col-span-2 md:col-auto indent-5 text-right text-pretty"
+              class="col-span-2 md:col-auto indent-5 text-pretty"
             >
               {{ item.director }}
             </div>
