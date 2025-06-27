@@ -50,7 +50,7 @@ watch(dialogMode, () => {
     >
   </div>
   <DialogSector ref="dRef" :mode="dialogMode" :onClose="setNoneMode" />
-  <section class="w-fit mx-auto flex flex-wrap gap-x-2 gap-y-4">
+  <section class="w-fit mx-auto flex flex-wrap-reverse gap-x-2 gap-y-4">
     <ul class="w-[99%] md:w-[541px] mx-auto overflow-hidden">
       <li
         v-for="(item, index) in Items"

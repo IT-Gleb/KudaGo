@@ -130,7 +130,15 @@ watch(films, () => {
           />
         </div>
         <div>
-          <h5 class="mb-5 text-balance">{{ item.title }}</h5>
+          <p
+            class="font-['Roboto'] font-bold text-[clamp(4vw,5vw,6vw)]/[clamp(4.2vw,5.5vw,6.5vw)] text-balance mb-5 md:hidden"
+          >
+            {{ item.title }}
+          </p>
+
+          <h5 class="hidden md:inline-block mb-5 text-balance">
+            {{ item.title }}
+          </h5>
           <div class="grid grid-cols-2 sm:grid-cols-[200px_1fr] gap-2">
             <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
             <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
@@ -152,13 +160,15 @@ watch(films, () => {
             <div v-if="item.director"><small>Режиссер:</small></div>
             <div v-if="item.director">{{ item.director }}</div>
             <div v-if="item.stars"><small>Актеры:</small></div>
-            <div v-if="item.stars">{{ item.stars }}</div>
+            <div v-if="item.stars" class="col-span-2 md:col-auto">
+              {{ item.stars }}
+            </div>
             <div v-if="item.description" class="font-bold">
               <small>Описание:</small>
             </div>
             <p
               v-if="item.description && item.description?.length > 0"
-              class="indent-2"
+              class="indent-2 col-span-2 md:col-auto"
             >
               {{ item.description }}
             </p>
