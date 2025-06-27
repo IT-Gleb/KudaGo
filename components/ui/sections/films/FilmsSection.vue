@@ -124,7 +124,6 @@ watch(films, () => {
             "
             alt=""
             loading="lazy"
-            getName
             decoding="async"
             class="block w-full h-full"
           />
