@@ -111,7 +111,7 @@ watch(films, () => {
       <article
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
-        class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-2 mb-2 odd:bg-slate-50 dark:odd:bg-slate-950"
+        class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-x-2 gap-y-4 odd:bg-slate-50 dark:odd:bg-slate-950"
       >
         <div
           class="w-[120px] h-[180px] sm:w-[200px] sm:h-[260px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
