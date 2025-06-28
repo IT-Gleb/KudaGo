@@ -12,7 +12,8 @@ export const FilterStore = defineStore("filterFilms", () => {
     results: [],
   });
   const filterParam = ref<string>("cartoons");
-  const hasData = computed(() => filtered.value.results.length > 0);
+  const hasFilteredData = computed(() => filtered.value.results.length > 0);
+  const Size = computed(() => filtered.value.results.length);
   const dataStatus = ref<AsyncDataRequestStatus>();
   const dataError = ref<NuxtError<unknown> | null>(null);
   const tick = ref<number>(0);
@@ -20,7 +21,6 @@ export const FilterStore = defineStore("filterFilms", () => {
 
   const setFilterParam = async (param: string) => {
     filterParam.value = param;
-    console.log(filterParam.value);
     if (filterParam.value.length > 0) {
       await getFiltered();
     } else {
@@ -83,7 +83,7 @@ export const FilterStore = defineStore("filterFilms", () => {
           if (!dataError.value && tick.value !== 100) {
             tick.value = 100;
           }
-          console.log(filtered.value.count, filtered.value.results.length);
+          // console.log(filtered.value.count, filtered.value.results.length);
         },
       }
     );
@@ -91,10 +91,11 @@ export const FilterStore = defineStore("filterFilms", () => {
 
   return {
     filtered,
-    hasData,
+    hasFilteredData,
     dataStatus,
     dataError,
     tick,
+    Size,
     getFiltered,
     setFilterParam,
     ClearData,

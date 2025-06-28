@@ -71,6 +71,7 @@ export default defineEventHandler(async (event) => {
     "budget",
     "director",
     "stars",
+    "year",
     "budget_currency",
     "imdb_rating",
     "mpaa_rating",
@@ -79,14 +80,16 @@ export default defineEventHandler(async (event) => {
 
   const tmpUrl = new URL(`http://localhost${event.path}`);
 
-  const params: string[] = (
-    tmpUrl.searchParams.get("filterParam") as string
-  )?.split(",");
+  const filters = tmpUrl.searchParams.get("filterParam") as string;
 
-  let initUrl: string = `https://kudago.com/public-api/v1.4/movies/?lang=ru&page=${randomIntegerFromMinMax(
-    1,
-    55
-  )}&page_size=100&fields=${typeKeys.join(",")}&text_format=text`;
+  if (!filters) {
+    return { errorMessage: "Не переданы параметры" };
+  }
+  const params: string[] = filters.split(",");
+
+  let initUrl: string = `https://kudago.com/public-api/v1.4/movies/?lang=ru&page=${1}&page_size=100&fields=${typeKeys.join(
+    ","
+  )}&text_format=text`;
 
   //Цикл
   let indx: number = 0;

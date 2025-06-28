@@ -8,6 +8,7 @@ import {
 import ProgressBar, {
   type TProgressState,
 } from "~/components/ProgressBar_svg/ProgressBar.vue";
+import Arrow2 from "~/components/svg/Arrow2.vue";
 
 const isShowFilter = ref<boolean>(false);
 const FilterPo = ref<TFilmSlugsData>([]);
@@ -20,7 +21,7 @@ const progresState = ref<TProgressState>("in-progress");
 const store = FilterStore();
 
 const { setFilterParam, ClearData } = store;
-const { hasData, dataStatus, tick } = storeToRefs(store);
+const { dataStatus, tick } = storeToRefs(store);
 
 const sortByRuSlug = (a: TFilmsSlug, b: TFilmsSlug) => {
   if (a.ru_slug.toLowerCase() > b.ru_slug.toLowerCase()) {
@@ -62,7 +63,15 @@ const handleUpdate = async () => {
 };
 
 watch(tick, () => {
-  showProgress.value = tick.value < 100 && progresState.value === "in-progress";
+  showProgress.value = progresState.value === "in-progress" && tick.value < 100;
+});
+
+watch(isShowFilter, () => {
+  if (!isShowFilter.value) {
+    progresState.value = "success";
+    showProgress.value = false;
+    ClearData();
+  }
 });
 
 watch(
@@ -70,16 +79,17 @@ watch(
   () => {
     paramFiltrStr.value = "";
     if (FilterPo.value.length > 0) {
-      paramFiltrStr.value = FilterPo.value.reduce((acc, curr) => {
-        acc += curr.slug + ",";
+      paramFiltrStr.value = FilterPo.value.reduce((acc, curr, index, array) => {
+        if (index < array.length - 1) {
+          acc += curr.slug + ",";
+        } else {
+          acc += curr.slug;
+        }
+
         return acc;
       }, "");
     }
-    paramFiltrStr.value = paramFiltrStr.value.slice(
-      0,
-      paramFiltrStr.value.length - 1
-    );
-    // console.log(paramFiltrStr.value);
+    //    console.log(paramFiltrStr.value);
   },
   { deep: true }
 );
@@ -125,12 +135,13 @@ onMounted(() => {
     >
       <div
         v-if="showProgress"
-        class="absolute z-10 bg-white inset-0 place-content-center Showing"
+        class="absolute z-10 bg-[#FFFFFFaf] inset-0 place-content-center Showing"
       >
         <div class="w-fit mx-auto grid grid-cols-1 row-auto gap-2">
-          <span class="w-fit mx-auto font-bold animate-bounce">{{
-            tick < 65 ? "Получаю данные..." : "&nbsp;"
-          }}</span>
+          <span
+            class="w-fit mx-auto font-bold dark:text-slate-900 animate-bounce"
+            >{{ tick < 65 ? "Получаю данные..." : "&nbsp;" }}</span
+          >
           <ProgressBar
             :width="160"
             :value="tick"
@@ -139,12 +150,17 @@ onMounted(() => {
           />
           <span
             v-if="tick > 65"
-            class="w-fit mx-auto font-bold animate-bounce"
-            >{{ tick > 65 ? "Применяю фильтры..." : "&nbsp;" }}</span
+            class="w-fit mx-auto font-bold animate-bounce dark:text-slate-900"
+            >{{
+              tick > 65 && tick < 100 ? "Применяю фильтры..." : "&nbsp;"
+            }}</span
           >
         </div>
       </div>
-      <label for="Filters" class="p-2">
+      <label
+        for="Filters"
+        class="w-full p-2 border-b border-b-indigo-900 dark:border-b-slate-400"
+      >
         <span
           class="font-['Roboto'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
           >Фильтровать по:</span
@@ -162,9 +178,19 @@ onMounted(() => {
           </button>
         </div>
       </label>
-      <div class="font-bold place-self-center">=><=</div>
+      <div class="font-bold place-self-center">
+        <div class="w-[40px] h-[40px] text-slate-400 rotate-90">
+          <Arrow2 />
+        </div>
+        <div class="w-[40px] h-[40px] text-slate-400 -rotate-90">
+          <Arrow2 />
+        </div>
+      </div>
 
-      <label for="existsFilters" class="p-2">
+      <label
+        for="existsFilters"
+        class="w-full p-2 border-t border-t-indigo-900 dark:border-t-slate-400"
+      >
         <span
           class="font-['Roboto'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
           >Добавить фильтр:</span
@@ -175,7 +201,7 @@ onMounted(() => {
         >
           <button
             type="button"
-            class="min-w-[60px] lg:min-w-[80px] min-h-[30px] lg:min-h-[40px] rounded-lg bg-rose-300 text-yellow-50 dark:bg-slate-600 dark:text-yellow-200 active:scale-90 p-1 cursor-pointer whitespace-nowrap overflow-hidden disabled:opacity-20 disabled:pointer-events-none"
+            class="min-w-[60px] lg:min-w-[80px] min-h-[30px] lg:min-h-[40px] rounded-lg bg-indigo-800 text-yellow-50 dark:bg-slate-600 dark:text-yellow-200 active:scale-90 p-1 cursor-pointer whitespace-nowrap overflow-hidden disabled:opacity-20 disabled:pointer-events-none"
             v-for="item in FilterFrom"
             :key="item.id"
             :disabled="dataStatus === 'pending'"
@@ -189,11 +215,11 @@ onMounted(() => {
     <div v-if="isShowFilter" class="text-right p-2">
       <button
         type="button"
-        class="min-w-[60px] min-h-[30px] p-2 bg-slate-800 text-slate-200 rounded-lg cursor-pointer active:scale-90 text-[16px]/[22px] disabled:opacity-15 disabled:pointer-events-none"
+        class="min-w-[60px] min-h-[30px] p-2 bg-slate-800 dark:bg-slate-400 text-slate-200 dark:text-slate-900 rounded-lg cursor-pointer active:scale-90 text-[16px]/[22px] disabled:opacity-15 disabled:pointer-events-none"
         @click.prevent="handleUpdate"
         :disabled="dataStatus === 'pending'"
       >
-        {{ FilterPo.length < 1 ? "Отменить" : "Применить" }}
+        {{ FilterPo.length < 1 ? "Нет фильта" : "Применить" }}
       </button>
     </div>
   </article>

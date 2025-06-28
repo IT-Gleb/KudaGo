@@ -2,11 +2,9 @@
 import type { IFilmsRoot } from "~/types/filmTypes";
 import { FilmsController } from "./controllers/FilmsController";
 import { randomIntegerFromMinMax } from "#imports";
-import FilmsFilterComponent from "./FilmsFilterComponent.vue";
+import FilmCard from "./FilmCard.vue";
 
 import { ref } from "vue";
-import { FilterStore } from "~/store/filterFilmStore";
-// import { getName } from "~/utils/functions";
 
 type TPageParam = -1 | 0 | 1;
 
@@ -15,18 +13,7 @@ const totalPage = ref<number>(500);
 
 const filmsRef = ref<HTMLDivElement | null>(null);
 
-const store = FilterStore();
-
-const { filtered } = storeToRefs(store);
-
 const { status, films, error } = await FilmsController(paramPage);
-
-const dataFilms = ref<IFilmsRoot>({
-  count: 0,
-  previous: "",
-  next: "",
-  results: [],
-});
 
 const handleRefresh = async () => {
   checkPage(0);
@@ -71,9 +58,6 @@ watch(films, () => {
 
 <template>
   <section class="w-[96%] xl:w-[80%] mx-auto min-h-screen p-1">
-    <!-- <div class="w-fit mx-auto uppercase">
-      {{ getName("jdh jdh name:dd:mm:yyyy jfh jfh gjhgj") }}
-    </div> -->
     <div ref="filmsRef" class="p-1 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <h4 class="my-5">Фильмы</h4>
@@ -93,10 +77,6 @@ watch(films, () => {
       class="w-[50px] h-[50px] mx-auto mt-5"
     >
       <LoaderComponent />
-    </div>
-
-    <div class="my-4 p-1">
-      <FilmsFilterComponent />
     </div>
 
     <div
@@ -128,81 +108,11 @@ watch(films, () => {
       "
       class="w-fit mx-auto"
     >
-      <article
+      <FilmCard
         v-for="item in (films as IFilmsRoot).results"
         :key="item.id"
-        class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[120px_1fr] sm:grid-cols-[220px_1fr] gap-x-2 gap-y-4 pt-2 odd:bg-slate-50 dark:odd:bg-slate-950"
-      >
-        <div
-          class="w-[120px] h-[180px] sm:w-[200px] sm:h-[260px] overflow-hidden rounded-lg object-cover object-left-top row-span-2 mb-5"
-        >
-          <img
-            :src="
-              item.poster !== null && typeof item.poster.image !== undefined
-                ? item.poster.image
-                : ''
-            "
-            alt=""
-            loading="lazy"
-            decoding="async"
-            class="block w-full h-full"
-          />
-        </div>
-        <div>
-          <p
-            class="font-['Roboto'] font-bold text-[clamp(4vw,5vw,6vw)]/[clamp(4.2vw,5.5vw,6.5vw)] text-balance uppercase mb-5 md:hidden"
-          >
-            {{ item.title }}
-          </p>
-
-          <h5 class="hidden md:inline-block mb-5 text-balance">
-            {{ item.title }}
-          </h5>
-          <div class="grid grid-cols-2 sm:grid-cols-[200px_1fr] gap-2 p-1">
-            <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
-            <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
-            <div class="font-bold"><small>Год выпуска:</small></div>
-            <div>{{ item.year }}</div>
-            <div class="font-bold"><small>Страна:</small></div>
-            <div>{{ item.country }}</div>
-            <div v-if="item.budget as number > 0" class="font-bold">
-              <small>Бюджет фильма:</small>
-            </div>
-            <div v-if="item.budget as number > 0">
-              {{
-                Intl.NumberFormat("en-EN", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(item.budget as number)
-              }}
-            </div>
-            <div v-if="item.director" class="font-bold">
-              <small>Режиссер:</small>
-            </div>
-            <div
-              v-if="item.director"
-              class="col-span-2 md:col-auto indent-5 text-pretty"
-            >
-              {{ item.director }}
-            </div>
-            <div v-if="item.stars" class="font-bold">
-              <small>Актеры:</small>
-            </div>
-            <div v-if="item.stars" class="col-span-2 md:col-auto indent-5">
-              {{ item.stars }}
-            </div>
-            <div v-if="item.description" class="font-bold">
-              <small>Описание:</small>
-            </div>
-            <p
-              v-if="item.description && item.description?.length > 0"
-              class="indent-2 col-span-2 md:col-auto"
-            >
-              {{ item.description }}
-            </p>
-          </div>
-        </div>
-      </article>
+        :item="item"
+      />
       <div
         v-if="status === 'success' && !error"
         class="flex flex-row items-center justify-center gap-4 my-5"

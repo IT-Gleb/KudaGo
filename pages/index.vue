@@ -7,7 +7,8 @@ import NewsBlock from "~/components/ui/sections/NewsBlock.vue";
 import EventOfDay from "~/components/ui/sections/eventOfDay/EventOfDay.vue";
 import DivObserveDataLoad from "~/components/ui/intersectObserve/DivObserveDataLoad.vue";
 import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
-import FilmsSection from "~/components/ui/sections/films/FilmsSection.vue";
+// import FilmsSection from "~/components/ui/sections/films/FilmsSection.vue";
+import FilmsStateSection from "~/components/ui/sections/films/FilmsStateSection.vue";
 import { nanoid } from "nanoid";
 
 useHead({
@@ -23,7 +24,7 @@ const ViewComponentsArray = reactive<
 >([
   { id: nanoid(), inview: false, component: markRaw(EventOfDay) },
   { id: nanoid(), inview: false, component: markRaw(NewsBlock) },
-  { id: nanoid(), inview: false, component: markRaw(FilmsSection) },
+  { id: nanoid(), inview: false, component: markRaw(FilmsStateSection) },
 ]);
 const handleObserve = (param1: number, param2: boolean) => {
   // console.log("index: ", param1, "value: ", param2);

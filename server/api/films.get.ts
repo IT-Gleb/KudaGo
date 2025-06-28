@@ -1,12 +1,12 @@
-import type { IFilmsRoot, IFilmsResult } from "~/types/filmTypes";
-import {
-  ExtractParagraphData,
-  randomIntegerFromMinMax,
-} from "~/utils/functions";
+import type { IFilmsRoot } from "~/types/filmTypes";
+// import {
+//   ExtractParagraphData,
+//   randomIntegerFromMinMax,
+// } from "~/utils/functions";
 
 export default defineEventHandler(async (event) => {
   let initUrl: string =
-    "https://kudago.com/public-api/v1.4/movies/?page=1&page_size=10&fields=id,title,description,poster,budget,budget_currency,year,country,imdb_rating,director,stars,age_restriction,mpaa_rating";
+    "https://kudago.com/public-api/v1.4/movies/?page=1&page_size=10&fields=id,title,description,poster,budget,budget_currency,year,country,imdb_rating,genres,director,stars,age_restriction,mpaa_rating";
   if (event.method === "GET") {
     const paramUrl = new URL(`http://localhost${event.path}`);
 

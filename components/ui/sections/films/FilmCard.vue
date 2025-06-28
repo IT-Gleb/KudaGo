@@ -1,0 +1,87 @@
+<script setup lang="ts">
+import type { IFilmsResult } from "~/types/filmTypes";
+
+const props = defineProps<{ item: IFilmsResult }>();
+</script>
+
+<template>
+  <article
+    class="w-[99%] lg:w-[80%] mx-auto grid grid-cols-[160px_1fr] sm:grid-cols-[240px_1fr] gap-x-2 gap-y-4 p-2 mt-2 odd:bg-slate-50 dark:odd:bg-slate-950"
+  >
+    <div
+      class="w-[160px] h-[240px] lg:w-[240px] lg:h-[360px] object-cover object-center overflow-hidden rounded-lg"
+    >
+      <img
+        :src="
+          item.poster !== null && typeof item.poster.image !== undefined
+            ? item.poster.image
+            : ''
+        "
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class="block w-full h-full"
+      />
+    </div>
+    <div class="grid grid-cols-2 gap-2 ml-2">
+      <div class="col-span-2">
+        <h4
+          class="text-[clamp(1rem,2rem,3rem)]/[clamp(1.2rem,2.3rem,3.3rem)] text-balance"
+        >
+          {{ item.title }}
+        </h4>
+      </div>
+      <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
+      <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
+      <div class="font-bold"><small>Год выпуска:</small></div>
+      <div>{{ item.year }}</div>
+      <div class="font-bold"><small>Страна:</small></div>
+      <div>{{ item.country }}</div>
+      <div v-if="item.budget as number > 0" class="font-bold">
+        <small>Бюджет фильма:</small>
+      </div>
+      <div v-if="item.budget as number > 0">
+        {{
+          Intl.NumberFormat("en-EN", {
+            style: "currency",
+            currency: "USD",
+          }).format(item.budget as number)
+        }}
+      </div>
+      <div v-if="item.director" class="font-bold">
+        <small>Режиссер:</small>
+      </div>
+      <div
+        v-if="item.director"
+        class="col-span-2 md:col-auto indent-5 text-pretty"
+      >
+        {{ item.director }}
+      </div>
+      <div v-if="item.stars" class="font-bold">
+        <small>Актеры:</small>
+      </div>
+      <div v-if="item.stars" class="col-span-2 md:col-auto indent-5">
+        {{ item.stars }}
+      </div>
+      <div v-if="item.description" class="font-bold">
+        <small>Описание:</small>
+      </div>
+      <p
+        v-if="item.description && item.description?.length > 0"
+        class="indent-2 col-span-2 md:col-auto"
+      >
+        {{ item.description }}
+      </p>
+      <div class="font-bold"><small>Жанр:</small></div>
+      <div>
+        <p
+          v-for="aa in item.genres"
+          :key="aa.id"
+          class="first-letter:uppercase"
+        >
+          {{ aa.name.trim() }}
+        </p>
+      </div>
+    </div>
+  </article>
+</template>
