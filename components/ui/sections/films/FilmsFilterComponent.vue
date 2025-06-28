@@ -12,7 +12,7 @@ import ProgressBar, {
 const isShowFilter = ref<boolean>(false);
 const FilterPo = ref<TFilmSlugsData>([]);
 const FilterFrom = ref<TFilmSlugsData>(FilmsGenres);
-const paramFiltrStr = ref<string>("");
+const paramFiltrStr = ref<string>("cartoons");
 
 const showProgress = ref<boolean>(false);
 const progresState = ref<TProgressState>("in-progress");
@@ -48,13 +48,13 @@ const handleFrom = (param: number, isReverce: boolean) => {
 };
 
 const handleUpdate = async () => {
-  if (FilterPo.value.length > 0 && paramFiltrStr.value !== "") {
-    showProgress.value = true;
+  if (FilterPo.value.length > 0) {
     progresState.value = "in-progress";
+    showProgress.value = true;
     await setFilterParam(paramFiltrStr.value);
   } else {
-    showProgress.value = false;
     progresState.value = "success";
+    showProgress.value = false;
     ClearData();
   }
 
@@ -94,6 +94,7 @@ watch(isShowFilter, () => {
 
 onMounted(() => {
   FilterFrom.value.sort(sortByRuSlug);
+  ClearData();
 });
 </script>
 
@@ -113,30 +114,39 @@ onMounted(() => {
         v-model="isShowFilter"
         name="showFilter"
         id="showFilter"
-        class="cursor-pointer accent-slate-900 dark:accent-amber-900 w-[18px] h-[18px] lg:w-[24px] lg:h-[24px]"
+        :disabled="showProgress"
+        class="cursor-pointer accent-slate-900 dark:accent-amber-900 w-[18px] h-[18px] lg:w-[24px] lg:h-[24px] disabled:opacity-20 disabled:pointer-events-none"
       />
     </label>
 
     <div
       v-if="isShowFilter"
-      class="w-full flex flex-row justify-between items-start gap-5 text-[12px]/[14px] lg:text-[14px]/[18px] Showing relative"
+      class="w-full flex flex-col items-start gap-5 text-[12px]/[14px] lg:text-[14px]/[18px] Showing relative"
     >
       <div
         v-if="showProgress"
-        class="absolute z-10 bg-[#faaa5033] inset-0 place-content-center Showing"
+        class="absolute z-10 bg-white inset-0 place-content-center Showing"
       >
-        <div class="w-fit mx-auto">
+        <div class="w-fit mx-auto grid grid-cols-1 row-auto gap-2">
+          <span class="w-fit mx-auto font-bold animate-bounce">{{
+            tick < 65 ? "Получаю данные..." : "&nbsp;"
+          }}</span>
           <ProgressBar
             :width="160"
             :value="tick"
             :state="progresState"
             :view="'dashboard'"
           />
+          <span
+            v-if="tick > 65"
+            class="w-fit mx-auto font-bold animate-bounce"
+            >{{ tick > 65 ? "Применяю фильтры..." : "&nbsp;" }}</span
+          >
         </div>
       </div>
-      <label for="Filters" class="max-w-[45%] p-2">
+      <label for="Filters" class="p-2">
         <span
-          class="font-['Inter'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
+          class="font-['Roboto'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
           >Фильтровать по:</span
         >
         <div id="Filters" class="w-full mt-3 flex flex-wrap gap-2">
@@ -154,9 +164,9 @@ onMounted(() => {
       </label>
       <div class="font-bold place-self-center">=><=</div>
 
-      <label for="existsFilters" class="max-w-[45%] p-2">
+      <label for="existsFilters" class="p-2">
         <span
-          class="font-['Inter'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
+          class="font-['Roboto'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
           >Добавить фильтр:</span
         >
         <div

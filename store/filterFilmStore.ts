@@ -20,7 +20,8 @@ export const FilterStore = defineStore("filterFilms", () => {
 
   const setFilterParam = async (param: string) => {
     filterParam.value = param;
-    if (filterParam.value.trim().length > 0) {
+    console.log(filterParam.value);
+    if (filterParam.value.length > 0) {
       await getFiltered();
     } else {
       filtered.value = { count: 0, next: "", previous: "", results: [] };
@@ -60,9 +61,9 @@ export const FilterStore = defineStore("filterFilms", () => {
             dataStatus.value = status.value;
             tick.value = 0;
             timerRef.value = setInterval(() => {
-              tick.value += 2;
+              tick.value += randomIntegerFromMinMax(1, 4);
               if (tick.value > 98) {
-                tick.value -= randomIntegerFromMinMax(12, 24);
+                tick.value -= randomIntegerFromMinMax(12, 48);
               }
               //   console.log(tick.value);
             }, delayTimer);
