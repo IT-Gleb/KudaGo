@@ -5,6 +5,7 @@ import { randomIntegerFromMinMax } from "#imports";
 import FilmsFilterComponent from "./FilmsFilterComponent.vue";
 
 import { ref } from "vue";
+import { FilterStore } from "~/store/filterFilmStore";
 // import { getName } from "~/utils/functions";
 
 type TPageParam = -1 | 0 | 1;
@@ -14,7 +15,18 @@ const totalPage = ref<number>(500);
 
 const filmsRef = ref<HTMLDivElement | null>(null);
 
+const store = FilterStore();
+
+const { filtered } = storeToRefs(store);
+
 const { status, films, error } = await FilmsController(paramPage);
+
+const dataFilms = ref<IFilmsRoot>({
+  count: 0,
+  previous: "",
+  next: "",
+  results: [],
+});
 
 const handleRefresh = async () => {
   checkPage(0);

@@ -1,13 +1,26 @@
 <script setup lang="ts">
+import { FilterStore } from "~/store/filterFilmStore";
 import {
   FilmsGenres,
   type TFilmSlugsData,
   type TFilmsSlug,
 } from "~/types/filmTypes";
+import ProgressBar, {
+  type TProgressState,
+} from "~/components/ProgressBar_svg/ProgressBar.vue";
+
 const isShowFilter = ref<boolean>(false);
 const FilterPo = ref<TFilmSlugsData>([]);
 const FilterFrom = ref<TFilmSlugsData>(FilmsGenres);
 const paramFiltrStr = ref<string>("");
+
+const showProgress = ref<boolean>(false);
+const progresState = ref<TProgressState>("in-progress");
+
+const store = FilterStore();
+
+const { setFilterParam, ClearData } = store;
+const { hasData, dataStatus, tick } = storeToRefs(store);
 
 const sortByRuSlug = (a: TFilmsSlug, b: TFilmsSlug) => {
   if (a.ru_slug.toLowerCase() > b.ru_slug.toLowerCase()) {
@@ -34,6 +47,24 @@ const handleFrom = (param: number, isReverce: boolean) => {
   FilterPo.value.sort(sortByRuSlug);
 };
 
+const handleUpdate = async () => {
+  if (FilterPo.value.length > 0 && paramFiltrStr.value !== "") {
+    showProgress.value = true;
+    progresState.value = "in-progress";
+    await setFilterParam(paramFiltrStr.value);
+  } else {
+    showProgress.value = false;
+    progresState.value = "success";
+    ClearData();
+  }
+
+  //console.log(paramFiltrStr.value);
+};
+
+watch(tick, () => {
+  showProgress.value = tick.value < 100 && progresState.value === "in-progress";
+});
+
 watch(
   FilterPo,
   () => {
@@ -53,15 +84,27 @@ watch(
   { deep: true }
 );
 
+watch(isShowFilter, () => {
+  if (!isShowFilter.value) {
+    FilterPo.value = [];
+    FilterFrom.value = Array.from(FilmsGenres);
+    FilterFrom.value.sort(sortByRuSlug);
+  }
+});
+
 onMounted(() => {
   FilterFrom.value.sort(sortByRuSlug);
 });
 </script>
 
 <template>
-  <article :class="isShowFilter ? 'bg-slate-100 dark:bg-slate-800' : null">
+  <article
+    :class="
+      isShowFilter ? 'bg-slate-100 dark:bg-slate-800 overflow-hidden' : null
+    "
+  >
     <label
-      class="flex flex-row gap-x-3 select-none cursor-pointer"
+      class="flex flex-row items-center gap-x-3 select-none cursor-pointer"
       for="showFilter"
     >
       <span>Фильтр</span>
@@ -70,14 +113,27 @@ onMounted(() => {
         v-model="isShowFilter"
         name="showFilter"
         id="showFilter"
-        class="cursor-pointer accent-slate-900 dark:accent-amber-900"
+        class="cursor-pointer accent-slate-900 dark:accent-amber-900 w-[18px] h-[18px] lg:w-[24px] lg:h-[24px]"
       />
     </label>
 
     <div
       v-if="isShowFilter"
-      class="w-full flex flex-row justify-between items-start gap-5 text-[12px]/[14px] lg:text-[14px]/[18px]"
+      class="w-full flex flex-row justify-between items-start gap-5 text-[12px]/[14px] lg:text-[14px]/[18px] Showing relative"
     >
+      <div
+        v-if="showProgress"
+        class="absolute z-10 bg-[#faaa5033] inset-0 place-content-center Showing"
+      >
+        <div class="w-fit mx-auto">
+          <ProgressBar
+            :width="160"
+            :value="tick"
+            :state="progresState"
+            :view="'dashboard'"
+          />
+        </div>
+      </div>
       <label for="Filters" class="max-w-[45%] p-2">
         <span
           class="font-['Inter'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
@@ -86,9 +142,10 @@ onMounted(() => {
         <div id="Filters" class="w-full mt-3 flex flex-wrap gap-2">
           <button
             type="button"
-            class="min-w-[60px] lg:min-w-[80px] min-h-[30px] lg:min-h-[40px] rounded-lg bg-green-300 dark:bg-slate-200 text-slate-700 active:scale-90 p-1 cursor-pointer whitespace-nowrap overflow-hidden"
+            class="min-w-[60px] lg:min-w-[80px] min-h-[30px] lg:min-h-[40px] rounded-lg bg-green-300 dark:bg-slate-200 text-slate-700 active:scale-90 p-1 cursor-pointer whitespace-nowrap overflow-hidden disabled:opacity-20 disabled:pointer-events-none"
             v-for="item in FilterPo"
             :key="item.id"
+            :disabled="dataStatus === 'pending'"
             @click="handleFrom(item.id, true)"
           >
             -{{ item.ru_slug }}
@@ -108,9 +165,10 @@ onMounted(() => {
         >
           <button
             type="button"
-            class="min-w-[60px] lg:min-w-[80px] min-h-[30px] lg:min-h-[40px] rounded-lg bg-rose-300 text-yellow-50 dark:bg-slate-600 dark:text-yellow-200 active:scale-90 p-1 cursor-pointer whitespace-nowrap overflow-hidden"
+            class="min-w-[60px] lg:min-w-[80px] min-h-[30px] lg:min-h-[40px] rounded-lg bg-rose-300 text-yellow-50 dark:bg-slate-600 dark:text-yellow-200 active:scale-90 p-1 cursor-pointer whitespace-nowrap overflow-hidden disabled:opacity-20 disabled:pointer-events-none"
             v-for="item in FilterFrom"
             :key="item.id"
+            :disabled="dataStatus === 'pending'"
             @click="handleFrom(item.id, false)"
           >
             +{{ item.ru_slug }}
@@ -118,5 +176,35 @@ onMounted(() => {
         </div>
       </label>
     </div>
+    <div v-if="isShowFilter" class="text-right p-2">
+      <button
+        type="button"
+        class="min-w-[60px] min-h-[30px] p-2 bg-slate-800 text-slate-200 rounded-lg cursor-pointer active:scale-90 text-[16px]/[22px] disabled:opacity-15 disabled:pointer-events-none"
+        @click.prevent="handleUpdate"
+        :disabled="dataStatus === 'pending'"
+      >
+        {{ FilterPo.length < 1 ? "Отменить" : "Применить" }}
+      </button>
+    </div>
   </article>
 </template>
+
+<style lang="css" scoped>
+.Showing {
+  animation: animoShow 300ms ease;
+}
+
+@keyframes animoShow {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(100%);
+  }
+}
+</style>

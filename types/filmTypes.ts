@@ -60,7 +60,9 @@ export type TFilmsSlug =
   | { id: 12; ru_slug: "Биографические"; slug: "biographies" }
   | { id: 13; ru_slug: "Детектив"; slug: "crime" }
   | { id: 14; ru_slug: "Вестерн"; slug: "western" }
-  | { id: 15; ru_slug: "Мюзикл"; slug: "musical" };
+  | { id: 15; ru_slug: "Документальный"; slug: "documentary" }
+  | { id: 16; ru_slug: "Исторический"; slug: "historical" }
+  | { id: 17; ru_slug: "Мюзикл"; slug: "musical" };
 
 export type TFilmSlugsData = Array<TFilmsSlug>;
 
@@ -72,7 +74,7 @@ export const FilmsGenres: TFilmSlugsData = [
   { id: 13, ru_slug: "Детектив", slug: "crime" },
   { id: 7, ru_slug: "Детские", slug: "children" },
   { id: 9, ru_slug: "Комедия", slug: "comedy" },
-  { id: 15, ru_slug: "Мюзикл", slug: "musical" },
+  { id: 17, ru_slug: "Мюзикл", slug: "musical" },
   { id: 2, ru_slug: "Мультфильмы", slug: "cartoons" },
   { id: 5, ru_slug: "Науч. поп", slug: "sc-fi" },
   { id: 6, ru_slug: "Приключения", slug: "adventure" },
@@ -80,4 +82,6 @@ export const FilmsGenres: TFilmSlugsData = [
   { id: 8, ru_slug: "Триллер", slug: "thriller" },
   { id: 10, ru_slug: "Ужасы", slug: "horror" },
   { id: 3, ru_slug: "Фантази", slug: "fantasy" },
+  { id: 15, ru_slug: "Документальный", slug: "documentary" },
+  { id: 16, ru_slug: "Исторический", slug: "historical" },
 ];
