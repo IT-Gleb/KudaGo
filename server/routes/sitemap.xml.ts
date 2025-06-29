@@ -9,14 +9,19 @@ export default defineEventHandler(async (event) => {
   });
 
   sitemap.write({
-    url: "/primers",
+    url: "/",
     changefreq: "daily",
+  });
+
+  sitemap.write({
+    url: "/primers",
+    changefreq: "monthly",
   });
 
   for (const doc of docs) {
     sitemap.write({
       url: doc._path,
-      changefreq: "daily",
+      changefreq: "monthly",
     });
   }
   sitemap.end();
