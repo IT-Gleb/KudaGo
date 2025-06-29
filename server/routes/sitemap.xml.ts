@@ -10,13 +10,13 @@ export default defineEventHandler(async (event) => {
 
   sitemap.write({
     url: "/primers",
-    changefreq: "monthly",
+    changefreq: "daily",
   });
 
   for (const doc of docs) {
     sitemap.write({
       url: doc._path,
-      changefreq: "monthly",
+      changefreq: "daily",
     });
   }
   sitemap.end();
