@@ -7,7 +7,7 @@ type TMainScreenItem = {
 };
 const MainMenuItems = ref<TMainScreenItem[]>([
   { id: nanoid(), label: "Новости", href: "#" },
-  { id: nanoid(), label: "События", href: "#" },
+  { id: nanoid(), label: "Контент", href: "/mycontent" },
   { id: nanoid(), label: "Фильмы", href: "#" },
   { id: nanoid(), label: "Примеры", href: "/primers" },
 ]);

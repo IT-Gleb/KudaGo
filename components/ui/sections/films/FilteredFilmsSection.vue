@@ -54,10 +54,8 @@ onMounted(() => {
       Фильмы
       <span
         class="text-[clamp(0.5rem,1rem,1.5rem)]/[clamp(0.75rem,1.2rem,1.75rem)]"
-        >отфильтровано (<mark>{{ Size }}</mark
-        >) страниц (<mark>{{ totalPage }}</mark
-        >) текущая страница (<mark>{{ activePage }}</mark
-        >)</span
+        ><mark>{{ Size }}</mark> страниц <mark>{{ totalPage }}</mark> текущая
+        страница <mark>{{ activePage }}</mark></span
       >
     </h3>
 
@@ -68,6 +66,15 @@ onMounted(() => {
       :change-page="handleActivePage"
     />
     <FilmCard v-for="item in ItemsOnPage" :key="item.id" :item="item" />
+    <h3 class="mt-3">
+      Фильмы
+      <span
+        class="text-[clamp(0.5rem,1rem,1.5rem)]/[clamp(0.75rem,1.2rem,1.75rem)]"
+        ><mark>{{ Size }}</mark> страниц <mark>{{ totalPage }}</mark> текущая
+        страница <mark>{{ activePage }}</mark></span
+      >
+    </h3>
+
     <FilteredPagination
       v-if="Size > countOnPage"
       :onPage="countOnPage"

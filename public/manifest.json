@@ -3,7 +3,7 @@
   "short_name": "mykudago",
   "author": "Gleb Torgashin",
   "version": "0.1",
-  "homepage_url": "http://localhost:3000",
+  "homepage_url": "https://kuda-go.vercel.app",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
