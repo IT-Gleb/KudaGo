@@ -19,9 +19,19 @@ const items = computed(() =>
   )
 );
 
+const buttonsRef = ref<HTMLButtonElement[]>([]);
+
 const Step: number = 192;
 const mainX = ref<number>(0);
 const Width = ref<number>(items.value.length * 38);
+
+const handleInView = (param: number) => {
+  buttonsRef.value[param].scrollIntoView({
+    behavior: "smooth",
+    block: "nearest",
+    inline: "center",
+  });
+};
 
 const handleMinusStep = () => {
   mainX.value -= Step;
@@ -58,8 +68,6 @@ watch(
   },
   { deep: true }
 );
-
-onMounted(() => {});
 </script>
 
 <template>
@@ -90,6 +98,7 @@ onMounted(() => {});
         <button
           type="button"
           v-for="item in items"
+          ref="buttonsRef"
           :key="item"
           class="min-w-[30px] h-[30px] text-slate-200 rounded-md text-[0.85rem]/[1.1rem] cursor-pointer active:scale-90 font-['Roboto']"
           :class="
@@ -97,7 +106,12 @@ onMounted(() => {});
               ? 'bg-amber-300 text-slate-800 font-bold'
               : 'bg-indigo-900'
           "
-          @click="props.changePage(item)"
+          @click="
+            () => {
+              handleInView(item - 1);
+              props.changePage(item);
+            }
+          "
         >
           {{ item }}
         </button>

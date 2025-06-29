@@ -62,12 +62,14 @@ onMounted(() => {
     </h3>
 
     <FilteredPagination
+      v-if="Size > countOnPage"
       :onPage="countOnPage"
       :active-page="activePage"
       :change-page="handleActivePage"
     />
     <FilmCard v-for="item in ItemsOnPage" :key="item.id" :item="item" />
     <FilteredPagination
+      v-if="Size > countOnPage"
       :onPage="countOnPage"
       :active-page="activePage"
       :change-page="handleActivePage"

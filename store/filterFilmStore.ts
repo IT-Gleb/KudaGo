@@ -1,8 +1,25 @@
 import type { AsyncDataRequestStatus, NuxtError } from "#app";
 import { defineStore } from "pinia";
-import type { IFilmsRoot } from "~/types/filmTypes";
+import type { IFilmGenres, IFilmsResult, IFilmsRoot } from "~/types/filmTypes";
 
 const delayTimer: number = 325;
+const sortByGenres = (a: IFilmsResult, b: IFilmsResult) => {
+  if (!a.genres || !b.genres) {
+    return 0;
+  }
+  if (a.genres?.length > b.genres?.length) {
+    return -1;
+  } else {
+    return 1;
+  }
+};
+const sortByName = (a: IFilmGenres, b: IFilmGenres) => {
+  if (a.name.toLowerCase() > b.name.toLowerCase()) {
+    return 1;
+  } else {
+    return -1;
+  }
+};
 
 export const FilterStore = defineStore("filterFilms", () => {
   const filtered = ref<IFilmsRoot>({
@@ -49,6 +66,7 @@ export const FilterStore = defineStore("filterFilms", () => {
           },
           onResponse: () => {
             dataStatus.value = "success";
+            dataError.value = null;
             clearInterval(timerRef.value);
             //console.log("response: ", dataStatus.value);
           },
@@ -62,8 +80,8 @@ export const FilterStore = defineStore("filterFilms", () => {
             tick.value = 0;
             timerRef.value = setInterval(() => {
               tick.value += randomIntegerFromMinMax(1, 4);
-              if (tick.value > 98) {
-                tick.value -= randomIntegerFromMinMax(12, 48);
+              if (tick.value >= 98) {
+                tick.value -= randomIntegerFromMinMax(12, 64);
               }
               //   console.log(tick.value);
             }, delayTimer);
@@ -80,6 +98,10 @@ export const FilterStore = defineStore("filterFilms", () => {
         transform: (input) => {
           filtered.value = Object.assign({}, input);
           filtered.value.count = filtered.value.results.length;
+          filtered.value.results.forEach((item) =>
+            item.genres?.sort(sortByName)
+          );
+          filtered.value.results.sort(sortByGenres);
           if (!dataError.value && tick.value !== 100) {
             tick.value = 100;
           }

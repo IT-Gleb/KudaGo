@@ -53,7 +53,8 @@ const handleUpdate = async () => {
     progresState.value = "in-progress";
     showProgress.value = true;
     await setFilterParam(paramFiltrStr.value);
-  } else {
+  }
+  if (FilterPo.value.length < 1) {
     progresState.value = "success";
     showProgress.value = false;
     ClearData();
@@ -115,10 +116,11 @@ onMounted(() => {
     "
   >
     <label
-      class="flex flex-row items-center gap-x-3 select-none cursor-pointer"
+      class="flex flex-row items-center gap-x-3 select-none cursor-pointer pb-2"
+      :class="isShowFilter ? '' : 'border-b dark:border-b-slate-300'"
       for="showFilter"
     >
-      <span>Фильтр</span>
+      <span class="uppercase">Фильтр</span>
       <input
         type="checkbox"
         v-model="isShowFilter"

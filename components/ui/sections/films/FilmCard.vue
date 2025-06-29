@@ -15,7 +15,7 @@ const props = defineProps<{ item: IFilmsResult }>();
         :src="
           item.poster !== null && typeof item.poster.image !== undefined
             ? item.poster.image
-            : ''
+            : 'NoPoster.webp'
         "
         alt=""
         loading="lazy"
