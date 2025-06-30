@@ -44,17 +44,17 @@ body {
 
   h4 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[length:clamp(2.5vw,var(--headingSize),3vw)]/[var(--lengthH)] uppercase font-semibold;
+    @apply py-1 text-[length:clamp(2.5vw,var(--headingSize),3vw)]/[calc(var(--lengthH)+2px)] uppercase font-semibold;
   }
 
   h5 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[clamp(2vw,var(--headingSize),2.5vw)]/[2.5vw] uppercase font-semibold;
+    @apply py-1 text-[clamp(2vw,var(--headingSize),2.5vw)]/[2.75vw] uppercase font-semibold;
   }
 
   h6 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[clamp(1.8vw,var(--headingSize),2vw)]/[2vw] uppercase font-semibold;
+    @apply py-1 text-[clamp(1.8vw,var(--headingSize),2vw)]/[2.3vw] uppercase font-semibold;
   }
 
   mark {
