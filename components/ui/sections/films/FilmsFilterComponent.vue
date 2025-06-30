@@ -49,22 +49,25 @@ const handleFrom = (param: number, isReverce: boolean) => {
 };
 
 const handleUpdate = async () => {
-  if (FilterPo.value.length > 0) {
+  if (FilterPo.value.length > 0 && paramFiltrStr.value.length > 3) {
     progresState.value = "in-progress";
     showProgress.value = true;
     await setFilterParam(paramFiltrStr.value);
   }
-  if (FilterPo.value.length < 1) {
-    progresState.value = "success";
-    showProgress.value = false;
-    ClearData();
-  }
+  // if (FilterPo.value.length < 1) {
+  //   progresState.value = "success";
+  //   showProgress.value = false;
+  //   ClearData();
+  // }
 
   //console.log(paramFiltrStr.value);
 };
 
 watch(tick, () => {
   showProgress.value = progresState.value === "in-progress" && tick.value < 100;
+  if (tick.value >= 100) {
+    progresState.value === "success";
+  }
 });
 
 watch(isShowFilter, () => {
@@ -218,10 +221,10 @@ onMounted(() => {
       <button
         type="button"
         class="min-w-[60px] min-h-[30px] p-2 bg-slate-800 dark:bg-slate-400 text-slate-200 dark:text-slate-900 rounded-lg cursor-pointer active:scale-90 text-[16px]/[22px] disabled:opacity-15 disabled:pointer-events-none"
-        @click.prevent="handleUpdate"
-        :disabled="dataStatus === 'pending'"
+        @click.prevent="handleUpdate()"
+        :disabled="dataStatus === 'pending' || FilterPo.length < 1"
       >
-        {{ FilterPo.length < 1 ? "Нет фильта" : "Применить" }}
+        Применить
       </button>
     </div>
   </article>

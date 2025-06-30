@@ -38,7 +38,7 @@ export const FilterStore = defineStore("filterFilms", () => {
 
   const setFilterParam = async (param: string) => {
     filterParam.value = param;
-    if (filterParam.value.length > 0) {
+    if (filterParam.value.length > 3) {
       await getFiltered();
     } else {
       filtered.value = { count: 0, next: "", previous: "", results: [] };
@@ -54,7 +54,7 @@ export const FilterStore = defineStore("filterFilms", () => {
 
   async function getFiltered() {
     const { error, status } = await useAsyncData(
-      `filter-${filterParam}`,
+      `filter-${filterParam.value}`,
       () =>
         $fetch<IFilmsRoot, string>("/api/filmsfilter", {
           headers: { "Content-Type": "application/json;utf-8" },

@@ -25,14 +25,6 @@ const Step: number = 192;
 const mainX = ref<number>(0);
 const Width = ref<number>(items.value.length * 38);
 
-const handleInView = (param: number) => {
-  buttonsRef.value[param].scrollIntoView({
-    behavior: "smooth",
-    block: "nearest",
-    inline: "center",
-  });
-};
-
 const handleMinusStep = () => {
   mainX.value -= Step;
   if (Math.abs(mainX.value) >= Width.value - 164) {
@@ -68,6 +60,27 @@ watch(
   },
   { deep: true }
 );
+
+watch(
+  props,
+  () => {
+    //Перемемтить выделенную кнопку в область видимости
+    const { activePage } = props;
+    const { length } = items.value;
+    //5-ть кнопок в зоне видимости
+    if (length < 6) {
+      mainX.value = 0;
+      return;
+    }
+    let left = buttonsRef.value[activePage - 1].offsetLeft;
+    if (activePage - 1 > 1 && activePage < length - 3) {
+      mainX.value = -left + 76; //Сместить на 2 кнопки
+    } else if (activePage - 1 > length - 4) {
+      mainX.value = -(Width.value - 174);
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -89,7 +102,7 @@ watch(
       <Arrow2 />
     </button>
     <div
-      class="my-10 w-[186px] h-[32px] bg-slate-200 dark:bg-slate-950 text-slate-900 overflow-hidden relative"
+      class="my-10 w-[186px] h-[32px] bg-slate-50 dark:bg-slate-950 text-slate-900 overflow-hidden relative"
     >
       <div
         class="flex flex-row items-center gap-2 absolute transition-all"
@@ -103,15 +116,10 @@ watch(
           class="min-w-[30px] h-[30px] text-slate-200 rounded-md text-[0.85rem]/[1.1rem] cursor-pointer active:scale-90 font-['Roboto']"
           :class="
             props.activePage === item
-              ? 'bg-amber-300 text-slate-800 font-bold'
+              ? 'bg-green-500 text-slate-800 font-bold'
               : 'bg-indigo-900'
           "
-          @click="
-            () => {
-              handleInView(item - 1);
-              props.changePage(item);
-            }
-          "
+          @click="props.changePage(item)"
         >
           {{ item }}
         </button>
