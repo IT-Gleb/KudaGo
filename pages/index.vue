@@ -56,15 +56,15 @@ onUnmounted(() => {
       </div>
 
       <div
-        class="bg-slate-200 dark:bg-slate-950 w-full h-[48%] place-content-center flex flex-col lg:flex-row items-center justify-evenly"
+        class="bg-slate-200 dark:bg-slate-950 w-full h-[48%] place-content-center flex flex-col md:flex-row items-center justify-evenly"
       >
         <div
-          class="order-1 lg:order-0 w-full md:w-[55%] uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,12vw,11vw)] font-['Inter'] font-bold text-slate-800 dark:text-slate-300 pl-20"
+          class="w-full md:w-[55%] uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,12vw,11vw)] font-['Inter'] font-bold text-slate-800 dark:text-slate-300 pl-20"
         >
           куда
         </div>
         <div
-          class="w-[300px] md:w-[460px] lg:w-[680px] object-fill text-indigo-950 dark:text-slate-600 -scale-x-90"
+          class="w-[280px] md:w-[380px] xl:w-[680px] object-fill text-indigo-950 dark:text-slate-600 -scale-x-90"
         >
           <Museum />
         </div>
@@ -76,12 +76,12 @@ onUnmounted(() => {
         class="bg-indigo-950 bg-[url('/svg/tusa.svg')] bg-repeat-x bg-contain bg-bottom-left dark:bg-slate-900 w-full h-[75%] lg:h-[33%] overflow-hidden place-content-start xl:place-content-center flex flex-col-reverse gap-5 lg:gap-0 lg:flex-row items-center justify-center"
       >
         <div
-          class="w-[320px] xl:ml-20 xl:w-[450px] text-slate-400 dark:text-slate-600 mask-b-from-20% mask-b-to-90%"
+          class="hidden xl:block lg:w-[320px] xl:ml-20 xl:w-[450px] text-slate-400 dark:text-slate-600 mask-b-from-20% mask-b-to-90%"
         >
           <RaveConcert />
         </div>
         <div
-          class="md:w-[70%] md:ml-[12%] md:text-left uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,11vw,11vw)] font-['Inter'] font-bold text-slate-200"
+          class="md:w-[70%] md:ml-[12%] md:text-left uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,11vw,11vw)] font-['Inter'] font-bold text-slate-200 xl:pb-4"
         >
           сходить
         </div>
