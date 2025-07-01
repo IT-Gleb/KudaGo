@@ -17,7 +17,7 @@ export default defineSitemapEventHandler(() => {
       //   _sitemap: "pages",
       changefreq: "monthly",
       priority: 0.1,
-      lastmod: new Date(),
+      lastmod: new Date("2025-06-30T22:00:00"),
     },
   ] satisfies SitemapUrlInput[];
 });

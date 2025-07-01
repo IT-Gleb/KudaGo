@@ -27,12 +27,17 @@ export default defineNuxtConfig({
   },
 
   site:{
-    url:"https://kuda-go.vercel.app",
+    //url:"https://kuda-go.vercel.app",
+    url: `${process.env.NUXT_SITE_NAME}`,
     name:"Сайт на API Kuda Go by Gleb Torgashin",
   },
 
   sitemap:{
-    urls:["/","/primers","/sitemap.xml"],
+    sources:["/api/__sitemap__/urls"],
+    // urls() {
+    //   return ["/abc", "/bbb", "/sega"]
+    // },
+    // urls:["/","/primers","/sitemap.xml"],
   },
 
   app: {
