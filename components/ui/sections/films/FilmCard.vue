@@ -2,6 +2,37 @@
 import type { IFilmsResult } from "~/types/filmTypes";
 
 const props = defineProps<{ item: IFilmsResult }>();
+const mpaa_rating_string = ref<string>("Нет возрастных ограничений");
+
+watch(
+  props.item,
+  () => {
+    if (props.item.mpaa_rating) {
+      switch (props.item.mpaa_rating.toLowerCase()) {
+        case "g":
+          mpaa_rating_string.value = "Нет возрастных ограничений";
+          break;
+        case "pg":
+          mpaa_rating_string.value = "Рекомендуется присутствие родителей";
+          break;
+        case "pg-13":
+          mpaa_rating_string.value = "Детям до 13 лет просмотр не желателен";
+          break;
+        case "r":
+          mpaa_rating_string.value =
+            "Лицам до 17 лет обязательно присутствие взрослого";
+          break;
+        case "nc-17":
+          mpaa_rating_string.value = "Лицам до 18 лет просмотр запрещен";
+          break;
+        default:
+          mpaa_rating_string.value = "Нет возрастных ограничений";
+          break;
+      }
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -35,7 +66,7 @@ const props = defineProps<{ item: IFilmsResult }>();
       <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
       <div class="font-bold"><small>Возрастные ограничения:</small></div>
       <div>
-        {{ item.mpaa_rating ? item.mpaa_rating : "нет" }}
+        {{ item.mpaa_rating ? mpaa_rating_string : "нет" }}
       </div>
 
       <div class="font-bold"><small>Год выпуска:</small></div>
@@ -47,7 +78,10 @@ const props = defineProps<{ item: IFilmsResult }>();
       <div v-if="item.budget as number > 0" class="font-bold">
         <small>Бюджет фильма:</small>
       </div>
-      <div v-if="item.budget as number > 0">
+      <div
+        v-if="item.budget as number > 0"
+        class="col-span-2 md:col-auto indent-3 text-pretty"
+      >
         {{
           Intl.NumberFormat("en-EN", {
             style: "currency",
