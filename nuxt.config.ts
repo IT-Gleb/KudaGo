@@ -19,11 +19,12 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/sitemap",
   ],
-  // nitro: {
-  //   prerender: {
-  //     routes: ["/sitemap.xml"],
-  //   },
-  // },
+  nitro: {
+    prerender: {
+      // routes: ["/sitemap.xml"],
+      routes:["/api/__sitemap__/urls"],
+    },
+  },
 
   site:{
     url:"https://kuda-go.vercel.app",
@@ -31,7 +32,7 @@ export default defineNuxtConfig({
   },
 
   sitemap:{
-    sources:["/api/__sitemap__/urls"]
+    urls:["/","/primers","/sitemap.xml"],
   },
 
   app: {

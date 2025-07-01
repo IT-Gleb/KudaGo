@@ -9,6 +9,7 @@ export default defineSitemapEventHandler(() => {
       //   _sitemap: "pages",
       changefreq: "daily",
       priority: 0.2,
+      lastmod: new Date(),
     },
     {
       loc: "/primers",
@@ -16,6 +17,7 @@ export default defineSitemapEventHandler(() => {
       //   _sitemap: "pages",
       changefreq: "monthly",
       priority: 0.1,
+      lastmod: new Date(),
     },
   ] satisfies SitemapUrlInput[];
 });
