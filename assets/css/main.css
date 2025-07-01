@@ -6,8 +6,8 @@
   --textNum: 16;
   --txtSize: calc(var(--textNum) * 1px);
   --headingSize: calc((var(--textNum) * 2.1) * 1px);
-  --lengthT: calc(var(--txtSize)+2px);
-  --lengthH: calc(var(--headingSize)+2px);
+  --lengthT: calc(var(--txtSize)+4px);
+  --lengthH: calc(var(--headingSize)+4px);
 }
 
 /* @theme static {
@@ -44,7 +44,7 @@ body {
 
   h4 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[length:clamp(2.5vw,var(--headingSize),3vw)]/[calc(var(--lengthH)+2px)] uppercase font-semibold;
+    @apply py-1 text-[length:clamp(2.5vw,var(--headingSize),3vw)]/[calc(var(--lengthH)+4px)] uppercase font-semibold;
   }
 
   h5 {
