@@ -36,7 +36,7 @@ const props = defineProps<{ item: IFilmsResult }>();
       <div class="font-bold"><small>Год выпуска:</small></div>
       <div>{{ item.year }}</div>
       <div class="font-bold"><small>Страна:</small></div>
-      <div>{{ item.country }}</div>
+      <div class="col-span-2 md:col-auto text-pretty">{{ item.country }}</div>
       <div v-if="item.budget as number > 0" class="font-bold">
         <small>Бюджет фильма:</small>
       </div>
