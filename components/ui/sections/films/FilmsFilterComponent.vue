@@ -50,6 +50,21 @@ const handleFrom = (param: number, isReverce: boolean) => {
   FilterPo.value.sort(sortByRuSlug);
 };
 
+const clearFilterPo = () => {
+  //Очистить FilterPro и перенести данные в FilterFrom
+  if (FilterPo.value.length < 1) {
+    return;
+  }
+  FilterPo.value.forEach((item) => {
+    const found = FilterFrom.value.find((find) => find.id === item.id);
+    if (typeof found === "undefined") {
+      FilterFrom.value.push(item);
+    }
+  });
+  FilterPo.value = [];
+  FilterFrom.value.sort(sortByRuSlug);
+};
+
 const handleUpdate = async () => {
   ClearData();
   isFiltered.value = !isFiltered.value;
@@ -67,7 +82,7 @@ const handleUpdate = async () => {
     showProgress.value = false;
     paramFiltrStr.value = "";
     progresState.value = "success";
-    FilterPo.value = [];
+    clearFilterPo();
   }
 
   //console.log(paramFiltrStr.value);
