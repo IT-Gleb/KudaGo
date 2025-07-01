@@ -65,7 +65,7 @@ watch(
       <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
       <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
       <div class="font-bold"><small>Возрастные ограничения:</small></div>
-      <div>
+      <div class="col-span-2 md:col-auto indent-5 text-pretty">
         {{ item.mpaa_rating ? mpaa_rating_string : "нет" }}
       </div>
 
