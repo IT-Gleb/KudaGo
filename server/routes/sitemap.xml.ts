@@ -1,30 +1,31 @@
-import { serverQueryContent } from "#content/server";
-import { SitemapStream, streamToPromise } from "sitemap";
+// import { serverQueryContent } from "#content/server";
 
-export default defineEventHandler(async (event) => {
-  // Fetch all documents
-  const docs = await serverQueryContent(event).find();
-  const sitemap = new SitemapStream({
-    hostname: "https://kuda-go.vercel.app",
-  });
+// import { SitemapStream, streamToPromise } from "sitemap";
 
-  sitemap.write({
-    url: "/",
-    changefreq: "daily",
-  });
+// export default defineEventHandler(async (event) => {
+//   // Fetch all documents
+//   const docs = await serverQueryContent(event).find();
+//   const sitemap = new SitemapStream({
+//     hostname: "https://kuda-go.vercel.app",
+//   });
 
-  sitemap.write({
-    url: "/primers",
-    changefreq: "monthly",
-  });
+//   sitemap.write({
+//     url: "/",
+//     changefreq: "daily",
+//   });
 
-  for (const doc of docs) {
-    sitemap.write({
-      url: doc._path,
-      changefreq: "monthly",
-    });
-  }
-  sitemap.end();
+//   sitemap.write({
+//     url: "/primers",
+//     changefreq: "monthly",
+//   });
 
-  return streamToPromise(sitemap);
-});
+//   for (const doc of docs) {
+//     sitemap.write({
+//       url: doc._path,
+//       changefreq: "monthly",
+//     });
+//   }
+//   sitemap.end();
+
+//   return streamToPromise(sitemap);
+// });

@@ -12,6 +12,7 @@
   "dependencies": {
     "@cyhnkckali/vue3-color-picker": "^2.1.2",
     "@nuxt/fonts": "^0.11.1",
+    "@nuxtjs/sitemap": "^7.4.3",
     "@pinia/nuxt": "^0.11.0",
     "@tailwindcss/vite": "^4.1.4",
     "@vueuse/components": "^13.1.0",
@@ -21,7 +22,6 @@
     "nanoid": "^5.1.5",
     "nuxt": "^3.16.2",
     "pinia": "^3.0.2",
-    "sitemap": "^8.0.0",
     "tailwindcss": "^4.1.4",
     "vue-router": "^4.5.0"
   },
@@ -43,7 +43,6 @@
     "Opera >= 12"
   ],
   "devDependencies": {
-    "@nuxt/content": "^3.6.1",
     "@vueuse/core": "^13.1.0",
     "@vueuse/nuxt": "^13.1.0"
   },

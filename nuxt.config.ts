@@ -17,14 +17,22 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/fonts",
     "@pinia/nuxt",
-    "@nuxt/content",
+    "@nuxtjs/sitemap",
   ],
-  nitro: {
-    prerender: {
-      routes: ["/sitemap.xml"],
-    },
+  // nitro: {
+  //   prerender: {
+  //     routes: ["/sitemap.xml"],
+  //   },
+  // },
+
+  site:{
+    url:"https://kuda-go.vercel.app",
+    name:"Сайт на API Kuda Go by Gleb Torgashin",
   },
-  content: {},
+
+  sitemap:{
+    sources:["/api/__sitemap__/urls"]
+  },
 
   app: {
     head: {
