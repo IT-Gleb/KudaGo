@@ -9,6 +9,8 @@ import ProgressBar, {
   type TProgressState,
 } from "~/components/ProgressBar_svg/ProgressBar.vue";
 import Arrow2 from "~/components/svg/Arrow2.vue";
+import { ref, watch, onMounted } from "vue";
+import { storeToRefs } from "pinia";
 
 const isShowFilter = ref<boolean>(false);
 const FilterPo = ref<TFilmSlugsData>([]);

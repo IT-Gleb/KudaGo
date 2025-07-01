@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import FilmCard from "./FilmCard.vue";
 import FilteredPagination from "./FilteredPagination.vue";

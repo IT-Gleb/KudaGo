@@ -3,6 +3,7 @@ import { FilterStore } from "~/store/filterFilmStore";
 import FilmsSection from "./FilmsSection.vue";
 import FilteredFilmsSection from "./FilteredFilmsSection.vue";
 import FilmsFilterComponent from "./FilmsFilterComponent.vue";
+import { storeToRefs } from "pinia";
 
 const store = FilterStore();
 const { hasFilteredData } = storeToRefs(store);
