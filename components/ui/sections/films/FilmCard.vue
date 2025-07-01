@@ -33,10 +33,17 @@ const props = defineProps<{ item: IFilmsResult }>();
       </div>
       <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
       <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
+      <div class="font-bold"><small>Возрастные ограничения:</small></div>
+      <div>
+        {{ item.mpaa_rating ? item.mpaa_rating : "нет" }}
+      </div>
+
       <div class="font-bold"><small>Год выпуска:</small></div>
       <div>{{ item.year }}</div>
       <div class="font-bold"><small>Страна:</small></div>
-      <div class="col-span-2 md:col-auto text-pretty">{{ item.country }}</div>
+      <div class="col-span-2 md:col-auto indent-5 text-pretty">
+        {{ item.country }}
+      </div>
       <div v-if="item.budget as number > 0" class="font-bold">
         <small>Бюджет фильма:</small>
       </div>
