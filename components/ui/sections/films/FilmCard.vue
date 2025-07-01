@@ -2,37 +2,49 @@
 import type { IFilmsResult } from "~/types/filmTypes";
 
 const props = defineProps<{ item: IFilmsResult }>();
-const mpaa_rating_string = ref<string>("Нет возрастных ограничений");
+const mpaa_rating_string = ref<string>("");
+const noChild = ref<string[]>(["thriller", "horror"]);
 
-watch(
-  props.item,
-  () => {
-    if (props.item.mpaa_rating) {
-      switch (props.item.mpaa_rating.toLowerCase()) {
-        case "g":
-          mpaa_rating_string.value = "Нет возрастных ограничений";
-          break;
-        case "pg":
-          mpaa_rating_string.value = "Рекомендуется присутствие родителей";
-          break;
-        case "pg-13":
-          mpaa_rating_string.value = "Детям до 13 лет просмотр не желателен";
-          break;
-        case "r":
-          mpaa_rating_string.value =
-            "Лицам до 17 лет обязательно присутствие взрослого";
-          break;
-        case "nc-17":
-          mpaa_rating_string.value = "Лицам до 18 лет просмотр запрещен";
-          break;
-        default:
-          mpaa_rating_string.value = "Нет возрастных ограничений";
-          break;
-      }
+function setRatingMPAA() {
+  mpaa_rating_string.value = "Нет возрастных ограничений";
+  if (props.item.mpaa_rating) {
+    // console.log(props.item.mpaa_rating);
+    switch (props.item.mpaa_rating.toLowerCase()) {
+      case "g":
+        mpaa_rating_string.value = "Нет возрастных ограничений";
+        break;
+      case "pg":
+        mpaa_rating_string.value = "Рекомендуется присутствие родителей";
+        break;
+      case "pg13":
+        mpaa_rating_string.value = "Детям до 13 лет просмотр не желателен";
+        break;
+      case "r":
+        mpaa_rating_string.value =
+          "Лицам до 17 лет обязательно присутствие взрослого";
+        break;
+      case "nc17":
+        mpaa_rating_string.value = "Лицам до 18 лет просмотр запрещен";
+        break;
+      default:
+        mpaa_rating_string.value = "Нет возрастных ограничений";
+        break;
     }
-  },
-  { deep: true }
-);
+  }
+
+  if (props.item.genres && props.item.genres.length > 0) {
+    let no = props.item.genres.some((item) =>
+      noChild.value.includes(item.slug)
+    );
+    if (no) {
+      mpaa_rating_string.value = "Рекомендуется присутствие родителей.";
+    }
+  }
+}
+
+onMounted(() => {
+  setRatingMPAA();
+});
 </script>
 
 <template>
@@ -64,13 +76,11 @@ watch(
       </div>
       <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
       <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
-      <div class="font-bold"><small>Возрастные ограничения:</small></div>
+      <div class="font-bold line-clamp-1 xl:line-clamp-2">
+        <small>Рейтинг MPAA:</small>
+      </div>
       <div class="col-span-2 md:col-auto indent-5 text-pretty">
-        {{
-          item.mpaa_rating
-            ? mpaa_rating_string + " -> " + item.mpaa_rating
-            : "нет"
-        }}
+        {{ mpaa_rating_string }}
       </div>
 
       <div class="font-bold"><small>Год выпуска:</small></div>
