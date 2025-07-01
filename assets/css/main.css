@@ -49,12 +49,12 @@ body {
 
   h5 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[clamp(2vw,var(--headingSize),2.5vw)]/[2.75vw] uppercase font-semibold;
+    @apply py-1 text-[clamp(2vw,var(--headingSize),2.5vw)]/[3vw] uppercase font-semibold;
   }
 
   h6 {
     font-family: "Roboto", system-ui, sans-serif;
-    @apply py-1 text-[clamp(1.8vw,var(--headingSize),2vw)]/[2.3vw] uppercase font-semibold;
+    @apply py-1 text-[clamp(1.8vw,var(--headingSize),2vw)]/[3vw] uppercase font-semibold;
   }
 
   mark {
