@@ -22,13 +22,16 @@ const items = computed(() =>
 const buttonsRef = ref<HTMLButtonElement[]>([]);
 
 const Step: number = 192;
+const WidthCorrect: number = 166;
+const ButtonWidth: number = 38;
+
 const mainX = ref<number>(0);
-const Width = ref<number>(items.value.length * 38);
+const Width = ref<number>(items.value.length * ButtonWidth);
 
 const handleMinusStep = () => {
   mainX.value -= Step;
-  if (Math.abs(mainX.value) >= Width.value - 164) {
-    mainX.value = -(Width.value - 164);
+  if (Math.abs(mainX.value) >= Width.value - WidthCorrect) {
+    mainX.value = -(Width.value - WidthCorrect);
   }
   //   console.log(mainX.value, Width.value - 164);
 };
@@ -48,15 +51,15 @@ const handleBegin = () => {
 };
 
 const handleEnd = () => {
-  if (mainX.value !== Width.value - 166) {
-    mainX.value = -(Width.value - 166);
+  if (mainX.value !== Width.value - WidthCorrect) {
+    mainX.value = -(Width.value - WidthCorrect);
   }
 };
 
 watch(
   items,
   () => {
-    Width.value = items.value.length * 38;
+    Width.value = items.value.length * ButtonWidth;
   },
   { deep: true }
 );
@@ -74,7 +77,7 @@ watch(
     }
     let left = buttonsRef.value[activePage - 1].offsetLeft;
     if (activePage - 1 > 1 && activePage < length - 3) {
-      mainX.value = -left + 76; //Сместить на 2 кнопки
+      mainX.value = -left + ButtonWidth * 2; //Сместить на 2 кнопки
     } else if (activePage - 1 > length - 4) {
       mainX.value = -(Width.value - 174);
     }

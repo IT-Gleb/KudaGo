@@ -23,7 +23,7 @@ const props = defineProps<{ item: IFilmsResult }>();
         class="block w-full h-full"
       />
     </div>
-    <div class="grid grid-cols-2 gap-2 ml-2">
+    <div class="grid grid-cols-[140px_1fr] gap-2 ml-2">
       <div class="col-span-2">
         <h4
           class="text-[clamp(1rem,2rem,3rem)]/[clamp(1.2rem,2.3rem,3.3rem)] text-balance"
@@ -79,7 +79,7 @@ const props = defineProps<{ item: IFilmsResult }>();
           :key="aa.id"
           class="first-letter:uppercase"
         >
-          {{ aa.name.trim() }}
+          {{ aa.name.trim() + " -> " + aa.slug.trim() }}
         </p>
       </div>
     </div>

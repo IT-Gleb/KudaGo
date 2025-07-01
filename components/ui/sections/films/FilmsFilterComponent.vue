@@ -142,10 +142,10 @@ onMounted(() => {
         v-if="showProgress"
         class="absolute z-10 bg-[#FFFFFFaf] inset-0 place-content-center Showing"
       >
-        <div class="w-fit mx-auto grid grid-cols-1 row-auto gap-2">
+        <div class="w-fit mx-auto flex flex-col items-center gap-2">
           <span
             class="w-fit mx-auto font-bold dark:text-slate-900 animate-bounce"
-            >{{ tick < 65 ? "Получаю данные..." : "&nbsp;" }}</span
+            >{{ tick < 65 ? "Получаю данные..." : "Применяю фильтры..." }}</span
           >
           <ProgressBar
             :width="160"
@@ -153,13 +153,6 @@ onMounted(() => {
             :state="progresState"
             :view="'dashboard'"
           />
-          <span
-            v-if="tick > 65"
-            class="w-fit mx-auto font-bold animate-bounce dark:text-slate-900"
-            >{{
-              tick > 65 && tick < 100 ? "Применяю фильтры..." : "&nbsp;"
-            }}</span
-          >
         </div>
       </div>
       <label
