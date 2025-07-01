@@ -76,10 +76,16 @@ onMounted(() => {
       </div>
       <div class="font-bold"><small>Рейтинг (IMDB):</small></div>
       <div>{{ item.imdb_rating ? item.imdb_rating : "нет" }}</div>
-      <div class="font-bold line-clamp-1 xl:line-clamp-2">
+      <div
+        v-if="item.mpaa_rating"
+        class="font-bold line-clamp-1 xl:line-clamp-2"
+      >
         <small>Рейтинг MPAA:</small>
       </div>
-      <div class="col-span-2 md:col-auto indent-5 text-pretty">
+      <div
+        v-if="item.mpaa_rating"
+        class="col-span-2 md:col-auto indent-5 text-pretty"
+      >
         {{ mpaa_rating_string }}
       </div>
 
