@@ -36,13 +36,8 @@ export const FilterStore = defineStore("filterFilms", () => {
   const tick = ref<number>(0);
   const timerRef = ref<NodeJS.Timeout>();
 
-  const setFilterParam = async (param: string) => {
+  const setFilterParam = (param: string) => {
     filterParam.value = param;
-    if (filterParam.value.length > 3) {
-      await getFiltered();
-    } else {
-      filtered.value = { count: 0, next: "", previous: "", results: [] };
-    }
   };
 
   function ClearData() {
@@ -53,7 +48,7 @@ export const FilterStore = defineStore("filterFilms", () => {
   }
 
   async function getFiltered() {
-    const { error, status } = await useAsyncData(
+    const { error, status, execute } = await useAsyncData(
       `filter-${filterParam.value}`,
       () =>
         $fetch<IFilmsRoot, string>("/api/filmsfilter", {
@@ -95,6 +90,7 @@ export const FilterStore = defineStore("filterFilms", () => {
         }),
       {
         dedupe: "cancel",
+
         transform: (input) => {
           filtered.value = Object.assign({}, input);
           filtered.value.count = filtered.value.results.length;
@@ -109,6 +105,7 @@ export const FilterStore = defineStore("filterFilms", () => {
         },
       }
     );
+    return execute;
   }
 
   return {

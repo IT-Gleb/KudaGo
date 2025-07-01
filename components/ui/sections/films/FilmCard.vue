@@ -140,7 +140,9 @@ onMounted(() => {
           :key="aa.id"
           class="first-letter:uppercase"
         >
-          {{ aa.name.trim() + " -> " + aa.slug.trim() }}
+          {{ aa.name.trim() }}
+
+          <!-- {{ aa.name.trim() + " -> " + aa.slug.trim() }} -->
         </p>
       </div>
     </div>

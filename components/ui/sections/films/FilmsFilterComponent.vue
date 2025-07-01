@@ -18,9 +18,11 @@ const paramFiltrStr = ref<string>("cartoons");
 const showProgress = ref<boolean>(false);
 const progresState = ref<TProgressState>("in-progress");
 
+const isFiltered = ref<boolean>(false); //Отфидьроано или нет
+
 const store = FilterStore();
 
-const { setFilterParam, ClearData } = store;
+const { setFilterParam, ClearData, getFiltered } = store;
 const { dataStatus, tick } = storeToRefs(store);
 
 const sortByRuSlug = (a: TFilmsSlug, b: TFilmsSlug) => {
@@ -49,16 +51,24 @@ const handleFrom = (param: number, isReverce: boolean) => {
 };
 
 const handleUpdate = async () => {
-  if (FilterPo.value.length > 0 && paramFiltrStr.value.length > 3) {
+  ClearData();
+  isFiltered.value = !isFiltered.value;
+  if (
+    isFiltered.value &&
+    FilterPo.value.length > 0 &&
+    paramFiltrStr.value.length > 3
+  ) {
     progresState.value = "in-progress";
     showProgress.value = true;
-    await setFilterParam(paramFiltrStr.value);
+    setFilterParam(paramFiltrStr.value);
+    (await getFiltered())();
+    //exec();
+  } else if (!isFiltered.value) {
+    showProgress.value = false;
+    paramFiltrStr.value = "";
+    progresState.value = "success";
+    FilterPo.value = [];
   }
-  // if (FilterPo.value.length < 1) {
-  //   progresState.value = "success";
-  //   showProgress.value = false;
-  //   ClearData();
-  // }
 
   //console.log(paramFiltrStr.value);
 };
@@ -143,16 +153,16 @@ onMounted(() => {
         class="absolute z-10 bg-[#FFFFFFaf] inset-0 place-content-center Showing"
       >
         <div class="w-fit mx-auto flex flex-col items-center gap-2">
-          <span
-            class="w-fit mx-auto font-bold dark:text-slate-900 animate-bounce"
-            >{{ tick < 65 ? "Получаю данные..." : "Применяю фильтры..." }}</span
-          >
           <ProgressBar
             :width="160"
             :value="tick"
             :state="progresState"
             :view="'dashboard'"
           />
+          <span
+            class="w-fit mx-auto font-bold dark:text-slate-900 animate-bounce"
+            >{{ tick < 65 ? "Получаю данные..." : "Применяю фильтры..." }}</span
+          >
         </div>
       </div>
       <label
@@ -217,7 +227,7 @@ onMounted(() => {
         @click.prevent="handleUpdate()"
         :disabled="dataStatus === 'pending' || FilterPo.length < 1"
       >
-        Применить
+        {{ isFiltered ? "Очистить" : "Применить" }}
       </button>
     </div>
   </article>
