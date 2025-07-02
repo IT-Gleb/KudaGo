@@ -12,15 +12,16 @@ import Arrow2 from "~/components/svg/Arrow2.vue";
 import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
+type TFilterState = "none" | "filtered";
+
 const isShowFilter = ref<boolean>(false);
 const FilterPo = ref<TFilmSlugsData>([]);
 const FilterFrom = ref<TFilmSlugsData>(FilmsGenres);
 const paramFiltrStr = ref<string>("cartoons");
+const FilterState = ref<TFilterState>("none");
 
 const showProgress = ref<boolean>(false);
 const progresState = ref<TProgressState>("in-progress");
-
-const isFiltered = ref<boolean>(false); //Отфидьроано или нет
 
 const store = FilterStore();
 
@@ -65,35 +66,35 @@ const clearFilterPo = () => {
   });
   FilterPo.value = [];
   FilterFrom.value.sort(sortByRuSlug);
+  FilterState.value = "none";
 };
 
 const handleUpdate = async () => {
-  ClearData();
-  isFiltered.value = !isFiltered.value;
-  if (
-    isFiltered.value &&
-    FilterPo.value.length > 0 &&
-    paramFiltrStr.value.length > 3
-  ) {
-    progresState.value = "in-progress";
-    showProgress.value = true;
-    setFilterParam(paramFiltrStr.value);
-    (await getFiltered())();
-    //exec();
-  } else if (!isFiltered.value) {
-    showProgress.value = false;
-    paramFiltrStr.value = "";
-    progresState.value = "success";
-    clearFilterPo();
-  }
-
   //console.log(paramFiltrStr.value);
+  if (FilterState.value === "none") {
+    setFilterParam(paramFiltrStr.value);
+    showProgress.value = true;
+    progresState.value = "in-progress";
+    (await getFiltered())();
+    FilterState.value = "filtered";
+    return;
+  }
+  if (FilterState.value === "filtered") {
+    clearFilterPo();
+    paramFiltrStr.value = "";
+    ClearData();
+    progresState.value = "success";
+    if (FilterState.value === "filtered") {
+      FilterState.value = "none";
+    }
+  }
 };
 
 watch(tick, () => {
   showProgress.value = progresState.value === "in-progress" && tick.value < 100;
   if (tick.value >= 100) {
     progresState.value === "success";
+    //FilterState.value = "filtered";
   }
 });
 
@@ -120,6 +121,7 @@ watch(
         return acc;
       }, "");
     }
+
     //    console.log(paramFiltrStr.value);
   },
   { deep: true }
@@ -244,7 +246,11 @@ onMounted(() => {
         @click.prevent="handleUpdate()"
         :disabled="dataStatus === 'pending' || FilterPo.length < 1"
       >
-        {{ isFiltered ? "Очистить" : "Применить" }}
+        {{
+          FilterState === "none" && FilterPo.length > 0
+            ? "Применить"
+            : "Очистить"
+        }}
       </button>
     </div>
   </article>

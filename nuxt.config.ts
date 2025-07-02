@@ -22,18 +22,18 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       // routes: ["/sitemap.xml"],
-      routes:["/api/__sitemap__/urls"],
+      routes: ["/api/__sitemap__/urls"],
     },
   },
 
-  site:{
+  site: {
     //url:"https://kuda-go.vercel.app",
     url: `${process.env.NUXT_SITE_NAME}`,
-    name:"Сайт на API Kuda Go by Gleb Torgashin",
+    name: "Сайт на API Kuda Go by Gleb Torgashin",
   },
 
-  sitemap:{
-    sources:["/api/__sitemap__/urls"],
+  sitemap: {
+    sources: ["/api/__sitemap__/urls"],
     // urls() {
     //   return ["/abc", "/bbb", "/sega"]
     // },
@@ -51,6 +51,7 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
+
   routeRules: {
     // "/api/news": {
     //   //ssr: true,
