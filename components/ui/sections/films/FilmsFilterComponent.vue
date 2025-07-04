@@ -86,7 +86,6 @@ const clearFilterPo = () => {
 const handleUpdate = async () => {
   //console.log(paramFiltrStr.value);
   if (FilterState.value === "none") {
-    FilterState.value = "filtered";
     setFilterParam(paramFiltrStr.value);
     showProgress.value = true;
     progresState.value = "in-progress";
@@ -98,14 +97,14 @@ const handleUpdate = async () => {
     paramFiltrStr.value = "";
     ClearData();
     progresState.value = "success";
-    FilterState.value = "none";
   }
 };
 
 watch(tick, () => {
   showProgress.value = progresState.value === "in-progress" && tick.value < 100;
   if (tick.value >= 100) {
-    progresState.value === "success";
+    progresState.value = "success";
+    FilterState.value = "filtered";
     goToFiltered();
 
     //FilterState.value = "filtered";
@@ -136,6 +135,9 @@ watch(
       }, "");
     }
 
+    FilterPo.value.length > 0
+      ? (FilterState.value = "none")
+      : (FilterState.value = "filtered");
     //    console.log(paramFiltrStr.value);
   },
   { deep: true }
@@ -151,6 +153,10 @@ watch(isShowFilter, () => {
 
 onMounted(() => {
   FilterFrom.value.sort(sortByRuSlug);
+  ClearData();
+});
+
+onUnmounted(() => {
   ClearData();
 });
 </script>

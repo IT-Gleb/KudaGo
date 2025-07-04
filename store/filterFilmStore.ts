@@ -45,6 +45,7 @@ export const FilterStore = defineStore("filterFilms", () => {
     filterParam.value = "";
     tick.value = 0;
     clearInterval(timerRef.value);
+    dataError.value = null;
   }
 
   async function getFiltered() {
