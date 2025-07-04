@@ -7,6 +7,8 @@ import type {
 
 const delimeter: string = ". ";
 
+export const FiltersHeader: string = "filterAbcBca";
+
 export function getNowYear(): string {
   const dt = new Date();
   return `${dt.getUTCFullYear()}`;

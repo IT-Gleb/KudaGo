@@ -11,6 +11,7 @@ import ProgressBar, {
 import Arrow2 from "~/components/svg/Arrow2.vue";
 import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
+import { FiltersHeader } from "../../../../utils/functions";
 
 type TFilterState = "none" | "filtered";
 
@@ -26,13 +27,26 @@ const progresState = ref<TProgressState>("in-progress");
 const store = FilterStore();
 
 const { setFilterParam, ClearData, getFiltered } = store;
-const { dataStatus, tick } = storeToRefs(store);
+const { dataStatus, tick, Size } = storeToRefs(store);
 
 const sortByRuSlug = (a: TFilmsSlug, b: TFilmsSlug) => {
   if (a.ru_slug.toLowerCase() > b.ru_slug.toLowerCase()) {
     return 1;
   } else {
     return -1;
+  }
+};
+
+const goToFiltered = () => {
+  const filteredArea = document.getElementById(FiltersHeader);
+  // console.log(filteredArea);
+
+  if (filteredArea) {
+    (filteredArea as HTMLElement).scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "start",
+    });
   }
 };
 
@@ -72,11 +86,11 @@ const clearFilterPo = () => {
 const handleUpdate = async () => {
   //console.log(paramFiltrStr.value);
   if (FilterState.value === "none") {
+    FilterState.value = "filtered";
     setFilterParam(paramFiltrStr.value);
     showProgress.value = true;
     progresState.value = "in-progress";
     (await getFiltered())();
-    FilterState.value = "filtered";
     return;
   }
   if (FilterState.value === "filtered") {
@@ -84,9 +98,7 @@ const handleUpdate = async () => {
     paramFiltrStr.value = "";
     ClearData();
     progresState.value = "success";
-    if (FilterState.value === "filtered") {
-      FilterState.value = "none";
-    }
+    FilterState.value = "none";
   }
 };
 
@@ -94,6 +106,8 @@ watch(tick, () => {
   showProgress.value = progresState.value === "in-progress" && tick.value < 100;
   if (tick.value >= 100) {
     progresState.value === "success";
+    goToFiltered();
+
     //FilterState.value = "filtered";
   }
 });

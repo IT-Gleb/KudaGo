@@ -5,12 +5,16 @@ type TMainScreenItem = {
   label: string;
   href: string;
 };
+const config = useRuntimeConfig();
+
+//console.log(config.public.nuxtSiteName);
+
 const MainMenuItems = ref<TMainScreenItem[]>([
   { id: nanoid(), label: "Новости", href: "#" },
   {
     id: nanoid(),
     label: "Контент",
-    href: `${process.env.NUXT_SITE_NAME}/sitemap.xml`,
+    href: `${config.public.nuxtSiteName}/sitemap.xml`,
   },
   { id: nanoid(), label: "Фильмы", href: "#" },
   { id: nanoid(), label: "Примеры", href: "/primers" },

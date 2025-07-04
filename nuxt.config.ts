@@ -40,6 +40,12 @@ export default defineNuxtConfig({
     // urls:["/","/primers","/sitemap.xml"],
   },
 
+  runtimeConfig: {
+    public: {
+      nuxtSiteName: "https://kuda-go.vercel.app",
+    },
+  },
+
   app: {
     head: {
       charset: "utf-8",
