@@ -16,7 +16,7 @@ const MainMenuItems = ref<TMainScreenItem[]>([
     label: "Контент",
     href: `${config.public.nuxtSiteName}/sitemap.xml`,
   },
-  { id: nanoid(), label: "Фильмы", href: "#" },
+  { id: nanoid(), label: "Фильмы", href: `#${FilmsSectionId}` },
   { id: nanoid(), label: "Примеры", href: "/primers" },
 ]);
 </script>

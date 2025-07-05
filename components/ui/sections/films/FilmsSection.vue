@@ -59,7 +59,7 @@ watch(films, () => {
 <template>
   <section class="w-[96%] xl:w-[80%] mx-auto min-h-screen p-1">
     <div ref="filmsRef" class="p-1 flex items-center justify-between">
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4" :id="FilmsSectionId">
         <h4 class="my-5">Фильмы</h4>
         <span>[Страница - {{ paramPage }} из {{ totalPage }}]</span>
       </div>

@@ -8,6 +8,7 @@ import type {
 const delimeter: string = ". ";
 
 export const FiltersHeader: string = "filterAbcBca";
+export const FilmsSectionId: string = "filmsId";
 
 export function getNowYear(): string {
   const dt = new Date();
