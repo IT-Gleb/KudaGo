@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { nanoid } from "nanoid";
+import { FilmsSectionId } from "~/utils/functions";
+
 type TMainScreenItem = {
   id: string;
   label: string;
@@ -9,6 +11,17 @@ const config = useRuntimeConfig();
 
 //console.log(config.public.nuxtSiteName);
 
+const handleFilmsClick = () => {
+  const filmsId = document.getElementById(FilmsSectionId);
+  if (filmsId) {
+    (filmsId as HTMLElement).scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "start",
+    });
+  }
+};
+
 const MainMenuItems = ref<TMainScreenItem[]>([
   { id: nanoid(), label: "Новости", href: "#" },
   {
@@ -16,7 +29,7 @@ const MainMenuItems = ref<TMainScreenItem[]>([
     label: "Контент",
     href: `${config.public.nuxtSiteName}/sitemap.xml`,
   },
-  { id: nanoid(), label: "Фильмы", href: `#${FilmsSectionId}` },
+  { id: nanoid(), label: "Фильмы", href: "" },
   { id: nanoid(), label: "Примеры", href: "/primers" },
 ]);
 </script>
@@ -27,10 +40,11 @@ const MainMenuItems = ref<TMainScreenItem[]>([
   >
     <NuxtLink
       rel="noopener"
-      v-for="menuItem of MainMenuItems"
+      v-for="(menuItem, index) in MainMenuItems"
       :key="menuItem.id"
       :to="menuItem.href"
-      class="px-1 py-[2px] hover:bg-slate-300 hover:text-indigo-950 md:hover:bg-indigo-950 md:hover:text-slate-200 dark:hover:bg-slate-300 dark:hover:text-indigo-950"
+      @click="index === 2 ? handleFilmsClick() : null"
+      class="px-1 py-[2px] cursor-pointer hover:bg-slate-300 hover:text-indigo-950 md:hover:bg-indigo-950 md:hover:text-slate-200 dark:hover:bg-slate-300 dark:hover:text-indigo-950"
       >{{ menuItem.label }}</NuxtLink
     >
   </div>
