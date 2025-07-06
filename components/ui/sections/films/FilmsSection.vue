@@ -3,6 +3,7 @@ import type { IFilmsRoot } from "~/types/filmTypes";
 import { FilmsController } from "./controllers/FilmsController";
 import { randomIntegerFromMinMax } from "#imports";
 import FilmCard from "./FilmCard.vue";
+import popMessage from "../../popover/popMessage.vue";
 
 import { ref } from "vue";
 
@@ -12,6 +13,8 @@ const paramPage = ref<number>(randomIntegerFromMinMax(1, 500));
 const totalPage = ref<number>(500);
 
 const filmsRef = ref<HTMLDivElement | null>(null);
+
+const PopoverRef = ref();
 
 const { status, films, error } = await FilmsController(paramPage);
 
@@ -47,9 +50,11 @@ const handlerPrev = async () => {
   checkPage(-1);
 };
 
-watch(films, () => {
+watch(films, async () => {
   if (films.value) {
     totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
+    await Wait(500);
+    PopoverRef.value?.showThisPopover();
   } else {
     totalPage.value = 500;
   }
@@ -71,6 +76,12 @@ watch(films, () => {
         <small>Обновить</small>
       </button>
     </div>
+
+    <popMessage
+      v-if="status !== 'pending' && !error"
+      ref="PopoverRef"
+      :message="'Данные получены...'"
+    />
 
     <div
       v-if="status === 'pending' && !error"

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script async setup lang="ts">
 import { FilterStore } from "~/store/filterFilmStore";
 import {
   FilmsGenres,
@@ -12,6 +12,7 @@ import Arrow2 from "~/components/svg/Arrow2.vue";
 import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { FiltersHeader } from "../../../../utils/functions";
+import PopMessage from "../../popover/popMessage.vue";
 
 type TFilterState = "none" | "filtered";
 
@@ -20,6 +21,9 @@ const FilterPo = ref<TFilmSlugsData>([]);
 const FilterFrom = ref<TFilmSlugsData>(FilmsGenres);
 const paramFiltrStr = ref<string>("cartoons");
 const FilterState = ref<TFilterState>("none");
+
+const popStringMsg = ref<string>("");
+const popRef = ref();
 
 const showProgress = ref<boolean>(false);
 const progresState = ref<TProgressState>("in-progress");
@@ -97,15 +101,23 @@ const handleUpdate = async () => {
     paramFiltrStr.value = "";
     ClearData();
     progresState.value = "success";
+
+    popStringMsg.value = "  Фильтры очищены!...";
+    await Wait(500);
+    popRef.value?.showThisPopover();
   }
 };
 
-watch(tick, () => {
+watch(tick, async () => {
   showProgress.value = progresState.value === "in-progress" && tick.value < 100;
   if (tick.value >= 100) {
     progresState.value = "success";
     FilterState.value = "filtered";
     goToFiltered();
+
+    popStringMsg.value = "  Фильтрование применено!...";
+    await Wait(500);
+    popRef.value?.showThisPopover();
 
     //FilterState.value = "filtered";
   }
@@ -162,6 +174,8 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <PopMessage ref="popRef" :message="popStringMsg" />
+
   <article
     :class="
       isShowFilter ? 'bg-slate-100 dark:bg-slate-800 overflow-hidden' : null
