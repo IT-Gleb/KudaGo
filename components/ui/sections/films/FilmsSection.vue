@@ -6,15 +6,17 @@ import FilmCard from "./FilmCard.vue";
 import popMessage from "../../popover/popMessage.vue";
 
 import { ref } from "vue";
+import { PopMessageStore } from "~/store/popMessagesStore";
 
 type TPageParam = -1 | 0 | 1;
+
+const popMsg = PopMessageStore();
+const { PopPush } = popMsg;
 
 const paramPage = ref<number>(randomIntegerFromMinMax(1, 500));
 const totalPage = ref<number>(500);
 
 const filmsRef = ref<HTMLDivElement | null>(null);
-
-const PopoverRef = ref<InstanceType<typeof popMessage>>();
 
 const { status, films, error } = await FilmsController(paramPage);
 
@@ -53,8 +55,7 @@ const handlerPrev = async () => {
 watch(films, async () => {
   if (films.value) {
     totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
-    await Wait(500);
-    PopoverRef.value?.showThisPopover();
+    PopPush("Данные загружены...");
   } else {
     totalPage.value = 500;
   }
@@ -62,6 +63,7 @@ watch(films, async () => {
 </script>
 
 <template>
+  <popMessage />
   <section class="w-[96%] xl:w-[80%] mx-auto min-h-screen p-1">
     <div ref="filmsRef" class="p-1 flex items-center justify-between">
       <div class="flex items-center gap-4" :id="FilmsSectionId">
@@ -76,12 +78,6 @@ watch(films, async () => {
         <small>Обновить</small>
       </button>
     </div>
-
-    <popMessage
-      v-if="status !== 'pending' && !error"
-      ref="PopoverRef"
-      :message="'Данные получены...'"
-    />
 
     <div
       v-if="status === 'pending' && !error"
