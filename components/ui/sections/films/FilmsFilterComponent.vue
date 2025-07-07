@@ -23,7 +23,7 @@ const paramFiltrStr = ref<string>("cartoons");
 const FilterState = ref<TFilterState>("none");
 
 const popStringMsg = ref<string>("");
-const popRef = ref();
+const popRef = ref<InstanceType<typeof PopMessage>>();
 
 const showProgress = ref<boolean>(false);
 const progresState = ref<TProgressState>("in-progress");
@@ -31,7 +31,7 @@ const progresState = ref<TProgressState>("in-progress");
 const store = FilterStore();
 
 const { setFilterParam, ClearData, getFiltered } = store;
-const { dataStatus, tick, Size } = storeToRefs(store);
+const { dataStatus, tick } = storeToRefs(store);
 
 const sortByRuSlug = (a: TFilmsSlug, b: TFilmsSlug) => {
   if (a.ru_slug.toLowerCase() > b.ru_slug.toLowerCase()) {

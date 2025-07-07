@@ -14,7 +14,8 @@ function setRatingMPAA() {
         mpaa_rating_string.value = "Нет возрастных ограничений";
         break;
       case "pg":
-        mpaa_rating_string.value = "Рекомендуется присутствие родителей";
+        mpaa_rating_string.value =
+          "Лицам меньше 15 лет, рекомендуется присутствие родителей";
         break;
       case "pg13":
         mpaa_rating_string.value = "Детям до 13 лет просмотр не желателен";
@@ -37,7 +38,8 @@ function setRatingMPAA() {
       noChild.value.includes(item.slug)
     );
     if (no) {
-      mpaa_rating_string.value = "Рекомендуется присутствие родителей.";
+      mpaa_rating_string.value =
+        "Лицам меньше 15 лет, рекомендуется присутствие родителей.";
     }
   }
 }

@@ -14,7 +14,7 @@ const totalPage = ref<number>(500);
 
 const filmsRef = ref<HTMLDivElement | null>(null);
 
-const PopoverRef = ref();
+const PopoverRef = ref<InstanceType<typeof popMessage>>();
 
 const { status, films, error } = await FilmsController(paramPage);
 
