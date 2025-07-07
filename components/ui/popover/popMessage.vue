@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { PopMessageStore } from "~/store/popMessagesStore";
+import { PopMessageStore, type TMessageStr } from "~/store/popMessagesStore";
 
 const popTop = ref<number>(window.innerHeight - 50);
 
 const messagesStore = PopMessageStore();
 const { messages } = storeToRefs(messagesStore);
 
-const calculateHeight = (param: string[]) => {
-  let windowHeight = window.innerHeight;
+const calculateHeight = (param: TMessageStr[]) => {
+  let windowHeight = window.innerHeight - 25;
   let myHeight = Number(
     popRef.value!.getBoundingClientRect().height.toFixed(1)
   );
@@ -16,8 +16,8 @@ const calculateHeight = (param: string[]) => {
   }
   // console.log(myHeight);
   param.length < 2
-    ? (popTop.value = windowHeight - myHeight - 10)
-    : (popTop.value = windowHeight - myHeight - 5);
+    ? (popTop.value = windowHeight - myHeight)
+    : (popTop.value = windowHeight - myHeight);
   // console.log(popTop.value);
 };
 
@@ -76,13 +76,13 @@ defineExpose({ popRef, showThisPopover });
     id="pop"
     ref="popRef"
     popover="manual"
-    class="w-[96%] left-1 xl:w-[60%] bg-slate-700 transition-all text-slate-100 dark:bg-slate-500 dark:text-yellow-100 font-['Roboto'] font-[500] rounded-md place-content-center p-1 overflow-hidden"
+    class="w-[96%] left-1 xl:w-[60%] bg-slate-800 transition-all text-slate-100 dark:bg-slate-500 dark:text-yellow-100 font-['Roboto'] font-[500] rounded-md place-content-center p-1 overflow-hidden"
     :style="{ top: `${popTop}px` }"
   >
-    <div class="flex flex-row gap-2 items-start justify-between p-2">
+    <div class="flex flex-row gap-2 items-start justify-between">
       <div class="flex flex-col items-start gap-2">
-        <span v-for="item in messages" class="block w-fit mx-auto" :key="item">
-          {{ item }}
+        <span v-for="(item, index) in messages" class="p-1" :key="item.id">
+          {{ `${index + 1}. ${item.msg}` }}
         </span>
       </div>
 

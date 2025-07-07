@@ -1,10 +1,15 @@
+import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
-const delayMsg: number = 5000;
+const delayMsg: number = 3500;
+export type TMessageStr = {
+  id: string;
+  msg: string;
+};
 
 export const PopMessageStore = defineStore("popMessages", () => {
-  const messages = ref<string[]>([]);
+  const messages = ref<TMessageStr[]>([]);
   const timerRef = ref<NodeJS.Timeout | null>(null);
 
   const queueSize = computed(() => messages.value.length);
@@ -26,7 +31,8 @@ export const PopMessageStore = defineStore("popMessages", () => {
   }
 
   function PopPush(param: string) {
-    messages.value.push(param);
+    let tmp: TMessageStr = { id: nanoid(), msg: param };
+    messages.value.push(tmp);
     if (messages.value.length > 0 && timerRef.value === null) {
       timerRef.value = setInterval(() => {
         DeleteFirst();

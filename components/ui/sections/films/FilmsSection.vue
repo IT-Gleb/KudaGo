@@ -52,14 +52,18 @@ const handlerPrev = async () => {
   checkPage(-1);
 };
 
-watch(films, async () => {
-  if (films.value) {
-    totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
-    PopPush("Данные загружены...");
-  } else {
-    totalPage.value = 500;
-  }
-});
+watch(
+  films,
+  () => {
+    if (films.value) {
+      totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
+      PopPush(`Данные по странице = ${paramPage.value}  загружены...`);
+    } else {
+      totalPage.value = 500;
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <template>
