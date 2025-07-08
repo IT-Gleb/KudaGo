@@ -1,96 +1,94 @@
 <script setup lang="ts">
-import { PopMessageStore, type TMessageStr } from "~/store/popMessagesStore";
+import { PopMessageStore } from "~/store/popMessagesStore";
 
-const popTop = ref<number>(window.innerHeight - 50);
+const refs = ref<Array<Ref<HTMLElement>>>([]);
+const timerRef = ref<NodeJS.Timeout | null>(null);
 
 const messagesStore = PopMessageStore();
 const { messages } = storeToRefs(messagesStore);
+const { DeleteMsg, SetInitialTop } = messagesStore;
 
-const calculateHeight = () => {
-  let windowHeight = window.innerHeight - 25;
-  let myHeight = Number(
-    popRef.value!.getBoundingClientRect().height.toFixed(1)
-  );
-  if (myHeight < 1) {
-    myHeight = 55;
+const ClearThisTimeOut = () => {
+  if (timerRef.value !== null) {
+    clearTimeout(timerRef.value);
   }
-  // console.log(myHeight);
-  popTop.value = windowHeight - myHeight;
-
-  // console.log(popTop.value);
+  timerRef.value = null;
 };
+
+// const calculateHeight = (param: number) => {
+//   let windowHeight = window.innerHeight;
+//   let myHeight = 50;
+//   // let myHeight = Number(
+//   //   popRef.value!.getBoundingClientRect().height.toFixed(1)
+//   // );
+//   // console.log(myHeight);
+
+//   popTop.value.unshift({
+//     id: `pop${param}`,
+//     top: windowHeight - myHeight * param - stepY,
+//   });
+
+//   // console.log(popTop.value);
+// };
 
 messagesStore.$subscribe(
   (mutation, state) => {
     //mutation.type может быть "direct" | "patch object" | "patch function"
-    if (mutation.type !== "direct") {
-      return;
-    }
+    // if (mutation.type !== "direct") {
+    //   return;
+    // }
     // console.log(mutation, state);
-    calculateHeight();
+    SetInitialTop(window.innerHeight);
+
     if (state.messages.length > 0) {
-      popRef.value?.showPopover();
-    } else {
-      handleClose();
+      //   // (refs.value[indx] as unknown as HTMLElement).showPopover();
+
+      ClearThisTimeOut();
+      timerRef.value = setTimeout(() => {
+        for (let indx: number = 0; indx < messages.value.length; indx++) {
+          (refs.value[indx] as unknown as HTMLElement).showPopover();
+        }
+      }, 400);
     }
   },
   {
+    // flush: "pre",
     flush: "sync",
     deep: true,
   }
 );
 
-const popRef = ref<HTMLDivElement>();
-const timerRef = ref<NodeJS.Timeout | null>(null);
-
-const clearTimer = () => {
-  if (timerRef.value !== null) {
-    clearTimeout(timerRef.value);
-    timerRef.value = null;
-  }
-};
-
-const showThisPopover = () => {
-  popRef.value?.showPopover();
-  timerRef.value = setTimeout(() => {
-    popRef.value?.hidePopover();
-    clearTimer();
-  }, 30000);
-};
-
-const handleClose = () => {
-  popRef.value?.hidePopover();
-  clearTimer();
+const handleClosePopover = (param: string) => {
+  DeleteMsg(param);
 };
 
 onUnmounted(() => {
-  clearTimer();
+  ClearThisTimeOut();
 });
-
-defineExpose({ popRef, showThisPopover });
 </script>
 
 <template>
   <div
-    id="pop"
-    ref="popRef"
+    v-for="item in messages"
+    ref="refs"
+    :id="`#${item.popId}`"
+    :key="item.id"
     popover="manual"
-    class="w-[96%] left-1 xl:w-[60%] bg-slate-800 transition-all text-slate-100 dark:bg-slate-500 dark:text-yellow-100 font-['Roboto'] font-[500] rounded-md place-content-center p-1 overflow-hidden"
-    :style="{ top: `${popTop}px` }"
+    class="w-[98%] md:w-[75%] max-h-[60px] left-1 transition-all overflow-hidden rounded-lg"
+    :style="{
+      top: `${item.top}px`,
+    }"
   >
-    <div class="flex flex-row gap-2 items-start justify-between">
-      <div class="flex flex-col items-start gap-2">
-        <span v-for="(item, index) in messages" class="p-1" :key="item.id">
-          {{ `${index + 1}. ${item.msg}` }}
-        </span>
-      </div>
-
+    <div
+      class="flex items-center gap-2 justify-between bg-green-400 dark:bg-green-800 text-black dark:text-amber-100 p-2"
+    >
+      <span class="font-['Roboto'] line-clamp-1">{{ item.msg }}</span>
       <button
         type="button"
-        popovertarget="pop"
+        :popovertarget="`${item.popId}`"
         popovertargetaction="hide"
-        class="px-2 min-w-[28px] min-h-[28px] cursor-pointer bg-slate-500 text-white active:scale-90 ml-[5rem] rounded-md float-right"
-        @click="handleClose"
+        class="px-2 min-w-[30px] min-h-[30px] cursor-pointer bg-slate-500 dark:bg-slate-900 text-white active:scale-90 ml-[5rem] rounded-md float-right"
+        @click.prevent="() => handleClosePopover(item.id)"
       >
         <span aria-hidden="true">x</span>
       </button>

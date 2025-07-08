@@ -71,6 +71,11 @@ const handleFrom = (param: number, isReverce: boolean) => {
         ));
   }
 
+  // if (!isReverce) {
+  //   const itm = FilterPo.value[FilterPo.value.length - 1].ru_slug;
+  //   PopPush(itm);
+  // }
+
   FilterFrom.value.sort(sortByRuSlug);
   FilterPo.value.sort(sortByRuSlug);
 };

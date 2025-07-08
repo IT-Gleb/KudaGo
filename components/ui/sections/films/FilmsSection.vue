@@ -57,7 +57,7 @@ watch(
   () => {
     if (films.value) {
       totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
-      PopPush(`Данные по странице = ${paramPage.value}  загружены...`);
+      PopPush(`Данные по странице ${paramPage.value}  загружены...`);
     } else {
       totalPage.value = 500;
     }
