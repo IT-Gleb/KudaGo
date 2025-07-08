@@ -6,7 +6,7 @@ const popTop = ref<number>(window.innerHeight - 50);
 const messagesStore = PopMessageStore();
 const { messages } = storeToRefs(messagesStore);
 
-const calculateHeight = (param: TMessageStr[]) => {
+const calculateHeight = () => {
   let windowHeight = window.innerHeight - 25;
   let myHeight = Number(
     popRef.value!.getBoundingClientRect().height.toFixed(1)
@@ -15,9 +15,8 @@ const calculateHeight = (param: TMessageStr[]) => {
     myHeight = 55;
   }
   // console.log(myHeight);
-  param.length < 2
-    ? (popTop.value = windowHeight - myHeight)
-    : (popTop.value = windowHeight - myHeight);
+  popTop.value = windowHeight - myHeight;
+
   // console.log(popTop.value);
 };
 
@@ -28,7 +27,7 @@ messagesStore.$subscribe(
       return;
     }
     // console.log(mutation, state);
-    calculateHeight(state.messages);
+    calculateHeight();
     if (state.messages.length > 0) {
       popRef.value?.showPopover();
     } else {
