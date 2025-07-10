@@ -4,11 +4,14 @@ import { FilmsController } from "./controllers/FilmsController";
 import { randomIntegerFromMinMax } from "#imports";
 import FilmCard from "./FilmCard.vue";
 import popMessage from "../../popover/popMessage.vue";
+import { useI18n } from "#i18n";
 
 import { ref } from "vue";
 import { PopMessageStore } from "~/store/popMessagesStore";
 
 type TPageParam = -1 | 0 | 1;
+
+const { t } = useI18n();
 
 const popMsg = PopMessageStore();
 const { PopPush } = popMsg;
@@ -57,7 +60,12 @@ watch(
   () => {
     if (films.value) {
       totalPage.value = Math.ceil((films.value as IFilmsRoot).count / 10);
-      PopPush(`Данные по странице ${paramPage.value}  загружены...`);
+      let msg: string = t("popMessages.dataPageLoaded").replace(
+        "%s",
+        paramPage.value.toString()
+      );
+
+      PopPush(msg);
     } else {
       totalPage.value = 500;
     }

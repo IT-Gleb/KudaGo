@@ -12,6 +12,7 @@
   "dependencies": {
     "@cyhnkckali/vue3-color-picker": "^2.1.2",
     "@nuxt/fonts": "^0.11.1",
+    "@nuxtjs/i18n": "^9.5.6",
     "@nuxtjs/sitemap": "^7.4.3",
     "@pinia/nuxt": "^0.11.0",
     "@tailwindcss/vite": "^4.1.4",
@@ -44,7 +45,8 @@
   ],
   "devDependencies": {
     "@vueuse/core": "^13.1.0",
-    "@vueuse/nuxt": "^13.1.0"
+    "@vueuse/nuxt": "^13.1.0",
+    "@nuxtjs/i18n": "^9.5.6"
   },
   "overrides": {
     "vue": "latest"

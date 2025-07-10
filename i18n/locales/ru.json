@@ -1,0 +1,18 @@
+{
+  "title": "Этот сайт использует API Kuda GO для отображения информации",
+  "author": "Торгашин Глеб",
+  "mainMenu": ["Новости", "Контент", "Фильмы", "Примеры"],
+  "mainTitle": ["куда", "сходить"],
+  "popMessages": {
+    "dataLoad": "Получаю данные...",
+    "dataEventDay": " по событиям дня",
+    "dataLoaded": "Данные @:popMessages.dataEventDay - загружены...",
+    "dataPageLoaded": "Данные по странице %s - загружены..."
+  },
+  "headdings": {
+    "eventOfDay": "событие дня"
+  },
+  "links": {
+    "onMainPage": "На главную"
+  }
+}

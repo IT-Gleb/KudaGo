@@ -11,6 +11,14 @@ import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
 import FilmsStateSection from "~/components/ui/sections/films/FilmsStateSection.vue";
 import filmComponent from "~/components/ui/film/filmComponent.vue";
 import { nanoid } from "nanoid";
+import { useI18n, type LocaleMessageType, type VueMessageType } from "#i18n";
+
+const { tm, rt } = useI18n();
+
+const { length } = tm("mainTitle");
+const MainTitle: Array<string> = tm("mainTitle")
+  .slice(0, length)
+  .map((item: LocaleMessageType<VueMessageType>) => rt(item));
 
 useHead({
   title: "Новости:[Kuda Go]",
@@ -63,7 +71,7 @@ onUnmounted(() => {
         <div
           class="w-full md:w-[55%] uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,12vw,11vw)] font-['Inter'] font-bold text-slate-800 dark:text-slate-300 pl-20"
         >
-          куда
+          {{ MainTitle[0] }}
         </div>
         <div
           class="w-[280px] md:w-[380px] xl:w-[680px] object-fill text-indigo-950 dark:text-slate-600 -scale-x-90"
@@ -85,7 +93,7 @@ onUnmounted(() => {
         <div
           class="md:w-[70%] md:ml-[12%] md:text-left uppercase text-[length:clamp(12vw,22vw,14vw)] md:text-[length:clamp(5vw,11vw,11vw)] font-['Inter'] font-bold text-slate-200 xl:pb-4"
         >
-          сходить
+          {{ MainTitle[1] }}
         </div>
       </div>
     </section>

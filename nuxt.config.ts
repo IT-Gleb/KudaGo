@@ -18,11 +18,23 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@pinia/nuxt",
     "@nuxtjs/sitemap",
+    "@nuxtjs/i18n",
   ],
   nitro: {
     prerender: {
       // routes: ["/sitemap.xml"],
       routes: ["/api/__sitemap__/urls"],
+    },
+  },
+  i18n: {
+    defaultLocale: "ru",
+    locales: [
+      { code: "ru", name: "Russian", file: "ru.json" },
+      { code: "en", name: "English", file: "eng.json" },
+    ],
+    detectBrowserLanguage: false,
+    bundle: {
+      optimizeTranslationDirective: false,
     },
   },
 

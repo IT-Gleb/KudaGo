@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { nanoid } from "nanoid";
 import { FilmsSectionId } from "~/utils/functions";
+import { useI18n, type LocaleMessageType, type VueMessageType } from "#i18n";
+
+const { tm, rt } = useI18n();
 
 type TMainScreenItem = {
   id: string;
@@ -10,6 +13,25 @@ type TMainScreenItem = {
 const config = useRuntimeConfig();
 
 //console.log(config.public.nuxtSiteName);
+const MainMenuItems = ref<TMainScreenItem[]>([]);
+const { length } = tm("mainMenu");
+tm("mainMenu")
+  .slice(0, length)
+  .map((item: LocaleMessageType<VueMessageType>) => rt(item))
+  .forEach((item: string, index: number) =>
+    MainMenuItems.value.push({
+      id: nanoid(),
+      label: item,
+      href:
+        index === 1
+          ? `${config.public.nuxtSiteName}/sitemap.xml`
+          : index === 2
+          ? ""
+          : index === 3
+          ? "/primers"
+          : "#",
+    })
+  );
 
 const handleFilmsClick = () => {
   const filmsId = document.getElementById(FilmsSectionId);
@@ -21,17 +43,6 @@ const handleFilmsClick = () => {
     });
   }
 };
-
-const MainMenuItems = ref<TMainScreenItem[]>([
-  { id: nanoid(), label: "Новости", href: "#" },
-  {
-    id: nanoid(),
-    label: "Контент",
-    href: `${config.public.nuxtSiteName}/sitemap.xml`,
-  },
-  { id: nanoid(), label: "Фильмы", href: "" },
-  { id: nanoid(), label: "Примеры", href: "/primers" },
-]);
 </script>
 
 <template>

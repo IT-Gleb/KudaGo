@@ -5,8 +5,10 @@ import { vIntersectionObserver } from "@vueuse/components";
 import { ref, watch } from "vue";
 import popMessage, { type TPopMsgStatus } from "../../popover/popMessage.vue";
 import { PopMessageStore } from "~/store/popMessagesStore";
+import { useI18n } from "#i18n";
 // import { onErrorCaptured } from "vue";
 
+const { t } = useI18n();
 const abortDelay: number = 4000;
 const url = "/api/eventofday";
 const popMsgStatus = ref<TPopMsgStatus>("success");
@@ -102,11 +104,11 @@ watch(isVisibled, () => {
 const initPopMsg = () => {
   popMsgStatus.value = "success";
   if (status.value === "pending") {
-    PopPush("Загружаю данные...");
+    PopPush(t("popMessages.dataLoad"));
     return;
   }
   if (status.value === "idle" || status.value === "success") {
-    PopPush("Данные по событиям дня загружены...");
+    PopPush(t("popMessages.dataLoaded"));
   } else {
     popMsgStatus.value = "error";
     PopPush("Не могу загрузить данные!!! Попробуйте позднее!");
@@ -138,7 +140,7 @@ onMounted(() => {
           { root: headRef, threshold: [0.25, 1] },
         ]"
       >
-        <h4 class="my-3">Событие дня</h4>
+        <h4 class="my-3">{{ t("headdings.eventOfDay") }}</h4>
         <button
           type="button"
           @click="handleReload"
