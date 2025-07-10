@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { PopMessageStore } from "~/store/popMessagesStore";
 
+export type TPopMsgStatus = "success" | "error";
+
+const props = withDefaults(defineProps<{ status?: TPopMsgStatus }>(), {
+  status: "success",
+});
+
 const refs = ref<Array<Ref<HTMLElement>>>([]);
 const timerRef = ref<NodeJS.Timeout | null>(null);
 
 const messagesStore = PopMessageStore();
 const { messages } = storeToRefs(messagesStore);
-const { DeleteMsg, SetInitialTop } = messagesStore;
+const { DeleteMsg, SetInitialTop, SetMinHeightFromWindowWidth } = messagesStore;
 
 const ClearThisTimeOut = () => {
   if (timerRef.value !== null) {
@@ -38,6 +44,7 @@ messagesStore.$subscribe(
     //   return;
     // }
     // console.log(mutation, state);
+    SetMinHeightFromWindowWidth(window.innerWidth);
     SetInitialTop(window.innerHeight);
 
     if (state.messages.length > 0) {
@@ -80,7 +87,12 @@ onUnmounted(() => {
     }"
   >
     <div
-      class="flex items-center gap-2 justify-between bg-green-400 dark:bg-green-800 text-black dark:text-amber-100 p-2"
+      class="flex items-center gap-2 justify-between text-[1rem]/[1.5rem] p-2"
+      :class="
+        props.status === 'success'
+          ? 'bg-green-400 dark:bg-green-800 text-black dark:text-amber-100'
+          : 'bg-red-500 text-white'
+      "
     >
       <span class="font-['Roboto'] line-clamp-1">{{ item.msg }}</span>
       <button

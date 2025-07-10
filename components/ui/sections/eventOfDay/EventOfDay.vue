@@ -2,11 +2,14 @@
 import type { TEventOfDayObject } from "~/types/myTypes";
 import { FormatDateFromString, FormatNowDate } from "#imports";
 import { vIntersectionObserver } from "@vueuse/components";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import popMessage, { type TPopMsgStatus } from "../../popover/popMessage.vue";
+import { PopMessageStore } from "~/store/popMessagesStore";
 // import { onErrorCaptured } from "vue";
 
 const abortDelay: number = 4000;
 const url = "/api/eventofday";
+const popMsgStatus = ref<TPopMsgStatus>("success");
 
 const headRef = ref<HTMLDivElement | null>();
 
@@ -17,6 +20,8 @@ const DateEvent = ref<string>(FormatNowDate());
 // });
 
 //console.log(DateEvent.value);
+const PopStore = PopMessageStore();
+const { PopPush } = PopStore;
 
 const {
   data: eventsDay,
@@ -25,7 +30,7 @@ const {
   clear,
   status,
 } = await useAsyncData<TEventOfDayObject[]>(
-  `event-${Math.random().toString()}`,
+  `event-${Math.random().toFixed(2)}`,
   () =>
     $fetch(url, {
       headers: { "Content-Type": "application/json;utf-8" },
@@ -36,6 +41,7 @@ const {
     }),
   {
     dedupe: "cancel",
+
     transform: (input) => {
       let tmp: TEventOfDayObject[] = [];
       if (input) {
@@ -92,10 +98,37 @@ watch(isVisibled, () => {
 //   errorMessage.value.isError = true;
 //   return false;
 // });
+
+const initPopMsg = () => {
+  popMsgStatus.value = "success";
+  if (status.value === "pending") {
+    PopPush("Загружаю данные...");
+    return;
+  }
+  if (status.value === "idle" || status.value === "success") {
+    PopPush("Данные по событиям дня загружены...");
+  } else {
+    popMsgStatus.value = "error";
+    PopPush("Не могу загрузить данные!!! Попробуйте позднее!");
+  }
+};
+
+watch(
+  () => status.value,
+  () => {
+    initPopMsg();
+  },
+  { immediate: true }
+);
+
+onMounted(() => {
+  initPopMsg();
+});
 </script>
 
 <template>
   <ClientOnly>
+    <popMessage :status="popMsgStatus" />
     <section class="min-h-screen w-[96%] lg:w-[80%] mx-auto p-1">
       <div
         ref="headRef"
@@ -109,7 +142,7 @@ watch(isVisibled, () => {
         <button
           type="button"
           @click="handleReload"
-          class="bg-indigo-950 text-slate-200 dark:bg-slate-400 dark:text-indigo-950 p-1 place-content-center overflow-hidden rounded-md cursor-pointer active:scale-90 active:shadow-none shadow-none hover:shadow-[2px_6px_10px_rgba(0,0,0,0.55)] hover:dark:shadow-[2px_6px_10px_rgba(250,200,240,0.55)]"
+          class="bg-indigo-950 text-slate-200 dark:bg-slate-400 dark:text-indigo-950 p-1 place-content-center overflow-hidden rounded-md cursor-pointer active:scale-90 active:shadow-none shadow-none"
         >
           <small>Обновить</small>
         </button>

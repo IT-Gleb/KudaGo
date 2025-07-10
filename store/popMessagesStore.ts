@@ -14,7 +14,8 @@ export const PopMessageStore = defineStore("popMessages", () => {
   const messages = ref<TMessageStr[]>([]);
   const timerRef = ref<NodeJS.Timeout | null>(null);
   const initialTop = ref<number>(500);
-  const minHeight = 52;
+  const isDescktop = ref<boolean>(true);
+  const minHeight = computed(() => (isDescktop.value ? 65 : 52));
 
   const queueSize = computed(() => messages.value.length);
 
@@ -44,10 +45,16 @@ export const PopMessageStore = defineStore("popMessages", () => {
       return;
     }
     for (let indx: number = 0; indx < length; indx++) {
-      messages.value[indx].top = initialTop.value - minHeight * (length - indx);
+      messages.value[indx].top =
+        initialTop.value - minHeight.value * (length - indx);
       messages.value[indx].popId = `pop${indx}`;
     }
-    messages.value[length - 1].top = initialTop.value - minHeight;
+    messages.value[length - 1].top = initialTop.value - minHeight.value;
+  }
+
+  function SetMinHeightFromWindowWidth(param: number) {
+    isDescktop.value = param > 1023 ? true : false;
+    // console.log(param, isDescktop.value, minHeight.value);
   }
 
   function DeleteMsg(param: string) {
@@ -80,5 +87,6 @@ export const PopMessageStore = defineStore("popMessages", () => {
     PopPush,
     DeleteMsg,
     SetInitialTop,
+    SetMinHeightFromWindowWidth,
   };
 });
