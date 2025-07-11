@@ -31,6 +31,8 @@ declare type TNewsData = {
 
 declare type TGetParamsObject = { [index: string]: string | number };
 
+export type TMyLocale = "ru" | "en" | null;
+
 //Событие дня интерафейсы
 export interface IEventOfDayRoot {
   count: number;

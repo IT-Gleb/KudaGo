@@ -2,10 +2,20 @@
 import ProgresSection from "~/components/ProgressBar_svg/ProgresSection.vue";
 import "@cyhnkckali/vue3-color-picker/dist/style.css";
 import { useI18n } from "#i18n";
+import type { TMyLocale } from "~/types/myTypes";
 
-const { t } = useI18n();
+const { t, setLocale, defaultLocale } = useI18n();
 
 useHead({ title: "Примеры: Counter, ProgressBar, Pie Chart" });
+
+onMounted(async () => {
+  const item: TMyLocale = localStorage.getItem("locale") as TMyLocale;
+  if (item) {
+    await setLocale(item);
+  } else {
+    await setLocale(defaultLocale);
+  }
+});
 </script>
 
 <template>

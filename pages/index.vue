@@ -12,8 +12,9 @@ import FilmsStateSection from "~/components/ui/sections/films/FilmsStateSection.
 import filmComponent from "~/components/ui/film/filmComponent.vue";
 import { nanoid } from "nanoid";
 import { useI18n, type LocaleMessageType, type VueMessageType } from "#i18n";
+import type { TMyLocale } from "~/types/myTypes";
 
-const { tm, rt } = useI18n();
+const { tm, rt, setLocale, defaultLocale } = useI18n();
 
 const { length } = tm("mainTitle");
 const MainTitle: Array<string> = tm("mainTitle")
@@ -42,6 +43,15 @@ const handleObserve = (param1: number, param2: boolean) => {
     ViewComponentsArray[param1].inview = param2;
   }
 };
+
+onBeforeMount(async () => {
+  const item: TMyLocale = localStorage.getItem("locale") as TMyLocale;
+  if (item) {
+    await setLocale(item);
+  } else {
+    await setLocale(defaultLocale);
+  }
+});
 
 onMounted(() => {
   window.onbeforeunload = (event: BeforeUnloadEvent) => {

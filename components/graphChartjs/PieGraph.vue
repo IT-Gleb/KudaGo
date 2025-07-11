@@ -185,8 +185,11 @@ function updateChartData(paramChart: ChartJS) {
     (item) => item.bgColor
   );
   paramChart.data.datasets[0].borderColor = calculateColor();
-
-  paramChart.update();
+  try {
+    paramChart.render();
+  } finally {
+    paramChart.update("show");
+  }
 }
 
 function resizeChart(err?: Error) {
@@ -213,7 +216,6 @@ watch(
 
     try {
       updateChartData(PieChart.value as ChartJS);
-      resizeChart();
     } catch (err) {
       resizeChart(err as Error);
     } finally {
