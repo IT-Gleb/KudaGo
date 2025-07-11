@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
+
 const props = defineProps<{ totalPages: number; activePage: number }>();
 const pages = ref<number[]>([]);
 const emit = defineEmits<{
@@ -17,7 +21,7 @@ for (let indx: number = 0; indx < PagesCount.value; indx++) {
 <template>
   <section class="p-1">
     <div class="w-fit mx-auto my-3 flex items-center gap-x-2">
-      <h6>Всего страниц</h6>
+      <h6>{{ t("news.total") }}</h6>
       <span
         ><small>-[{{ PagesCount }}]</small></span
       >

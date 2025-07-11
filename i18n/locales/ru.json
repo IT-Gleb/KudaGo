@@ -14,5 +14,38 @@
   },
   "links": {
     "onMainPage": "На главную"
+  },
+  "buttons": {
+    "update": "Обновить"
+  },
+  "news": {
+    "title": "Новости",
+    "page": "страница",
+    "total": "Всего страниц",
+    "newsOnPage": "Новостей на странице",
+    "filteredBy": "Фильтр запроса",
+    "filter": {
+      "all": "Всё",
+      "intresting": "Интересное",
+      "city": "Города",
+      "towns": [
+        "ekb=Екатеринбург",
+        "kzn=Казань",
+        "msk=Москва",
+        "nnv=Нижний Новгород",
+        "spb=Санкт-Петербург"
+      ]
+    }
+  },
+  "filterComponent": {
+    "name": "Фильтр",
+    "getData": "Получаю данные...",
+    "implementFilters": "Применяю фильты...",
+    "filterBy": "Фильтровать по",
+    "addFilter": "Добавить фильтр",
+    "btnClear": "Очистить",
+    "btnApply": "Применить",
+    "popFiltered": "Данные отфильтрованы",
+    "popFiltersClear": "Фильтры очищены"
   }
 }

@@ -146,7 +146,7 @@ onMounted(() => {
           @click="handleReload"
           class="bg-indigo-950 text-slate-200 dark:bg-slate-400 dark:text-indigo-950 p-1 place-content-center overflow-hidden rounded-md cursor-pointer active:scale-90 active:shadow-none shadow-none"
         >
-          <small>Обновить</small>
+          <small>{{ t("buttons.update") }}</small>
         </button>
       </div>
       <LoaderComponent

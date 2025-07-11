@@ -16,6 +16,10 @@ import { FiltersHeader } from "../../../../utils/functions";
 import popMessage from "../../popover/popMessage.vue";
 import { PopMessageStore } from "~/store/popMessagesStore";
 
+import { useI18n } from "#i18n";
+
+const { t, locale } = useI18n();
+
 type TFilterState = "none" | "filtered";
 
 const isShowFilter = ref<boolean>(false);
@@ -111,7 +115,7 @@ const handleUpdate = async () => {
     ClearData();
     progresState.value = "success";
 
-    popStringMsg.value = "  Фильтры очищены!...";
+    popStringMsg.value = `   ${t("filterComponent.popFiltersClear")}`;
     PopPush(popStringMsg.value);
   }
 };
@@ -123,7 +127,7 @@ watch(tick, async () => {
     FilterState.value = "filtered";
     goToFiltered();
 
-    popStringMsg.value = "  Фильтрование применено!...";
+    popStringMsg.value = `   ${t("filterComponent.popFiltered")}`;
     PopPush(popStringMsg.value);
 
     //FilterState.value = "filtered";
@@ -192,7 +196,7 @@ onUnmounted(() => {
       :class="isShowFilter ? '' : 'border-b dark:border-b-slate-300'"
       for="showFilter"
     >
-      <span class="uppercase">Фильтр</span>
+      <span class="uppercase">{{ t("filterComponent.name") }}</span>
       <input
         type="checkbox"
         v-model="isShowFilter"
@@ -220,7 +224,11 @@ onUnmounted(() => {
           />
           <span
             class="w-fit mx-auto font-bold dark:text-slate-900 animate-bounce"
-            >{{ tick < 65 ? "Получаю данные..." : "Применяю фильтры..." }}</span
+            >{{
+              tick < 65
+                ? t("filterComponent.getData")
+                : t("filterComponent.implementFilters")
+            }}</span
           >
         </div>
       </div>
@@ -230,7 +238,8 @@ onUnmounted(() => {
       >
         <span
           class="font-['Roboto'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
-          >Фильтровать по:</span
+        >
+          {{ t("filterComponent.filterBy") }}:</span
         >
         <div id="Filters" class="w-full mt-3 flex flex-wrap gap-2">
           <button
@@ -241,7 +250,7 @@ onUnmounted(() => {
             :disabled="dataStatus === 'pending'"
             @click="handleFrom(item.id, true)"
           >
-            -{{ item.ru_slug }}
+            -{{ locale === "ru" ? item.ru_slug : item.slug }}
           </button>
         </div>
       </label>
@@ -260,7 +269,7 @@ onUnmounted(() => {
       >
         <span
           class="font-['Roboto'] text-[clamp(2vw,3vw,3.5vw)]/[clamp(2.5vw,3.5vw,4vw)]"
-          >Добавить фильтр:</span
+          >{{ t("filterComponent.addFilter") }}:</span
         >
         <div
           id="existsFilters"
@@ -274,7 +283,7 @@ onUnmounted(() => {
             :disabled="dataStatus === 'pending'"
             @click="handleFrom(item.id, false)"
           >
-            +{{ item.ru_slug }}
+            +{{ locale === "ru" ? item.ru_slug : item.slug }}
           </button>
         </div>
       </label>
@@ -288,8 +297,8 @@ onUnmounted(() => {
       >
         {{
           FilterState === "none" && FilterPo.length > 0
-            ? "Применить"
-            : "Очистить"
+            ? t("filterComponent.btnApply")
+            : t("filterComponent.btnClear")
         }}
       </button>
     </div>

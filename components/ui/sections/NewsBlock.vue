@@ -15,6 +15,9 @@ import NewsError from "../NewsError.vue";
 import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useLazyAsyncData, useHead } from "#app";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 const ActivePage = ref<number>(1);
 const titleRef = ref<HTMLHeadingElement | null>(null);
@@ -155,13 +158,13 @@ watch(SelectedItem, () => {
         class="flex flex-row flex-wrap items-center justify-between gap-2 mt-10"
       >
         <h2 ref="titleRef" class="uppercase">
-          Новости
+          {{ t("news.title") }}
           <span
             class="text-[clamp(2.2vw,2.8vw,3vw)] md:text-[clamp(1vw,1.3vw,1.5vw)]"
             >{{
               Filtered
                 ? `Фильтр-[${SelectedItem?.name}]`
-                : `Страница-[${ActivePage}]`
+                : `${t("news.page")}-[${ActivePage}]`
             }}</span
           >
         </h2>
@@ -170,7 +173,7 @@ watch(SelectedItem, () => {
           class="active:scale-90 hover:underline cursor-pointer bg-indigo-950 text-slate-200 dark:font-bold dark:bg-slate-400 disabled:opacity-0 dark:text-indigo-900 px-1 pt-[2px] pb-1 rounded-md"
           @click="handleReload"
         >
-          <small>Обновить</small>
+          <small>{{ t("buttons.update") }}</small>
         </button>
       </div>
       <div

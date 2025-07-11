@@ -14,5 +14,38 @@
   },
   "links": {
     "onMainPage": "Home"
+  },
+  "buttons": {
+    "update": "Update"
+  },
+  "news": {
+    "title": "news",
+    "page": "page",
+    "total": "total",
+    "newsOnPage": "News on page",
+    "filteredBy": "Filter by",
+    "filter": {
+      "all": "All",
+      "intresting": "Interesting",
+      "city": "Cityes",
+      "towns": [
+        "ekb=Ekaterinburg",
+        "kzn=Kazan",
+        "msk=Moscow",
+        "nnv=Nizhny Novgorod",
+        "spb=Sankt-Peterburg"
+      ]
+    }
+  },
+  "filterComponent": {
+    "name": "Filter by",
+    "getData": "Load data...",
+    "implementFilters": "Implement filters...",
+    "filterBy": "Filter by",
+    "addFilter": "Add filter",
+    "btnClear": "Clear",
+    "btnApply": "Apply",
+    "popFiltered": "Data filtered...",
+    "popFiltersClear": "Filters are cleaned..."
   }
 }

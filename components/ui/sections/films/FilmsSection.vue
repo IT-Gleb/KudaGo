@@ -87,7 +87,7 @@ watch(
         @click="handleRefresh"
         class="bg-indigo-950 -inset-4 xl:inset-0 text-slate-300 dark:bg-slate-300 dark:text-indigo-900 cursor-pointer active:scale-90 p-1 place-content-center overflow-hidden rounded-md"
       >
-        <small>Обновить</small>
+        <small>{{ t("buttons.update") }}</small>
       </button>
     </div>
 

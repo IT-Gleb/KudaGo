@@ -1,5 +1,8 @@
 <script setup lang="ts">
 //import { setCountOnPage } from "../../utils/urls";
+import { useI18n } from "#i18n";
+const { t } = useI18n();
+
 const CountOnPageArray: number[] = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 const CountP = ref<number>(CountOnPageArray[2]);
 const emitPage = defineEmits(["setNewsCountOnPage"]);
@@ -13,7 +16,9 @@ watch(CountP, () => {
 
 <template>
   <div class="flex items-center gap-x-2">
-    <span><small>Новостей на странице</small></span>
+    <span
+      ><small>{{ t("news.newsOnPage") }}</small></span
+    >
     <select
       name="countSelect"
       id="countSel"

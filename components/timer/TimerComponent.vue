@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { vIntersectionObserver } from "@vueuse/components";
+import { useI18n } from "#i18n";
+
+const { locale } = useI18n();
 
 const DateStr = ref<string>();
 const timerRef = ref<number>(-1);
@@ -8,7 +11,7 @@ const delayTimer: number = 1200;
 
 function formatDate(): string {
   const dt: number = Date.now();
-  return Intl.DateTimeFormat("ru-RU", {
+  return Intl.DateTimeFormat(locale.value === "ru" ? "ru-RU" : "en-EN", {
     day: "2-digit",
     month: "long",
     year: "numeric",
