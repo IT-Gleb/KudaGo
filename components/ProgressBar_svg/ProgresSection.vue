@@ -7,6 +7,9 @@ import PieGraph from "../graphChartjs/PieGraph.vue";
 //import PieForm from "../graphChartjs/PieForm.vue";
 import TestGraphComponent from "../graphChartjs/TestGraphComponent.vue";
 import CounterParent from "../graphChartjs/CounterParent.vue";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 const widthBar = ref<number>(180);
 const valuesBar = ref<number>(0);
@@ -64,12 +67,12 @@ const handleClearGraph = () => {
 <template>
   <section class="min-h-screen p-1 py-10">
     <article class="flex flex-col gap-5 p-4">
-      <h4>Счетчик</h4>
+      <h4>{{ t("tests.counter") }}</h4>
       <CounterParent />
       <hr />
     </article>
     <article class="flex flex-col gap-4 p-4">
-      <h4>Индикатор загрузки</h4>
+      <h4>{{ t("tests.indicator") }}</h4>
       <div class="flex flex-col gap-5">
         <div class="w-fit mx-auto mt-5">
           <ProgressBar
@@ -83,7 +86,7 @@ const handleClearGraph = () => {
           class="w-fit mx-auto p-2 place-content-center flex flex-wrap gap-5 justify-baseline"
         >
           <label class="flex gap-2">
-            <span>Тип: </span>
+            <span>{{ t("tests.labels.type") }}: </span>
             <button
               type="button"
               class="p-2 min-w-[120px] min-h-[40px] place-content-center cursor-pointer bg-indigo-900 text-slate-300 active:scale-90 overflow-hidden"
@@ -93,7 +96,7 @@ const handleClearGraph = () => {
             </button>
           </label>
           <label class="flex gap-2">
-            <span>Размер:</span>
+            <span>{{ t("tests.labels.size") }}:</span>
             <select
               id="selectWidth"
               v-model="widthBar"
@@ -117,10 +120,10 @@ const handleClearGraph = () => {
             @click="handleAutoProgress"
             :disabled="stateVar === 'in-progress'"
           >
-            "Запустить"
+            {{ t("tests.labels.run") }}
           </button>
           <label class="flex gap-2">
-            <span>Значения:</span>
+            <span>{{ t("tests.labels.values") }}:</span>
             <select
               id="progressValues"
               class="outline-none border border-indigo-900 p-1 dark:bg-slate-950 dark:text-slate-300"
@@ -140,7 +143,7 @@ const handleClearGraph = () => {
           </label>
 
           <label class="flex gap-2">
-            <span>Состояние:</span>
+            <span>{{ t("tests.labels.state") }}:</span>
             <select
               id="selState"
               class="outline-none border border-indigo-900 p-1 dark:bg-slate-950 dark:text-slate-300"

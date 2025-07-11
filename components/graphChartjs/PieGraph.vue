@@ -16,6 +16,9 @@ import { calculateColor, PieStore } from "~/store/pieStore";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import { getNowYear } from "#imports";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 ChartJS.register(
   PieController,
@@ -111,7 +114,7 @@ const ChartConfig: ChartConfiguration = {
     labels: Items.value.map((item) => item.label),
     datasets: [
       {
-        label: "Значение: ",
+        label: t("tests.chart.dialog.sizeEdit") + ":",
         data: Items.value.map((item) => item.value),
         backgroundColor: Items.value.map((item) => item.bgColor),
         borderColor: "#000000",
@@ -210,6 +213,7 @@ watch(
 
     try {
       updateChartData(PieChart.value as ChartJS);
+      resizeChart();
     } catch (err) {
       resizeChart(err as Error);
     } finally {

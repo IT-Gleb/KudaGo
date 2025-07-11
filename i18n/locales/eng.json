@@ -38,7 +38,7 @@
     }
   },
   "filterComponent": {
-    "name": "Filter by",
+    "name": "Filter",
     "getData": "Load data...",
     "implementFilters": "Implement filters...",
     "filterBy": "Filter by",
@@ -47,5 +47,31 @@
     "btnApply": "Apply",
     "popFiltered": "Data filtered...",
     "popFiltersClear": "Filters are cleaned..."
+  },
+  "tests": {
+    "counter": "Counter",
+    "indicator": "Loading indicator",
+    "labels": {
+      "type": "Type",
+      "size": "Size",
+      "values": "Values",
+      "state": "State",
+      "run": "Run"
+    },
+    "chart": {
+      "heading": "Pie chart",
+      "btnAddSector": "Add Sector",
+      "btnEditSector": "Change sector",
+      "btnGenChart": "Generate a chart (random values)",
+      "sector": "Sector",
+      "dialog": {
+        "titleEdit": "Sector change",
+        "titleAdd": "Adding a sector",
+        "nameEdit": "Name",
+        "sizeEdit": "Value",
+        "colorEdit": "Colour",
+        "btnClose": "Close"
+      }
+    }
   }
 }

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { vIntersectionObserver } from "@vueuse/components";
 import { useTemplateRef, shallowRef } from "vue";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{ compsLength: number }>();
 const observeEmit = defineEmits(["onObserve"]);
@@ -31,6 +34,6 @@ watch(isChecked, () => {
       { root: checkDivRef, threshold: [0.5, 1] },
     ]"
   >
-    Загрузка данных...
+    {{ t("filterComponent.getData") }}...
   </div>
 </template>

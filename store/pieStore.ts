@@ -51,7 +51,7 @@ const calculateRandomArray = (): Array<TPieChartItem> => {
     (_, index) => ({
       id: nanoid(),
       value: randomIntegerFromMinMax(12, 25),
-      label: `Сектор-${index + 1}`,
+      label: `Sector-${index + 1}`,
       bgColor: calculateColor(),
     })
   );

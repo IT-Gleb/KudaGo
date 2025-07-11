@@ -4,6 +4,9 @@ import PieItemEditButton from "./PieItemEditButton.vue";
 import PieItemTrashButton from "./PieItemTrashButton.vue";
 import PieGraph from "./PieGraph.vue";
 import DialogSector from "./DialogSector.vue";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 import { ref } from "vue";
 import type { TDialogMode } from "./DialogSector.vue";
@@ -45,9 +48,9 @@ watch(dialogMode, () => {
 
 <template>
   <div class="mb-10">
-    <span ref="aRef" class="header1 font-[600] text-[32px]/[32px]"
-      >Круговая диаграмма</span
-    >
+    <span ref="aRef" class="header1 font-[600] text-[32px]/[32px]">{{
+      t("tests.chart.heading")
+    }}</span>
   </div>
   <DialogSector ref="dRef" :mode="dialogMode" :onClose="setNoneMode" />
   <section class="w-fit mx-auto flex flex-wrap-reverse gap-x-2 gap-y-4">
@@ -86,7 +89,7 @@ watch(dialogMode, () => {
           class="w-full bg-[#1B84FF] header1 text-white font-[400] text-[16px]/[24px] rounded-[10px] cursor-pointer active:scale-90 p-[18px_36px_18px_36px]"
           @click.prevent="handleAddDialog"
         >
-          Добавить сектор
+          {{ t("tests.chart.btnAddSector") }}
         </button>
       </li>
       <li class="mt-[30px]">
@@ -95,7 +98,7 @@ watch(dialogMode, () => {
           class="w-full bg-[#1B84FF] header1 text-white text-balance font-[400] text-[16px]/[24px] rounded-[10px] cursor-pointer active:scale-90 p-[18px_36px_18px_36px]"
           @click.prevent="handleRandomValues"
         >
-          Сформировать график(случайные значения)
+          {{ t("tests.chart.btnGenChart") }}
         </button>
       </li>
     </ul>

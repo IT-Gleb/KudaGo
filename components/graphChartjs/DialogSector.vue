@@ -5,6 +5,9 @@ import { PieStore } from "~/store/pieStore";
 import { storeToRefs } from "pinia";
 import type { TPieChartItem } from "./PieGraph.vue";
 import { nanoid } from "nanoid";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 export type TDialogMode = "none" | "add" | "edit";
 
@@ -159,12 +162,14 @@ watch(nValue, () => {
           <span
             class="font-['Inter'] text-[#252F4A] font-[500] text-[20px]/[24px]"
             >{{
-              props.mode === "add" ? "Добавление сектора" : "Изменение сектора"
+              props.mode === "add"
+                ? t("tests.chart.dialog.titleAdd")
+                : t("tests.chart.dialog.titleEdit")
             }}</span
           >
           <button
             type="button"
-            title="Закрыть"
+            :title="t('tests.chart.dialog.btnClose')"
             data-text="x"
             class="w-[18px] h-[18px] overflow-hidden place-content-center bg-[#1B84FF] text-white text-[18px]/[20px] font-sans cursor-pointer select-none active:scale-90 relative before:absolute before:content-[attr(data-text)] before:left-[55%] before:top-[55%] before:translate-[-65%]"
             @click="handleClose"
@@ -178,9 +183,9 @@ watch(nValue, () => {
               for="nameSector"
               class="cursor-pointer flex flex-col gap-y-1"
             >
-              <span class="text-[12px]/[14px] font-[400] font-['Inter'] mt-2"
-                >Наименование</span
-              >
+              <span class="text-[12px]/[14px] font-[400] font-['Inter'] mt-2">{{
+                t("tests.chart.dialog.nameEdit")
+              }}</span>
               <input
                 type="text"
                 name="nameSector"
@@ -206,9 +211,9 @@ watch(nValue, () => {
               for="namberValue"
               class="cursor-pointer flex flex-col gap-y-1"
             >
-              <span class="text-[12px]/[14px] font-[400] font-['Inter'] mt-2"
-                >Значение</span
-              >
+              <span class="text-[12px]/[14px] font-[400] font-['Inter'] mt-2">{{
+                t("tests.chart.dialog.sizeEdit")
+              }}</span>
               <input
                 type="number"
                 name="namberValue"
@@ -236,7 +241,7 @@ watch(nValue, () => {
               <span
                 v-if="!colourShow"
                 class="text-[12px] font-[400] font-['Inter']"
-                >Цвет</span
+                >{{ t("tests.chart.dialog.colorEdit") }}</span
               >
               <Vue3ColorPicker
                 id="ColorValue"
@@ -270,7 +275,11 @@ watch(nValue, () => {
           type="submit"
           class="w-full mt-[20px] bg-[#1B84FF] p-[18px_36px_18px_36px] rounded-[10px] overflow-hidden text-white font-['Inter'] font-[400] text-[16px]/[24px] cursor-pointer active:scale-90"
         >
-          {{ props.mode === "edit" ? "Изменить сектор" : "Добавить сектор" }}
+          {{
+            props.mode === "edit"
+              ? t("tests.chart.btnEditSector")
+              : t("tests.chart.btnAddSector")
+          }}
         </button>
       </form>
     </dialog>

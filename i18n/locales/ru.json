@@ -47,5 +47,31 @@
     "btnApply": "Применить",
     "popFiltered": "Данные отфильтрованы",
     "popFiltersClear": "Фильтры очищены"
+  },
+  "tests": {
+    "counter": "Счетчик",
+    "indicator": "Индикатор загрузки",
+    "labels": {
+      "type": "Тип",
+      "size": "Размер",
+      "values": "Значения",
+      "state": "Состояние",
+      "run": "Запустить"
+    },
+    "chart": {
+      "heading": "Круговая диаграмма",
+      "btnAddSector": "Добавить сектор",
+      "btnEditSector": "Изменить сектор",
+      "btnGenChart": "Сформировать график(случайные значения)",
+      "sector": "Сектор",
+      "dialog": {
+        "titleEdit": "Изменение сектора",
+        "titleAdd": "Добавление сектора",
+        "nameEdit": "Наименование",
+        "sizeEdit": "Значение",
+        "colorEdit": "Цвет",
+        "btnClose": "Закрыть"
+      }
+    }
   }
 }
