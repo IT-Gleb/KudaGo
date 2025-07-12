@@ -111,7 +111,7 @@ const initPopMsg = () => {
     PopPush(t("popMessages.dataLoaded"));
   } else {
     popMsgStatus.value = "error";
-    PopPush("Не могу загрузить данные!!! Попробуйте позднее!");
+    PopPush(t("eventOfDay.errorMsg"));
   }
 };
 

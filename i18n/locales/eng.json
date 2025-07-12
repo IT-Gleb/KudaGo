@@ -18,6 +18,9 @@
   "buttons": {
     "update": "Update"
   },
+  "eventOfDay": {
+    "errorMsg": "Сan't load the data!!! Try again later!"
+  },
   "news": {
     "title": "news",
     "page": "page",
