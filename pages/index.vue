@@ -11,10 +11,16 @@ import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
 import FilmsStateSection from "~/components/ui/sections/films/FilmsStateSection.vue";
 import filmComponent from "~/components/ui/film/filmComponent.vue";
 import { nanoid } from "nanoid";
-import { useI18n, type LocaleMessageType, type VueMessageType } from "#i18n";
+import {
+  useI18n,
+  useLocaleHead,
+  type LocaleMessageType,
+  type VueMessageType,
+} from "#i18n";
 import type { TMyLocale } from "~/types/myTypes";
 
-const { tm, rt, setLocale, defaultLocale } = useI18n();
+const { t, tm, rt, setLocale, defaultLocale } = useI18n();
+const i18nHead = useLocaleHead({ seo: { canonicalQueries: ["en"] } });
 
 const { length } = tm("mainTitle");
 const MainTitle: Array<string> = tm("mainTitle")
@@ -22,10 +28,11 @@ const MainTitle: Array<string> = tm("mainTitle")
   .map((item: LocaleMessageType<VueMessageType>) => rt(item));
 
 useHead({
+  htmlAttrs: { lang: i18nHead.value.htmlAttrs.lang },
   title: "Новости:[Kuda Go]",
   meta: [
-    { name: "description", content: "Этот сайт использует API Kuda Go." },
-    { name: "author", content: "Gleb Torgashin" },
+    { name: "description", content: t("title") },
+    { name: "author", content: t("author") },
   ],
 });
 

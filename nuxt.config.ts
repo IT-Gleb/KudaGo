@@ -27,10 +27,12 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
+    baseUrl: "https://kuda-go.vercel.app",
+    strategy: "prefix_and_default",
     defaultLocale: "ru",
     locales: [
-      { code: "ru", name: "Russian", file: "ru.json" },
-      { code: "en", name: "English", file: "eng.json" },
+      { code: "ru", name: "Russian", language: "ru-RU", file: "ru.json" },
+      { code: "en", name: "English", language: "en-US", file: "eng.json" },
     ],
     detectBrowserLanguage: false,
     bundle: {
@@ -63,7 +65,7 @@ export default defineNuxtConfig({
       charset: "utf-8",
       title: "KudaGo API",
       htmlAttrs: {
-        lang: "ru",
+        lang: "ru-RU",
       },
       viewport: "width=device-width, initial-scale=1, maximum-scale=5",
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
