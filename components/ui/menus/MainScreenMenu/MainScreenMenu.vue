@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { FilmsSectionId } from "~/utils/functions";
 import { useI18n, type LocaleMessageType, type VueMessageType } from "#i18n";
 
-const { tm, rt } = useI18n();
+const { tm, rt, locale } = useI18n();
 
 type TMainScreenItem = {
   id: string;
@@ -24,7 +24,9 @@ tm("mainMenu")
       label: item,
       href:
         index === 1
-          ? `${config.public.nuxtSiteName}/sitemap.xml`
+          ? `${config.public.nuxtSiteName}/__sitemap__/${
+              locale.value.startsWith("en") ? "en" : "ru"
+            }.xml` //`${config.public.nuxtSiteName}/sitemap.xml`
           : index === 2
           ? ""
           : index === 3
