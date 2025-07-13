@@ -20,6 +20,8 @@ import { useI18n } from "#i18n";
 
 const { t } = useI18n();
 
+const timerCreateChart = ref<NodeJS.Timeout | null>(null);
+
 ChartJS.register(
   PieController,
   // Legend,
@@ -32,8 +34,8 @@ ChartJS.register(
 
 const props = defineProps<{ editOnClick?: (paramIndex: number) => void }>();
 
-const ChartRef = ref();
-const PieChart = ref<ChartJS>();
+const ChartRef = ref<HTMLCanvasElement | null>(null);
+const PieChart = ref<ChartJS | null>(null);
 const isUpdate = ref<boolean>(false);
 const Index = ref<number>(0);
 
@@ -127,12 +129,30 @@ const ChartConfig: ChartConfiguration = {
 };
 
 onMounted(() => {
-  PieChart.value = new ChartJS(ChartRef.value, ChartConfig);
+  if (ChartRef.value !== null) {
+    PieChart.value = new ChartJS(ChartRef.value, ChartConfig);
+  } else {
+    timerCreateChart.value = setTimeout(() => {
+      // console.log("Graph");
+
+      PieChart.value = new ChartJS(
+        ChartRef.value as HTMLCanvasElement,
+        ChartConfig
+      );
+    }, 1000);
+  }
   //(PieChart.value as ChartJS).draw();
 });
 
 onUnmounted(() => {
-  (PieChart.value as ChartJS).destroy();
+  if (timerCreateChart.value !== null) {
+    clearTimeout(timerCreateChart.value);
+    timerCreateChart.value = null;
+  }
+  if (PieChart.value) {
+    (PieChart.value as ChartJS).destroy();
+    PieChart.value = null;
+  }
 });
 
 const handleClick = (event: MouseEvent) => {
@@ -226,54 +246,56 @@ watch(
 );
 
 const ClearChart = () => {
+  Items.value = [];
   try {
     (PieChart.value as ChartJS).clear();
   } catch (err) {
     console.log(err);
   }
-  Items.value = [];
 };
 
 defineExpose({ ClearChart });
 </script>
 
 <template>
-  <div class="w-fit mx-auto">
-    <div
-      class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[960px] xl:h-[640px] mx-auto object-cover object-left-top"
-    >
-      <canvas
-        ref="ChartRef"
-        id="pieGraph"
-        width="100%"
-        height="100%"
-        class="block w-full h-full cursor-pointer"
-        @click="handleClick"
-      ></canvas>
-    </div>
-    <div
-      class="w-fit mx-auto mt-10 grid grid-cols-[150px_150px]"
-      :class="
-        Items.length > 4
-          ? 'lg:grid-cols-[150px_150px_150px_150px_150px] lg:gap-2'
-          : 'lg:flex lg:items-center lg:gap-x-4'
-      "
-    >
+  <client-only>
+    <div class="w-fit mx-auto">
       <div
-        v-for="item in Items"
-        :key="item.id"
-        class="flex items-center gap-x-2"
+        class="w-[310px] md:w-[480px] md:h-[320px] lg:w-[768px] lg:h-[512px] xl:w-[960px] xl:h-[640px] mx-auto object-cover object-left-top"
+      >
+        <canvas
+          ref="ChartRef"
+          id="pieGraph"
+          width="100%"
+          height="100%"
+          class="block w-full h-full cursor-pointer"
+          @click="handleClick"
+        ></canvas>
+      </div>
+      <div
+        class="w-fit mx-auto mt-10 grid grid-cols-[150px_150px]"
+        :class="
+          Items.length > 4
+            ? 'lg:grid-cols-[150px_150px_150px_150px_150px] lg:gap-2'
+            : 'lg:flex lg:items-center lg:gap-x-4'
+        "
       >
         <div
-          class="w-[14px] h-[14px] rounded-full"
-          :style="{ backgroundColor: `${item.bgColor}` }"
-        ></div>
-        <div
-          class="font-['Inter'] font-[400] text-[15px]/[24px] whitespace-nowrap overflow-hidden"
+          v-for="item in Items"
+          :key="item.id"
+          class="flex items-center gap-x-2"
         >
-          {{ item.label }}
+          <div
+            class="w-[14px] h-[14px] rounded-full"
+            :style="{ backgroundColor: `${item.bgColor}` }"
+          ></div>
+          <div
+            class="font-['Inter'] font-[400] text-[15px]/[24px] whitespace-nowrap overflow-hidden"
+          >
+            {{ item.label }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </client-only>
 </template>
