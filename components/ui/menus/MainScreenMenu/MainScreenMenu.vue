@@ -25,7 +25,7 @@ tm("mainMenu")
       href:
         index === 1
           ? `${config.public.nuxtSiteName}/__sitemap__/${
-              locale.value.startsWith("en") ? "en" : "ru"
+              locale.value.startsWith("en") ? "en-EN" : "ru-RU"
             }.xml` //`${config.public.nuxtSiteName}/sitemap.xml`
           : index === 2
           ? ""

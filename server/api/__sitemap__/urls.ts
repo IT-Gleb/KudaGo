@@ -21,5 +21,12 @@ export default defineSitemapEventHandler(() => {
       lastmod: new Date("2025-06-30T22:00:00"),
       _i18nTransform: true,
     },
+    {
+      loc: "/search",
+      changefreq: "never",
+      priority: 0.1,
+      lastmod: new Date("2025-07-14T11:00:00"),
+      _i18nTransform: true,
+    },
   ] satisfies SitemapUrlInput[];
 });

@@ -2,6 +2,8 @@
 import SearchEdit from "./SearchEdit.vue";
 import Search from "../svg/Search.vue";
 
+const router = useRouter();
+
 const isShow = ref<boolean>(false);
 
 const handleShow = (param: boolean) => {
@@ -17,8 +19,9 @@ defineExpose({ handleShow });
 watch(
   useState("searchTxt"),
   (newValue: string) => {
-    if (newValue.trim().length > 0) {
-      console.log("нужно искать по строке: ", newValue);
+    if (newValue.trim().length > 3) {
+      // console.log("нужно искать по строке: ", newValue);
+      router.push({ path: "/search" });
     }
   },
   { deep: true }
@@ -30,7 +33,7 @@ watch(
   <button
     type="button"
     v-if="!isShow"
-    class="w-[24px] h-[24px] text-indigo-900 cursor-pointer active:scale-90"
+    class="w-[24px] h-[24px] text-indigo-900 dark:text-slate-400 cursor-pointer active:scale-90"
     @click="handleShow(true)"
   >
     <Search />
