@@ -20,7 +20,7 @@ const { status, searchdata, error, execute } = useSearchData(
   currentPage
 );
 
-const PagesCount = computed(() => {
+const ItemsCount = computed(() => {
   if (searchdata.value) {
     if (searchdata.value.results) {
       const { length } = (searchdata.value as ISearchRoot)
@@ -35,7 +35,7 @@ const PagesCount = computed(() => {
 });
 
 const lengthOnPage = computed(() => {
-  return Math.ceil(PagesCount.value / itemsOnPage) > 0;
+  return Math.ceil(ItemsCount.value / itemsOnPage) > 0;
 });
 </script>
 
@@ -66,20 +66,16 @@ const lengthOnPage = computed(() => {
         Обновить
       </button>
     </div>
-    <div v-if="PagesCount > 0">
+    <div v-if="ItemsCount > 0">
       Найдено: <mark>{{ searchdata?.count }}</mark> Страниц:
-      <mark>{{ PagesCount }}</mark>
+      <mark>{{ ItemsCount }}</mark>
     </div>
 
     <div class="my-10">
       <div v-if="status === 'pending'">load data...</div>
       <div v-if="error !== null">{{ error }}</div>
       <div
-        v-if="
-          (status === 'success' || status === 'idle') &&
-          (searchdata?.count === null ||
-            (searchdata?.count !== undefined && searchdata?.count < 1))
-        "
+        v-if="(status === 'success' || status === 'idle') && ItemsCount === 0"
       >
         <h3>Нет данных</h3>
       </div>
@@ -89,8 +85,12 @@ const lengthOnPage = computed(() => {
       >
         <div v-for="item in searchdata?.results" :key="item.id">
           <div class="flex flex-col gap-2">
-            <div class="font-bold first-letter:uppercase">{{ item.title }}</div>
-            <div class="text-[0.85em]/[1.2em]">
+            <div
+              class="font-bold first-letter:uppercase text-[1.5em]/[1.8em] md:text-[1em]/[1.2em]"
+            >
+              {{ item.title }}
+            </div>
+            <div class="text-[1.2em]/[1.6em] md:text-[0.8em]/[1.2em]">
               <p class="indent-5 text-balance">
                 {{ item.description }}
               </p>
@@ -121,7 +121,7 @@ const lengthOnPage = computed(() => {
         </div>
       </div>
     </div>
-    <div v-if="PagesCount > 0 && lengthOnPage" class="my-10">
+    <div v-if="ItemsCount > 12 && lengthOnPage" class="my-10">
       <button
         type="button"
         aria-label="На главную"
