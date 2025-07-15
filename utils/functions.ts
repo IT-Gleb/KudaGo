@@ -366,6 +366,42 @@ export function ExtractParagraphData(param: string): string {
   return txt;
 }
 
+export function ExtracTextFromLink(param: string): string | null {
+  let txt: string = param;
+  const regStr: string = `<a[a-zA-Z\\d\\s=&<"-_/\\?\\W\\.>]+?</a>`;
+  const regStr2: string = `>[а-яА-Я\\d\\s\\.]+?<`;
+  let reg = new RegExp(regStr, "gmi");
+
+  const test = reg.test(txt);
+
+  let resStr: string = "";
+  if (test) {
+    reg = new RegExp(regStr, "gmi");
+    resStr = reg
+      .exec(txt)
+      ?.map((item) => item.toString())
+      .reduce((acc, curr) => {
+        acc = curr;
+        return acc;
+      }, "") as string;
+
+    const reg2 = new RegExp(regStr2, "gmi");
+    // console.log(reg2.test(resStr));
+
+    let linkText = reg2
+      .exec(resStr)
+      ?.map((item) => item.toString())
+      .reduce((acc, curr) => {
+        acc = curr;
+        return acc;
+      }, "") as string;
+    // console.log(test, resStr, linkText);
+    txt = txt.replaceAll(resStr, linkText);
+  }
+
+  return txt;
+}
+
 export function randomIntegerFromMinMax(
   paramMin: number,
   paramMax: number

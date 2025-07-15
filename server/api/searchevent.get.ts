@@ -1,8 +1,8 @@
 import { ISearchRoot } from "~/types/serchTypes";
 
 export default defineEventHandler(async (event) => {
-  const searchUrl: string =
-    "https://kudago.com/public-api/v1.4/search/?q=кофе&lang=ru&expand=place,dates&page_size=15&location=&ctype=event&is_free=&lat=&lon=&radius=&text_format=text";
+  const shablonUrl: string =
+    "https://kudago.com/public-api/v1.4/search/?q=#param#&lang=&expand=place,dates&page_size=15&location=&ctype=event&is_free=&lat=&lon=&radius=&text_format=text";
 
   if (event.method !== "GET") {
     return {
@@ -10,6 +10,12 @@ export default defineEventHandler(async (event) => {
       type: "NoGetMethod",
     };
   }
+  const _searchUrl = new URL(`http://localhost${event.path}`);
+  const query = _searchUrl.searchParams.get("query") ?? "cofe";
+
+  // console.log(query);
+  const searchUrl: string = shablonUrl.replace("#param#", query.trim());
+
   try {
     const req = await $fetch<Blob, string>(searchUrl, {
       headers: { "Content-Type": "application/json;utf-8" },
