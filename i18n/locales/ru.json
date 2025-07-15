@@ -16,7 +16,11 @@
     "onMainPage": "На главную"
   },
   "buttons": {
-    "update": "Обновить"
+    "update": "Обновить",
+    "langButton": "Сменитб язык",
+    "searchButton": "Поиск",
+    "closeSearch": "Закрыть",
+    "clearSearch": "Очистить"
   },
   "eventOfDay": {
     "errorMsg": "Не могу загрузить данные!!! Попробуйте позднее!"

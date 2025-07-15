@@ -16,7 +16,11 @@
     "onMainPage": "Home"
   },
   "buttons": {
-    "update": "Update"
+    "update": "Update",
+    "langButton": "Change language",
+    "searchButton": "Search",
+    "closeSearch": "Close",
+    "clearSearch": "Clear"
   },
   "eventOfDay": {
     "errorMsg": "Сan't load the data!!! Try again later!"

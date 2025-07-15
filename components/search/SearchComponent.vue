@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import SearchEdit from "./SearchEdit.vue";
 import Search from "../svg/Search.vue";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 const router = useRouter();
 
@@ -32,6 +35,8 @@ watch(
   <SearchEdit v-if="isShow" :func-blur="changeShow" />
   <button
     type="button"
+    :aria-label="t('buttons.searchButton')"
+    :title="t('buttons.searchButton')"
     v-if="!isShow"
     class="w-[24px] h-[24px] text-indigo-900 dark:text-slate-400 cursor-pointer active:scale-90"
     @click="handleShow(true)"

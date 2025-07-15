@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Search from "../svg/Search.vue";
 import Cross from "../svg/Cross.vue";
+import RoundCross from "../svg/RoundCross.vue";
 import { refDebounced } from "@vueuse/core";
 import { ref } from "vue";
 import { useI18n } from "#i18n";
@@ -65,6 +66,8 @@ onMounted(() => {
     <div class="flex items-end gap-1 text-indigo-950 bg-slate-300 p-1">
       <button
         type="button"
+        :title="t('buttons.clearSearch')"
+        :aria-label="t('buttons.clearSearch')"
         class="w-[24px] h-[24px] cursor-pointer active:scale-90"
         @click="handleClear"
       >
@@ -72,10 +75,12 @@ onMounted(() => {
       </button>
       <button
         type="button"
+        :title="t('buttons.closeSearch')"
+        :aria-label="t('buttons.closeSearch')"
         class="w-[24px] h-[24px] cursor-pointer active:scale-90"
         @click="props.funcBlur"
       >
-        <Search />
+        <RoundCross />
       </button>
     </div>
   </form>

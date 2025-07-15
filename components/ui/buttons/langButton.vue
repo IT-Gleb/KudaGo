@@ -4,7 +4,7 @@ import Usa from "~/components/svg/Usa.vue";
 import { useI18n } from "#i18n";
 import type { TMyLocale } from "~/types/myTypes";
 
-const { setLocale, defaultLocale } = useI18n();
+const { setLocale, defaultLocale, t } = useI18n();
 const isRusLocale = ref<boolean>(defaultLocale === "ru");
 
 const handleLocale = () => {
@@ -37,6 +37,8 @@ onBeforeMount(async () => {
 <template>
   <button
     type="button"
+    :aria-label="t('buttons.langButton')"
+    :title="t('buttons.langButton')"
     class="w-[32px] h-[32px] rounded-full overflow-hidden active:scale-90 cursor-pointer object-cover object-left-top"
     @click="handleLocale"
   >
