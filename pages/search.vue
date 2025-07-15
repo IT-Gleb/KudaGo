@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useSearchData } from "~/components/search/controller/SearchDataController";
-import type { ISearchRoot } from "~/types/serchTypes";
+import type { ISearchResult, ISearchRoot } from "~/types/serchTypes";
 import { FormatDateFromNumber } from "~/utils/functions";
 
 const itemsOnPage: number = 15;
@@ -21,22 +21,21 @@ const { status, searchdata, error, execute } = useSearchData(
 );
 
 const PagesCount = computed(() => {
-  if (!searchdata.value) {
+  if (searchdata.value) {
+    if (searchdata.value.results) {
+      const { length } = (searchdata.value as ISearchRoot)
+        .results as ISearchResult[];
+      return length;
+    } else {
+      return 0;
+    }
+  } else {
     return 0;
   }
-  const { count } = searchdata.value as ISearchRoot;
-  let result = count ?? 0;
-  result = Math.ceil(result / itemsOnPage);
-  return result;
 });
 
 const lengthOnPage = computed(() => {
-  if (searchdata.value?.results) {
-    const { length } = searchdata.value?.results;
-    return length > 12;
-  } else {
-    return false;
-  }
+  return Math.ceil(PagesCount.value / itemsOnPage) > 0;
 });
 </script>
 
@@ -54,7 +53,7 @@ const lengthOnPage = computed(() => {
 
       <div class="my-5">
         Параметры поиска:
-        <span v-if="paramSearch.length > 0"
+        <span v-if="paramSearch !== ''"
           ><mark>{{ paramSearch }}</mark></span
         >
       </div>
@@ -77,7 +76,9 @@ const lengthOnPage = computed(() => {
       <div v-if="error !== null">{{ error }}</div>
       <div
         v-if="
-          (status === 'success' || status === 'idle') && searchdata?.count === 0
+          (status === 'success' || status === 'idle') &&
+          (searchdata?.count === null ||
+            (searchdata?.count !== undefined && searchdata?.count < 1))
         "
       >
         <h3>Нет данных</h3>

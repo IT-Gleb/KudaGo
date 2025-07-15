@@ -102,6 +102,10 @@ export function FormatTimeFromNumber(param: number) {
   const dateData: number = Number(`${param}000`);
   try {
     const dt = new Date(dateData);
+    const hour = dt.getUTCHours();
+    const minutes = dt.getUTCMinutes();
+    return `${ZeroNumber(hour)}:${ZeroNumber(minutes)}`;
+
     return Intl.DateTimeFormat("ru-RU", {
       hour: "numeric",
       minute: "2-digit",
