@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { useSearchData } from "~/components/search/controller/SearchDataController";
+import type { ISearchRoot } from "~/types/serchTypes";
+import { FormatDateFromNumber } from "~/utils/functions";
+
+const itemsOnPage: number = 15;
 
 const router = useRouter();
 
@@ -9,7 +13,31 @@ const handleMain = () => {
   router.replace({ path: "/" });
 };
 
-const { status, searchdata, error, execute } = useSearchData(paramSearch);
+const currentPage = ref<number>(1);
+
+const { status, searchdata, error, execute } = useSearchData(
+  paramSearch,
+  currentPage
+);
+
+const PagesCount = computed(() => {
+  if (!searchdata.value) {
+    return 0;
+  }
+  const { count } = searchdata.value as ISearchRoot;
+  let result = count ?? 0;
+  result = Math.ceil(result / itemsOnPage);
+  return result;
+});
+
+const lengthOnPage = computed(() => {
+  if (searchdata.value?.results) {
+    const { length } = searchdata.value?.results;
+    return length > 12;
+  } else {
+    return false;
+  }
+});
 </script>
 
 <template>
@@ -25,7 +53,10 @@ const { status, searchdata, error, execute } = useSearchData(paramSearch);
       </button>
 
       <div class="my-5">
-        Параметры поиска: <span>{{ paramSearch }}</span>
+        Параметры поиска:
+        <span v-if="paramSearch.length > 0"
+          ><mark>{{ paramSearch }}</mark></span
+        >
       </div>
       <button
         type="button"
@@ -36,8 +67,9 @@ const { status, searchdata, error, execute } = useSearchData(paramSearch);
         Обновить
       </button>
     </div>
-    <div v-if="searchdata?.count">
-      Страниц: {{ Math.floor((searchdata?.count as number) / 15) }}
+    <div v-if="PagesCount > 0">
+      Найдено: <mark>{{ searchdata?.count }}</mark> Страниц:
+      <mark>{{ PagesCount }}</mark>
     </div>
 
     <div class="my-10">
@@ -58,7 +90,7 @@ const { status, searchdata, error, execute } = useSearchData(paramSearch);
           <div class="flex flex-col gap-2">
             <div class="font-bold first-letter:uppercase">{{ item.title }}</div>
             <div class="text-[0.85em]/[1.2em]">
-              <p class="indent-5">
+              <p class="indent-5 text-balance">
                 {{ item.description }}
               </p>
             </div>
@@ -67,20 +99,28 @@ const { status, searchdata, error, execute } = useSearchData(paramSearch);
             <div v-if="item.daterange.start_date">
               <small>
                 начало:
-                {{ FormatDateToString(item.daterange.start_date.toString()) }}
+                {{ FormatDateFromNumber(item.daterange.start_date) }}
+              </small>
+              &nbsp;
+              <small v-if="item.daterange.start_time">
+                {{ FormatTimeFromNumber(item.daterange.start_time) }}
               </small>
             </div>
             <div v-if="item.daterange.end_date">
               <small>
                 окончание:
-                {{ FormatDateToString(item.daterange.end_date.toString()) }}
+                {{ FormatDateFromNumber(item.daterange.end_date) }}
+              </small>
+              &nbsp;
+              <small v-if="item.daterange.end_time">
+                {{ FormatTimeFromNumber(item.daterange.end_time) }}
               </small>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="my-10">
+    <div v-if="PagesCount > 0 && lengthOnPage" class="my-10">
       <button
         type="button"
         aria-label="На главную"

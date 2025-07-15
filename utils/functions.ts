@@ -63,6 +63,54 @@ export function FormatDateFromString(param: string | null) {
   }
 }
 
+export function DateFromNumber(param: number): Date {
+  const dateStr: number = Number(`${param}000`);
+  return new Date(dateStr);
+}
+
+export function CompareDateAndNow(param: number): boolean {
+  const dt1 = DateFromNumber(param);
+  const dt2 = new Date();
+
+  // console.log(
+  //   FormatDateFromNumber(dt1.valueOf()),
+  //   Intl.DateTimeFormat("ru-RU", {
+  //     year: "numeric",
+  //     day: "2-digit",
+  //     month: "long",
+  //   }).format(dt2)
+  // );
+
+  return dt1 >= dt2;
+}
+
+export function FormatDateFromNumber(param: number) {
+  const dateData: number = Number(`${param}000`);
+  try {
+    const dt = new Date(dateData);
+    return Intl.DateTimeFormat("ru-RU", {
+      year: "numeric",
+      day: "2-digit",
+      month: "long",
+    }).format(dt);
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
+export function FormatTimeFromNumber(param: number) {
+  const dateData: number = Number(`${param}000`);
+  try {
+    const dt = new Date(dateData);
+    return Intl.DateTimeFormat("ru-RU", {
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(dt);
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
 export function FormatNowDate() {
   const dt = Date.now();
 
@@ -369,35 +417,39 @@ export function ExtractParagraphData(param: string): string {
 export function ExtracTextFromLink(param: string): string | null {
   let txt: string = param;
   const regStr: string = `<a[a-zA-Z\\d\\s=&<"-_/\\?\\W\\.>]+?</a>`;
-  const regStr2: string = `>[а-яА-Я\\d\\s\\.]+?<`;
+  const regStr2: string = `>[\\W\\d\\s\\S]+?<`;
   let reg = new RegExp(regStr, "gmi");
 
   const test = reg.test(txt);
+  // console.log(test);
 
   let resStr: string = "";
   if (test) {
     reg = new RegExp(regStr, "gmi");
-    resStr = reg
-      .exec(txt)
-      ?.map((item) => item.toString())
-      .reduce((acc, curr) => {
-        acc = curr;
-        return acc;
-      }, "") as string;
+    resStr = reg.exec(txt)?.reduce((acc, curr) => {
+      acc = curr;
+      return acc;
+    }, "") as string;
 
+    //console.log(resStr);
     const reg2 = new RegExp(regStr2, "gmi");
-    // console.log(reg2.test(resStr));
+    //console.log(reg2.test(resStr));
 
-    let linkText = reg2
-      .exec(resStr)
-      ?.map((item) => item.toString())
-      .reduce((acc, curr) => {
-        acc = curr;
-        return acc;
-      }, "") as string;
-    // console.log(test, resStr, linkText);
-    txt = txt.replaceAll(resStr, linkText);
+    let linkText = reg2.exec(resStr)?.reduce((acc, curr) => {
+      acc = curr;
+      return acc;
+    }, "") as string;
+    // console.log(resStr, linkText);
+    // linkText = linkText.replaceAll("<", "");
+    // linkText = linkText.replaceAll(">", "");
+    if (linkText) {
+      // console.log(linkText);
+      txt = txt.replaceAll(resStr, linkText);
+    }
+    txt = txt.replaceAll("strong", "");
   }
+
+  // console.log(txt);
 
   return txt;
 }

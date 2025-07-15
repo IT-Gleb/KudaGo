@@ -2,7 +2,7 @@ import { ISearchRoot } from "~/types/serchTypes";
 
 export default defineEventHandler(async (event) => {
   const shablonUrl: string =
-    "https://kudago.com/public-api/v1.4/search/?q=#param#&lang=&expand=place,dates&page_size=15&location=&ctype=event&is_free=&lat=&lon=&radius=&text_format=text";
+    "https://kudago.com/public-api/v1.4/search/?q=&lang=&expand=place,dates&page=1&page_size=100&location=&ctype=event&is_free=&lat=&lon=&radius=&text_format=text";
 
   if (event.method !== "GET") {
     return {
@@ -11,25 +11,29 @@ export default defineEventHandler(async (event) => {
     };
   }
   const _searchUrl = new URL(`http://localhost${event.path}`);
-  const query = _searchUrl.searchParams.get("query") ?? "cofe";
+  const query = _searchUrl.searchParams.get("query") ?? "выставки";
+  const page = _searchUrl.searchParams.get("page") ?? "1";
 
   // console.log(query);
-  const searchUrl: string = shablonUrl.replace("#param#", query.trim());
+  const searchUrl = new URL(shablonUrl);
+  searchUrl.searchParams.set("q", query.trim());
+  searchUrl.searchParams.set("page", page.trim());
 
   try {
-    const req = await $fetch<Blob, string>(searchUrl, {
+    const req = await $fetch<Blob, string>(searchUrl.toString(), {
       headers: { "Content-Type": "application/json;utf-8" },
       method: "GET",
       retry: 3,
       retryDelay: 500,
       cache: "no-store",
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(5000),
     });
 
     const data: ISearchRoot = JSON.parse(
       await (req as Blob).text()
     ) satisfies ISearchRoot;
-    // const bdtext = JSON.parse(data.results[1].body_text);
+    // const bdtext = JSON.parse(data.results[0].body_text);
+    // return bdtext;
 
     return data;
   } catch (err) {

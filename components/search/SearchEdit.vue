@@ -49,7 +49,7 @@ onMounted(() => {
 
 <template>
   <form
-    class="flex items-center rounded-r-2xl overflow-hidden m-0 p-0 border-1 animoSearch"
+    class="flex items-start rounded-r-2xl overflow-hidden m-0 p-0 border-1 animoSearch"
     action=""
     @submit.prevent="() => false"
   >
@@ -60,7 +60,7 @@ onMounted(() => {
       autocomplete="off"
       v-model="searchText"
       :placeholder="t('search.placeholder')"
-      class="max-w-[320px] min-h-[30px] p-1 outline-none font-['Inter'] text-[1rem]/[1.2rem] placeholder:text-slate-500"
+      class="max-w-[320px] min-h-[30px] py-[2px] px-1 outline-none font-['Inter'] text-[1rem]/[1.2rem] placeholder:text-slate-500"
     />
     <div class="flex items-end gap-1 text-indigo-950 bg-slate-300 p-1">
       <button
@@ -83,15 +83,18 @@ onMounted(() => {
 
 <style lang="css" scoped>
 .animoSearch {
-  animation: animoSized 400ms ease;
+  animation-delay: 500ms;
+  animation: animoSized 0.5s ease;
 }
 
 @keyframes animoSized {
   0% {
-    width: 5%;
+    transform-origin: right;
+    transform: scaleX(0);
   }
   100% {
-    width: auto;
+    transform-origin: right;
+    transform: scaleX(100%);
   }
 }
 </style>

@@ -70,3 +70,147 @@ export interface ISearchSource {
   name: string;
   link: string;
 }
+
+//----------------------------
+export interface Search_Root {
+  blocks: Search_Block[];
+  entityMap: Search_EntityMap;
+}
+
+export interface Search_Block {
+  key: string;
+  text: string;
+  type: string;
+  depth: number;
+  inlineStyleRanges: Search_InlineStyleRange[];
+  entityRanges: Search_EntityRange[];
+  data: Search_Data;
+}
+
+export interface Search_InlineStyleRange {
+  offset: number;
+  length: number;
+  style: string;
+}
+
+export interface Search_EntityRange {
+  offset: number;
+  length: number;
+  key: number;
+}
+
+export interface Search_Data {
+  text?: string;
+  slides?: Search_Slide[];
+  caption?: string;
+  image?: Search_Image2;
+  url?: string;
+  newTab?: boolean;
+  sourceTitle?: string;
+  sourceUrl?: string;
+}
+
+export interface Search_Slide {
+  caption: string;
+  sourceTitle?: string;
+  image: Search_Image;
+}
+
+export interface Search_Image {
+  filename: string;
+  url: string;
+}
+
+export interface Search_Image2 {
+  filename: string;
+  url: string;
+}
+
+export interface Search_EntityMap {
+  "0": Search_N0;
+  "1": Search_N1;
+  "2": Search_N2;
+  "3": Search_N3;
+  "4": Search_N4;
+  "5": Search_N5;
+}
+
+export interface Search_N0 {
+  type: string;
+  mutability: string;
+  data: Search_Data2;
+}
+
+export interface Search_Data2 {
+  href: string;
+  url: string;
+}
+
+export interface Search_N1 {
+  type: string;
+  mutability: string;
+  data: Search_Data3;
+}
+
+export interface Search_Data3 {
+  url: string;
+  newTab: boolean;
+  index: boolean;
+  title: string;
+  modalIsOpen: boolean;
+  currentLinkEntityKey: string;
+}
+
+export interface Search_N2 {
+  type: string;
+  mutability: string;
+  data: Search_Data4;
+}
+
+export interface Search_Data4 {
+  url: string;
+  newTab: boolean;
+  index: boolean;
+  title: string;
+  modalIsOpen: boolean;
+  currentLinkEntityKey: string;
+}
+
+export interface Search_N3 {
+  type: string;
+  mutability: string;
+  data: Search_Data5;
+}
+
+export interface Search_Data5 {
+  href: string;
+  url: string;
+}
+
+export interface Search_N4 {
+  type: string;
+  mutability: string;
+  data: Search_Data6;
+}
+
+export interface Search_Data6 {
+  href: string;
+  url: string;
+}
+
+export interface Search_N5 {
+  type: string;
+  mutability: string;
+  data: Search_Data7;
+}
+
+export interface Search_Data7 {
+  href: string;
+  url: string;
+  index: boolean;
+  newTab: boolean;
+  title: string;
+  modalIsOpen: boolean;
+  currentLinkEntityKey: string;
+}
+//-----------------------------------
