@@ -28,7 +28,7 @@ tm("mainMenu")
               locale.value.startsWith("en") ? "en-EN" : "ru-RU"
             }.xml` //`${config.public.nuxtSiteName}/sitemap.xml`
           : index === 2
-          ? ""
+          ? "#"
           : index === 3
           ? "/primers"
           : "#",
