@@ -105,7 +105,11 @@ const serchItems = computed(() => {
                   class="w-full object-cover object-center"
                 >
                   <img
-                    :src="item.first_image?.image"
+                    :src="
+                      item.first_image?.thumbnails !== null
+                        ? item.first_image?.thumbnails['640x384']
+                        : item.first_image.image
+                    "
                     alt=""
                     loading="lazy"
                     decoding="async"
