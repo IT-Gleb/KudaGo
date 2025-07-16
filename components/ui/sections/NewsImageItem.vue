@@ -10,9 +10,9 @@ const props = defineProps<{
     <img
       :src="props.imageSrc"
       :alt="props.imageAlt"
-      decoding="sync"
-      loading="eager"
-      class="block w-full h-full"
+      decoding="async"
+      loading="lazy"
+      class="block max-w-full max-h-full"
     />
   </div>
 </template>

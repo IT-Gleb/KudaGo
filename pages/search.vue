@@ -74,7 +74,7 @@ const serchItems = computed(() => {
     <div v-if="(status === 'success' || status === 'idle') && serchItems > 0">
       Найдено: {{ serchItems }}
 
-      <div class="my-10">
+      <div class="my-10 text-[1rem]/[1.2rem] font-light">
         <div
           v-for="([key, value], index) in Object.entries(searchdata?.results as TSearchDataObject)"
           :key="index"
@@ -113,7 +113,7 @@ const serchItems = computed(() => {
                   />
                 </div>
                 <p
-                  class="indent-5 text-pretty font-light first-letter:uppercase text-[0.8em]/[1.2em] mt-1"
+                  class="indent-5 text-pretty font-light first-letter:uppercase text-[1.4em]/[1.4em] sm:text-[1.1em]/[1.1em] lg:text-[0.8em]/[1.2em] mt-1"
                 >
                   {{ item.description }}
                 </p>

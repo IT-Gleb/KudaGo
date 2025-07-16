@@ -25,7 +25,7 @@ const ItemInView = (paramIndex: number) => {
   (itemsRef.value[paramIndex] as HTMLDivElement).scrollIntoView({
     behavior: "smooth",
     block: "nearest",
-    inline: "center",
+    inline: "start",
   });
   ActiveIndex.value !== paramIndex
     ? (ActiveIndex.value = paramIndex)

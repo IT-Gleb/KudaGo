@@ -172,7 +172,7 @@ onMounted(() => {
               alt=""
               loading="lazy"
               decoding="async"
-              class="block w-full h-full"
+              class="block max-w-full max-h-full"
             />
           </div>
           <p class="indent-4 my-2 font-bold">{{ item.description }}</p>

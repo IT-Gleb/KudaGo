@@ -65,7 +65,7 @@ onMounted(() => {
         alt=""
         loading="lazy"
         decoding="async"
-        class="block w-full h-full"
+        class="block max-w-full max-h-full"
       />
     </div>
     <div class="grid grid-cols-[100px_1fr] lg:grid-cols-[140px_1fr] gap-2 ml-2">
