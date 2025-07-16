@@ -71,6 +71,16 @@ export interface ISearchSource {
   link: string;
 }
 
+export type TSearchDataObject = Partial<
+  Record<number | "unknow", ISearchResult[]>
+>;
+
+export type TGrouppedSearchData = {
+  count: number;
+  isGroupped: boolean;
+  results: TSearchDataObject;
+};
+
 //----------------------------
 export interface Search_Root {
   blocks: Search_Block[];

@@ -88,6 +88,9 @@ export default defineNuxtConfig({
     //     maxAge: 3600,
     //   },
     // },
+    "/api/searchevent": {
+      ssr: false,
+    },
     "/api/cityes": {
       swr: true,
       cache: {

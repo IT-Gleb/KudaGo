@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useSearchData } from "~/components/search/controller/SearchDataController";
-import type { ISearchResult, ISearchRoot } from "~/types/serchTypes";
+import type { TSearchDataObject } from "~/types/serchTypes";
 import { FormatDateFromNumber } from "~/utils/functions";
+import loaderComponent from "~/components/loader/loaderComponent.vue";
 
 const itemsOnPage: number = 15;
 
@@ -20,22 +21,12 @@ const { status, searchdata, error, execute } = useSearchData(
   currentPage
 );
 
-const ItemsCount = computed(() => {
+const serchItems = computed(() => {
   if (searchdata.value) {
-    if (searchdata.value.results) {
-      const { length } = (searchdata.value as ISearchRoot)
-        .results as ISearchResult[];
-      return length;
-    } else {
-      return 0;
-    }
+    return searchdata.value.count !== null ? searchdata.value.count : 0;
   } else {
     return 0;
   }
-});
-
-const lengthOnPage = computed(() => {
-  return Math.ceil(ItemsCount.value / itemsOnPage) > 0;
 });
 </script>
 
@@ -66,84 +57,101 @@ const lengthOnPage = computed(() => {
         Обновить
       </button>
     </div>
-    <div v-if="ItemsCount > 0" class="my-10">
-      Найдено: <mark>{{ searchdata?.count }}</mark> Страниц:
-      <mark>{{ ItemsCount }}</mark>
-    </div>
 
     <div class="my-10">
-      <div v-if="status === 'pending'">load data...</div>
-      <div v-if="error !== null">{{ error }}</div>
       <div
-        v-if="(status === 'success' || status === 'idle') && ItemsCount === 0"
+        v-if="status === 'pending'"
+        class="w-[34px] h-[34px] mx-auto text-orange-600 dark:text-slate-400"
       >
-        <h3>Нет данных</h3>
+        <loader-component />
       </div>
-      <div
-        v-else
-        class="p-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-2"
-      >
-        <div v-for="item in searchdata?.results" :key="item.id">
-          <div class="flex flex-col gap-2">
-            <NuxtLink :to="item.item_url" target="_blank">
-              <div
-                class="h-[60px] overflow-hidden bg-slate-100 dark:bg-slate-700 p-1 font-bold first-letter:uppercase text-[1.5em]/[1.8em] md:text-[1em]/[1.2em]"
+      <div v-if="error !== null">{{ error }}</div>
+    </div>
+    <div v-if="status !== 'pending' && status !== 'error' && serchItems < 1">
+      <h4>Нет Данных</h4>
+    </div>
+
+    <div v-if="(status === 'success' || status === 'idle') && serchItems > 0">
+      Найдено: {{ serchItems }}
+
+      <div class="my-10">
+        <div
+          v-for="([key, value], index) in Object.entries(searchdata?.results as TSearchDataObject)"
+          :key="index"
+          class="my-5 font-bold font-['Roboto'] p-1"
+        >
+          <h5 class="text-orange-600">
+            {{
+              (key as string) === "unknow"
+                ? "Дата начала не указана"
+                : FormatDateFromNumber(Number(key))
+            }}
+          </h5>
+          <hr class="text-orange-700" />
+          <div
+            class="ml-2 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          >
+            <article v-for="item in value" :key="item.id" class="">
+              <header
+                class="bg-orange-200 h-[80px] p-1 place-content-center overflow-hidden"
               >
-                {{ item.title }}
-              </div>
-            </NuxtLink>
-            <div class="text-[1.2em]/[1.6em] md:text-[0.8em]/[1.2em] mt-1">
-              <div
-                v-if="item.first_image"
-                class="w-full aspect-square object-cover object-center mr-2 mb-1"
-              >
-                <img
-                  :src="item.first_image?.image"
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  class="block w-full h-full"
-                />
-              </div>
-              <p class="indent-5 text-balance">
-                {{ item.description }}
-              </p>
-            </div>
-          </div>
-          <div v-if="item.daterange" class="text-right">
-            <div v-if="item.daterange.start_date">
-              <small>
-                начало:
-                {{ FormatDateFromNumber(item.daterange.start_date) }}
-              </small>
-              &nbsp;
-              <small v-if="item.daterange.start_time">
-                {{ FormatTimeFromNumber(item.daterange.start_time) }}
-              </small>
-            </div>
-            <div v-if="item.daterange.end_date">
-              <small>
-                окончание:
-                {{ FormatDateFromNumber(item.daterange.end_date) }}
-              </small>
-              &nbsp;
-              <small v-if="item.daterange.end_time">
-                {{ FormatTimeFromNumber(item.daterange.end_time) }}
-              </small>
-            </div>
+                <h6 class="font-['Roboto'] text-[1em]/[1.25em] text-pretty">
+                  {{ item.title }}
+                </h6>
+              </header>
+              <main>
+                <div
+                  v-if="item.first_image"
+                  class="w-full object-cover object-center"
+                >
+                  <img
+                    :src="item.first_image?.image"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    class="block max-w-full max-h-full"
+                  />
+                </div>
+                <p
+                  class="indent-5 text-pretty font-light first-letter:uppercase text-[0.8em]/[1.2em] mt-1"
+                >
+                  {{ item.description }}
+                </p>
+                <div class="grid grid-cols-2 p-1">
+                  <hr class="col-span-2 mt-2 text-orange-600" />
+                  <span
+                    class="font-light text-[0.76em]/[1em] place-content-center"
+                    >Место проведения:
+                  </span>
+                  <span>{{
+                    item.place !== null
+                      ? Locations[item.place?.location as unknown as string]
+                      : "Не указано"
+                  }}</span>
+                  <hr class="col-span-2 text-orange-600" />
+                  <span
+                    class="font-light text-[0.76em]/[1em] place-content-center"
+                    >Начало(время):</span
+                  >
+                  <span>{{
+                    item.daterange !== null &&
+                    item.daterange.start_time !== null
+                      ? FormatTimeFromNumber(
+                          item.daterange?.start_time as number
+                        )
+                      : "Не указано"
+                  }}</span>
+                </div>
+              </main>
+              <footer class="text-right p-2 place-content-center">
+                <NuxtLink :to="item.item_url" target="_blank">
+                  Первоисточник
+                </NuxtLink>
+              </footer>
+            </article>
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="ItemsCount > 12 && lengthOnPage" class="my-10">
-      <button
-        type="button"
-        aria-label="На главную"
-        class="min-w-[60px] min-h-[30px] p-2 place-content-center bg-slate-600 text-slate-100 active:scale-90 cursor-pointer"
-        @click="handleMain"
-      >
-        На главную
-      </button>
     </div>
   </section>
 </template>

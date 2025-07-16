@@ -2,6 +2,7 @@ import type {
   ISearchResult,
   ISearchRoot,
   Search_Root,
+  TGrouppedSearchData,
 } from "~/types/serchTypes";
 import type { Ref } from "vue";
 
@@ -11,7 +12,7 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
     data: searchdata,
     error,
     execute,
-  } = useAsyncData<ISearchRoot>(
+  } = useAsyncData<ISearchRoot | TGrouppedSearchData>(
     `searchData-${randomIntegerFromMinMax(1, 100)}`,
     async () =>
       await $fetch<ISearchRoot, string>("/api/searchevent", {
@@ -31,54 +32,33 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
       lazy: true,
       watch: [param, paramPage],
       transform: (input) => {
-        if (input.results && input.results.length > 0) {
-          let data = Object.assign({}, input);
-          let tmp: ISearchResult[] = [];
+        let data: TGrouppedSearchData = {
+          count: 0,
+          isGroupped: false,
+          results: [],
+        };
+        if ((input as ISearchRoot).results) {
+          //Сгруппировать по дате начала
+          let tmp = Object.groupBy(
+            (input as ISearchRoot).results as ISearchResult[],
+            (item) =>
+              item.daterange !== null && item.daterange?.start_date !== null
+                ? item.daterange.start_date
+                : "unknow"
+          );
 
-          tmp = (data.results as ISearchResult[])
-            .filter((item) => {
-              if (item.daterange && item.daterange.start_date) {
-                return CompareDateAndNow(item.daterange?.start_date);
-              } else {
-                return true;
-              }
-            })
-            .sort((a, b) => {
-              if (a.daterange?.start_date && b.daterange?.start_date) {
-                if (a.daterange?.start_date > b.daterange?.start_date) {
-                  return 1;
-                } else {
-                  return -1;
-                }
-              } else {
-                return 1;
-              }
-            });
-
-          tmp.forEach((item) => {
-            if (item.description !== null) {
-              let text: unknown = "";
-              let objText: string = "";
-              try {
-                text = JSON.parse(item.description) as Search_Root;
-              } catch (err) {
-                objText = item.description;
-              }
-
-              if (
-                typeof text === "object" &&
-                text !== null &&
-                "blocks" in text
-              ) {
-                const { blocks } = text as Search_Root;
-                objText = blocks[0]["text"];
-              }
-              objText = ExtracTextFromLink(objText) as string;
-              objText = ExtractParagraphData(objText) as string;
-              item.description = objText;
+          //Рассчитать количество полученных данных
+          let total: number = 0;
+          for (const key of Object.values(tmp)) {
+            if (key) {
+              total += key?.length;
             }
-          });
-          data.results = Array.from(tmp);
+          }
+
+          data.count = total;
+          data.isGroupped = true;
+          data.results = tmp;
+
           return data;
         } else {
           return input;

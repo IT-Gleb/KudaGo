@@ -9,6 +9,16 @@ const delimeter: string = ". ";
 
 export const FiltersHeader: string = "filterAbcBca";
 export const FilmsSectionId: string = "filmsId";
+export const Locations: { [key: string]: string } = {
+  spb: "Санкт-Петербург",
+  msk: "Москва",
+  ekb: "Екатеринбург",
+  krd: "Краснодар",
+  nsk: "Новосибирск",
+  sochi: "Сочи",
+  nnv: "Нижний Новгород",
+  kzn: "Казань",
+};
 
 export function getNowYear(): string {
   const dt = new Date();
