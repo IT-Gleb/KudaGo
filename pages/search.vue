@@ -41,7 +41,7 @@ const lengthOnPage = computed(() => {
 
 <template>
   <section class="p-1 lg:w-[80%] mx-auto">
-    <div class="flex flex-row items-center justify-between">
+    <div class="flex flex-row items-center justify-between my-10">
       <button
         type="button"
         aria-label="На главную"
@@ -51,7 +51,7 @@ const lengthOnPage = computed(() => {
         На главную
       </button>
 
-      <div class="my-5">
+      <div>
         Параметры поиска:
         <span v-if="paramSearch !== ''"
           ><mark>{{ paramSearch }}</mark></span
@@ -66,7 +66,7 @@ const lengthOnPage = computed(() => {
         Обновить
       </button>
     </div>
-    <div v-if="ItemsCount > 0">
+    <div v-if="ItemsCount > 0" class="my-10">
       Найдено: <mark>{{ searchdata?.count }}</mark> Страниц:
       <mark>{{ ItemsCount }}</mark>
     </div>
@@ -85,12 +85,26 @@ const lengthOnPage = computed(() => {
       >
         <div v-for="item in searchdata?.results" :key="item.id">
           <div class="flex flex-col gap-2">
-            <div
-              class="font-bold first-letter:uppercase text-[1.5em]/[1.8em] md:text-[1em]/[1.2em]"
-            >
-              {{ item.title }}
-            </div>
-            <div class="text-[1.2em]/[1.6em] md:text-[0.8em]/[1.2em]">
+            <NuxtLink :to="item.item_url" target="_blank">
+              <div
+                class="h-[60px] overflow-hidden bg-slate-100 dark:bg-slate-700 p-1 font-bold first-letter:uppercase text-[1.5em]/[1.8em] md:text-[1em]/[1.2em]"
+              >
+                {{ item.title }}
+              </div>
+            </NuxtLink>
+            <div class="text-[1.2em]/[1.6em] md:text-[0.8em]/[1.2em] mt-1">
+              <div
+                v-if="item.first_image"
+                class="w-full aspect-square object-cover object-center mr-2 mb-1"
+              >
+                <img
+                  :src="item.first_image?.image"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  class="block w-full h-full"
+                />
+              </div>
               <p class="indent-5 text-balance">
                 {{ item.description }}
               </p>
