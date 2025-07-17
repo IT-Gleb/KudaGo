@@ -56,11 +56,11 @@ const showVirtualKeyboard = () => {
 const textToSearch = useState("searchTxt", () => "");
 
 watch(debouncedInput, () => {
-  textToSearch.value = debouncedInput.value;
+  textToSearch.value = debouncedInput.value.trim();
 });
 
 watch(searchText, () => {
-  searchText.value.length <= SearchMinSymbolsLength
+  searchText.value.trim().length <= SearchMinSymbolsLength
     ? popRef.value?.showPopover()
     : popRef.value?.hidePopover();
 });
@@ -70,7 +70,7 @@ onMounted(() => {
 
   let timer = setTimeout(() => {
     popoverPosition();
-    searchText.value.length <= SearchMinSymbolsLength
+    searchText.value.trim().length <= SearchMinSymbolsLength
       ? popRef.value?.showPopover()
       : null;
 

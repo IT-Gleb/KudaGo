@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { useSearchData } from "~/components/search/controller/SearchDataController";
-import type { TSearchDataObject } from "~/types/serchTypes";
+import type {
+  ISearchResult,
+  TGrouppedSearchData,
+  TSearchDataObject,
+} from "~/types/serchTypes";
 import { FormatDateFromNumber } from "~/utils/functions";
 import loaderComponent from "~/components/loader/loaderComponent.vue";
 import SearchCard from "~/components/search/SearchCard.vue";
 import { useI18n } from "#i18n";
+import SearchFilterComponent from "~/components/search/SearchFilterComponent.vue";
+import type { VNodeRef } from "vue";
 
 const { t } = useI18n();
 
@@ -13,10 +19,17 @@ const itemsOnPage: number = 15;
 const router = useRouter();
 
 const paramSearch = useState<string>("searchTxt");
+const FilteredData = ref<TGrouppedSearchData>({
+  count: 0,
+  isGroupped: false,
+  results: [],
+});
 
 const isSearchParam = computed(
   () => paramSearch.value && paramSearch.value.trim().length > 0
 );
+
+const scrollTimer = ref<NodeJS.Timeout | null>(null);
 
 const handleMain = () => {
   router.replace({ path: "/" });
@@ -31,7 +44,7 @@ const { status, searchdata, error, execute } = useSearchData(
 
 const serchItems = computed(() => {
   if (searchdata.value) {
-    return searchdata.value.count !== null ? searchdata.value.count : 0;
+    return FilteredData.value.count !== null ? FilteredData.value.count : 0;
   } else {
     return 0;
   }
@@ -43,6 +56,64 @@ useHead({
     { name: "description", content: t("title") },
     { name: "author", content: t("author") },
   ],
+});
+
+const handleFilter = (paramKey: string, paramIndex: number) => {
+  let tmp: ISearchResult[] = [];
+
+  const isNoDate = paramKey === "unknow";
+
+  if (searchdata.value && searchdata.value.results) {
+    tmp = Array.from(
+      searchdata.value?.results[
+        //@ts-ignore
+        isNoDate ? "unknow" : Number(paramKey)
+      ] as unknown as ISearchResult[]
+    );
+    FilteredData.value.count = tmp.length;
+    FilteredData.value.results = Object.assign(
+      {},
+      { [isNoDate ? "unknow" : Number(paramKey)]: tmp }
+    );
+  }
+
+  scrollTimer.value = setTimeout(() => {
+    const element = document.getElementById(paramKey);
+    if (element) {
+      // console.log(element);
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest",
+      });
+    }
+    clearTimeout(scrollTimer.value as NodeJS.Timeout);
+    scrollTimer.value = null;
+  }, 600);
+};
+
+const handlerCancelFilter = () => {
+  if (searchdata.value && "isGroupped" in searchdata.value) {
+    FilteredData.value = Object.assign(
+      {},
+      searchdata.value as TGrouppedSearchData
+    );
+  }
+};
+
+watch(
+  searchdata,
+  () => {
+    handlerCancelFilter();
+  },
+  { deep: true }
+);
+
+onUnmounted(() => {
+  if (scrollTimer.value !== null) {
+    clearTimeout(scrollTimer.value as NodeJS.Timeout);
+  }
+  scrollTimer.value = null;
 });
 </script>
 
@@ -107,19 +178,28 @@ useHead({
     >
       Найдено: {{ serchItems }}
 
+      <SearchFilterComponent
+        :items="Object.keys(searchdata?.results as unknown as string[]) "
+        :run-filter="handleFilter"
+        :cancel-filter="handlerCancelFilter"
+        :disabled-button="searchdata?.count === FilteredData.count"
+      />
+
       <div class="my-10 font-light">
         <div
-          v-for="([key, value], index) in Object.entries(searchdata?.results as TSearchDataObject)"
-          :key="index"
+          v-for="([keyO, value], index) in Object.entries(FilteredData.results as
+          TSearchDataObject)"
+          :key="keyO"
+          :id="keyO"
           class="my-5 font-bold font-['Roboto'] p-1"
         >
           <h5
             class="text-orange-600 dark:text-slate-200 text-[1.8em]/[2.1em] lg:text-[1rem]/[1.2rem]"
           >
             {{
-              (key as string) === "unknow"
+              (keyO as string) === "unknow"
                 ? "Дата начала не указана"
-                : FormatDateFromNumber(Number(key))
+                : FormatDateFromNumber(Number(keyO))
             }}
           </h5>
           <hr class="text-orange-700 dark:text-slate-500" />
@@ -130,7 +210,7 @@ useHead({
               v-for="itm of value"
               :key="itm.id"
               :item="itm"
-              :date="key"
+              :date="keyO"
             />
           </div>
         </div>
@@ -138,3 +218,7 @@ useHead({
     </div>
   </section>
 </template>
+
+<!--
+   v-for="([key, value], index) in Object.entries(searchdata?.results as TSearchDataObject)"
+ -->
