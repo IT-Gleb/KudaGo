@@ -20,13 +20,23 @@ export default defineEventHandler(async (event) => {
     };
   }
   const _searchUrl = new URL(`http://localhost${event.path}`);
-  const query = _searchUrl.searchParams.get("query") ?? "выставки";
+  const query = _searchUrl.searchParams.get("query") ?? "";
   const page = _searchUrl.searchParams.get("page") ?? "1";
 
   // console.log(query);
   const searchUrl = new URL(shablonUrl);
   searchUrl.searchParams.set("q", query.trim());
   searchUrl.searchParams.set("page", page.trim());
+  let data: ISearchRoot = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+  };
+
+  if (query.trim() === "") {
+    return data;
+  }
 
   try {
     const req = await $fetch<Blob, string>(searchUrl.toString(), {
@@ -38,9 +48,7 @@ export default defineEventHandler(async (event) => {
       signal: AbortSignal.timeout(5000),
     });
 
-    const data: ISearchRoot = JSON.parse(
-      await (req as Blob).text()
-    ) satisfies ISearchRoot;
+    data = JSON.parse(await (req as Blob).text()) satisfies ISearchRoot;
     // const bdtext = JSON.parse(data.results[0].body_text);
     // return bdtext;
     let tmp: ISearchResult[] = [];

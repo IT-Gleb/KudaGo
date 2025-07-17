@@ -22,7 +22,7 @@ defineExpose({ handleShow });
 watch(
   useState("searchTxt"),
   (newValue: string) => {
-    if (newValue.trim().length > 3) {
+    if (newValue.trim().length > SearchMinSymbolsLength) {
       // console.log("нужно искать по строке: ", newValue);
       router.push({ path: "/search" });
     }

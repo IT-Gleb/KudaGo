@@ -18,7 +18,12 @@ export const Locations: { [key: string]: string } = {
   sochi: "Сочи",
   nnv: "Нижний Новгород",
   kzn: "Казань",
+  krasnoyarsk: "Красноярск",
+  vbg: "Выборг",
+  smr: "Самара",
+  ufa: "Уфа",
 };
+export const SearchMinSymbolsLength: number = 3;
 
 export function getNowYear(): string {
   const dt = new Date();
@@ -95,7 +100,11 @@ export function CompareDateAndNow(param: number): boolean {
 }
 
 export function FormatDateFromNumber(param: number) {
-  const dateData: number = Number(`${param}000`);
+  let dateData: number = 0;
+  dateData = Number(`${param}000`);
+  if (isNaN(dateData)) {
+    return "";
+  }
   try {
     const dt = new Date(dateData);
     return Intl.DateTimeFormat("ru-RU", {
@@ -110,16 +119,19 @@ export function FormatDateFromNumber(param: number) {
 
 export function FormatTimeFromNumber(param: number) {
   const dateData: number = Number(`${param}000`);
+  if (isNaN(dateData)) {
+    return "";
+  }
   try {
     const dt = new Date(dateData);
     const hour = dt.getUTCHours();
     const minutes = dt.getUTCMinutes();
     return `${ZeroNumber(hour)}:${ZeroNumber(minutes)}`;
 
-    return Intl.DateTimeFormat("ru-RU", {
-      hour: "numeric",
-      minute: "2-digit",
-    }).format(dt);
+    // return Intl.DateTimeFormat("ru-RU", {
+    //   hour: "numeric",
+    //   minute: "2-digit",
+    // }).format(dt);
   } catch (err) {
     return (err as Error).message;
   }

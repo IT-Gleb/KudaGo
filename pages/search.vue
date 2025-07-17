@@ -3,12 +3,20 @@ import { useSearchData } from "~/components/search/controller/SearchDataControll
 import type { TSearchDataObject } from "~/types/serchTypes";
 import { FormatDateFromNumber } from "~/utils/functions";
 import loaderComponent from "~/components/loader/loaderComponent.vue";
+import SearchCard from "~/components/search/SearchCard.vue";
+import { useI18n } from "#i18n";
+
+const { t } = useI18n();
 
 const itemsOnPage: number = 15;
 
 const router = useRouter();
 
 const paramSearch = useState<string>("searchTxt");
+
+const isSearchParam = computed(
+  () => paramSearch.value && paramSearch.value.trim().length > 0
+);
 
 const handleMain = () => {
   router.replace({ path: "/" });
@@ -27,6 +35,14 @@ const serchItems = computed(() => {
   } else {
     return 0;
   }
+});
+
+useHead({
+  title: "Поиск:[Kuda Go]",
+  meta: [
+    { name: "description", content: t("title") },
+    { name: "author", content: t("author") },
+  ],
 });
 </script>
 
@@ -58,6 +74,10 @@ const serchItems = computed(() => {
       </button>
     </div>
 
+    <div v-if="!isSearchParam" class="w-fit mx-auto my-10">
+      <h4>Не введены параметры поиска</h4>
+    </div>
+
     <div class="my-10">
       <div
         v-if="status === 'pending'"
@@ -67,92 +87,51 @@ const serchItems = computed(() => {
       </div>
       <div v-if="error !== null">{{ error }}</div>
     </div>
-    <div v-if="status !== 'pending' && status !== 'error' && serchItems < 1">
+    <div
+      v-if="
+        status !== 'pending' &&
+        status !== 'error' &&
+        serchItems < 1 &&
+        isSearchParam
+      "
+    >
       <h4>Нет Данных</h4>
     </div>
 
-    <div v-if="(status === 'success' || status === 'idle') && serchItems > 0">
+    <div
+      v-if="
+        (status === 'success' || status === 'idle') &&
+        serchItems > 0 &&
+        isSearchParam
+      "
+    >
       Найдено: {{ serchItems }}
 
-      <div class="my-10 text-[1rem]/[1.2rem] font-light">
+      <div class="my-10 font-light">
         <div
           v-for="([key, value], index) in Object.entries(searchdata?.results as TSearchDataObject)"
           :key="index"
           class="my-5 font-bold font-['Roboto'] p-1"
         >
-          <h5 class="text-orange-600">
+          <h5
+            class="text-orange-600 dark:text-slate-200 text-[1.8em]/[2.1em] lg:text-[1rem]/[1.2rem]"
+          >
             {{
               (key as string) === "unknow"
                 ? "Дата начала не указана"
                 : FormatDateFromNumber(Number(key))
             }}
           </h5>
-          <hr class="text-orange-700" />
+          <hr class="text-orange-700 dark:text-slate-500" />
           <div
-            class="ml-2 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            class="mx-2 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
           >
-            <article v-for="item in value" :key="item.id" class="">
-              <header
-                class="bg-orange-200 h-[80px] p-1 place-content-center overflow-hidden"
-              >
-                <h6 class="font-['Roboto'] text-[1em]/[1.25em] text-pretty">
-                  {{ item.title }}
-                </h6>
-              </header>
-              <main>
-                <div
-                  v-if="item.first_image"
-                  class="w-full object-cover object-center"
-                >
-                  <img
-                    :src="
-                      item.first_image?.thumbnails !== null
-                        ? item.first_image?.thumbnails['640x384']
-                        : item.first_image.image
-                    "
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    class="block max-w-full max-h-full"
-                  />
-                </div>
-                <p
-                  class="indent-5 text-pretty font-light first-letter:uppercase text-[1.4em]/[1.4em] sm:text-[1.1em]/[1.1em] lg:text-[0.8em]/[1.2em] mt-1"
-                >
-                  {{ item.description }}
-                </p>
-                <div class="grid grid-cols-2 p-1">
-                  <hr class="col-span-2 mt-2 text-orange-600" />
-                  <span
-                    class="font-light text-[0.76em]/[1em] place-content-center"
-                    >Место проведения:
-                  </span>
-                  <span>{{
-                    item.place !== null
-                      ? Locations[item.place?.location as unknown as string]
-                      : "Не указано"
-                  }}</span>
-                  <hr class="col-span-2 text-orange-600" />
-                  <span
-                    class="font-light text-[0.76em]/[1em] place-content-center"
-                    >Начало(время):</span
-                  >
-                  <span>{{
-                    item.daterange !== null &&
-                    item.daterange.start_time !== null
-                      ? FormatTimeFromNumber(
-                          item.daterange?.start_time as number
-                        )
-                      : "Не указано"
-                  }}</span>
-                </div>
-              </main>
-              <footer class="text-right p-2 place-content-center">
-                <NuxtLink :to="item.item_url" target="_blank">
-                  Первоисточник
-                </NuxtLink>
-              </footer>
-            </article>
+            <SearchCard
+              v-for="itm of value"
+              :key="itm.id"
+              :item="itm"
+              :date="key"
+            />
           </div>
         </div>
       </div>

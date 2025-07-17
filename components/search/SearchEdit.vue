@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import Search from "../svg/Search.vue";
 import Cross from "../svg/Cross.vue";
 import RoundCross from "../svg/RoundCross.vue";
 import { refDebounced } from "@vueuse/core";
 import { ref } from "vue";
 import { useI18n } from "#i18n";
+import { useResizeObserver } from "@vueuse/core";
 
-const delayDebonce: number = 1000;
+const delayDebonce: number = 1500;
 
 const props = defineProps<{ funcBlur: () => void }>();
 const searchRef = ref<HTMLInputElement | null>(null);
+const popRef = ref<HTMLDivElement>();
 
 const searchText = ref<string>("");
 
 const { t } = useI18n();
 
 const debouncedInput = refDebounced(searchText, delayDebonce);
+
+useResizeObserver(searchRef, (entries) => {
+  popoverPosition();
+});
 
 const handleClear = () => {
   searchText.value = "";
@@ -24,6 +29,17 @@ const handleClear = () => {
 
 const isKeyBoardPersist = () => {
   return "virtualKeyboard" in navigator;
+};
+
+const popoverPosition = () => {
+  if (searchRef.value) {
+    const popRect = (
+      searchRef.value as HTMLInputElement
+    ).getBoundingClientRect();
+    popRef.value?.style.setProperty("top", `${popRect.bottom - 2}px`);
+    popRef.value?.style.setProperty("left", `${popRect.x + 12}px`);
+    // console.log(popRect);
+  }
 };
 
 const showVirtualKeyboard = () => {
@@ -37,14 +53,31 @@ const showVirtualKeyboard = () => {
   }
 };
 
-const textToSerch = useState("searchTxt", () => "");
+const textToSearch = useState("searchTxt", () => "");
 
 watch(debouncedInput, () => {
-  textToSerch.value = debouncedInput.value;
+  textToSearch.value = debouncedInput.value;
+});
+
+watch(searchText, () => {
+  searchText.value.length <= SearchMinSymbolsLength
+    ? popRef.value?.showPopover()
+    : popRef.value?.hidePopover();
 });
 
 onMounted(() => {
   searchRef.value?.focus();
+
+  let timer = setTimeout(() => {
+    popoverPosition();
+    searchText.value.length <= SearchMinSymbolsLength
+      ? popRef.value?.showPopover()
+      : null;
+
+    clearTimeout(timer);
+  }, 500);
+
+  // window.addEventListener("resize", popoverPosition);
 });
 </script>
 
@@ -84,6 +117,15 @@ onMounted(() => {
       </button>
     </div>
   </form>
+  <div
+    popover="hint"
+    ref="popRef"
+    class="w-fit my-2 p-2 place-content-center bg-slate-800 text-white dark:bg-slate-600 dark:text-slate-200 first-letter:uppercase font-normal lowercase"
+  >
+    <small>
+      Введите не менее {{ SearchMinSymbolsLength + 1 }}-х символов для поиска
+    </small>
+  </div>
 </template>
 
 <style lang="css" scoped>

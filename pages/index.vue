@@ -20,7 +20,7 @@ import {
 import type { TMyLocale } from "~/types/myTypes";
 
 const { t, tm, rt, setLocale, defaultLocale } = useI18n();
-const i18nHead = useLocaleHead({ seo: { canonicalQueries: ["en"] } });
+const i18nHead = useLocaleHead({ seo: { canonicalQueries: ["ru"] } });
 
 const { length } = tm("mainTitle");
 const MainTitle: Array<string> = tm("mainTitle")

@@ -1,7 +1,6 @@
 import type {
   ISearchResult,
   ISearchRoot,
-  Search_Root,
   TGrouppedSearchData,
 } from "~/types/serchTypes";
 import type { Ref } from "vue";
@@ -12,23 +11,29 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
     data: searchdata,
     error,
     execute,
-  } = useAsyncData<ISearchRoot | TGrouppedSearchData>(
+  } = useAsyncData<ISearchRoot | TGrouppedSearchData | null>(
     `searchData-${randomIntegerFromMinMax(1, 100)}`,
-    async () =>
-      await $fetch<ISearchRoot, string>("/api/searchevent", {
-        headers: { "Content-Type": "application/json;utf-8" },
-        method: "GET",
-        retry: 3,
-        retryDelay: 500,
-        signal: AbortSignal.timeout(5000),
-        cache: "force-cache",
-        params: {
-          query: param.value,
-          page: paramPage.value,
-        },
-      }),
+    async () => {
+      if (param.value.length > SearchMinSymbolsLength) {
+        return await $fetch<ISearchRoot, string>("/api/searchevent", {
+          headers: { "Content-Type": "application/json;utf-8" },
+          method: "GET",
+          retry: 3,
+          retryDelay: 500,
+          signal: AbortSignal.timeout(5000),
+          cache: "force-cache",
+          params: {
+            query: param.value,
+            page: paramPage.value,
+          },
+        });
+      } else {
+        return null;
+      }
+    },
     {
       dedupe: "cancel",
+      immediate: false,
       lazy: true,
       watch: [param, paramPage],
       transform: (input) => {
@@ -37,6 +42,9 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
           isGroupped: false,
           results: [],
         };
+        if (input === null) {
+          return data;
+        }
         if ((input as ISearchRoot).results) {
           //Сгруппировать по дате начала
           let tmp = Object.groupBy(
