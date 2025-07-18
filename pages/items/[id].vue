@@ -4,8 +4,9 @@ import { ref, nextTick, onMounted } from "vue";
 import { useState } from "#app";
 import type { ISearchResult } from "~/types/serchTypes";
 import { ClientOnly } from "#components";
-import L, { type LeafletEventHandlerFn } from "leaflet";
+import L, { icon, type LeafletEventHandlerFn } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import marker from "~/components/svg/marker.vue";
 
 const router = useRouter();
 
@@ -35,19 +36,49 @@ const initLeafLetMap = () => {
       eventItem.value.place?.coords?.lon as number
     ),
     zoom: 16,
+    attributionControl: false,
   });
+
+  const mIcon = L.icon({
+    iconUrl: "/svg/markerIcon.svg",
+    iconSize: [36, 92],
+    // iconAnchor: [32, 91],
+    tooltipAnchor: [36, -5],
+  });
+
+  // const mIcon = L.divIcon({
+  //   className: "icon-class",
+  //   iconSize: [36, 92],
+  //   iconAnchor: [30, 91],
+  //   tooltipAnchor: [40, -45],
+  // });
+
+  const MyAttrControl = L.control.attribution().addTo(LeafletMap.value);
+  MyAttrControl.setPrefix("<a href='https://leafletjs.com/'>Maps</a>");
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 25,
-    attribution: "© OpenStreetMap contributors",
+    attribution: "© ",
+    subdomains: ["a", "b", "c"],
   }).addTo(LeafletMap.value);
+  //Транспорт
+  //Нужен ключ
+  // L.tileLayer(
+  //   "http://a.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png"
+  // ).addTo(LeafletMap.value);
+  // L.tileLayer(
+  //   "http://{s}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png"
+  // ).addTo(LeafletMap.value);
 
   // L.marker([52.103839, 4.252742], { icon: customDivIcon }).addTo(leafletMap.value)
   if (LeafletMap.value) {
-    const marker = L.marker([
-      eventItem.value.place?.coords?.lat as number,
-      eventItem.value.place?.coords?.lon as number,
-    ])
+    const marker = L.marker(
+      [
+        eventItem.value.place?.coords?.lat as number,
+        eventItem.value.place?.coords?.lon as number,
+      ],
+      { icon: mIcon, alt: Locations[eventItem.value.place.location] }
+    )
       .addTo(LeafletMap.value)
       .bindTooltip(
         (Locations[eventItem.value.place.location] +
@@ -127,8 +158,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.icon-class {
+  color: green;
+}
 .my-labels {
-  background-color: black;
-  color: white;
+  background-color: black !important;
+  color: white !important;
+}
+.leaflet-control-attribution {
+  display: none !important;
 }
 </style>

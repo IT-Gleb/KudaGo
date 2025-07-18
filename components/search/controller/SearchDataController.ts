@@ -42,7 +42,7 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
           isGroupped: false,
           results: [],
         };
-        if (input === null) {
+        if (input === null || input === undefined) {
           return data;
         }
         if ((input as ISearchRoot).results) {
