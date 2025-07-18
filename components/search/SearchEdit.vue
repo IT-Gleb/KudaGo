@@ -5,12 +5,15 @@ import { refDebounced } from "@vueuse/core";
 import { ref } from "vue";
 import { useI18n } from "#i18n";
 import { useResizeObserver } from "@vueuse/core";
+import { useRouter } from "vue-router";
 
 const delayDebonce: number = 1500;
 
 const props = defineProps<{ funcBlur: () => void }>();
 const searchRef = ref<HTMLInputElement | null>(null);
 const popRef = ref<HTMLDivElement>();
+
+const router = useRouter();
 
 const searchText = ref<string>("");
 
@@ -66,7 +69,9 @@ watch(searchText, () => {
 });
 
 onMounted(() => {
-  searchRef.value?.focus();
+  nextTick(() => {
+    searchRef.value?.focus();
+  });
 
   let timer = setTimeout(() => {
     popoverPosition();
@@ -79,13 +84,25 @@ onMounted(() => {
 
   // window.addEventListener("resize", popoverPosition);
 });
+
+const handlerRoute = async () => {
+  await router.push("/search");
+};
+
+const handlerSubmit = (): boolean => {
+  if (searchText.value.length > SearchMinSymbolsLength) {
+    handlerRoute();
+    return true;
+  }
+  return false;
+};
 </script>
 
 <template>
   <form
     class="flex items-start rounded-r-2xl overflow-hidden m-0 p-0 border-1 animoSearch"
     action=""
-    @submit.prevent="() => false"
+    @submit.prevent="handlerSubmit"
   >
     <input
       ref="searchRef"

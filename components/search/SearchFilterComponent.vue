@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { FormatDateFromNumber } from "~/utils/functions";
+import { ref } from "vue";
 import nextSvg from "../ui/svg/nextSvg.vue";
 
 const props = defineProps<{
@@ -20,7 +22,7 @@ const handlerOpen = () => {
   <section class="my-10 lg:text-[0.7em]/[1em] bg-slate-100 dark:bg-slate-800">
     <details :open="isOpen">
       <summary
-        class="bg-slate-300 p-2 flex gap-2 items-center justify-between cursor-pointer"
+        class="bg-slate-300 dark:bg-slate-800 p-2 flex gap-2 items-center justify-between cursor-pointer"
       >
         Отобрать по:
         {{
@@ -38,7 +40,7 @@ const handlerOpen = () => {
         >
           <next-svg
             class="transition-transform"
-            :class="isOpen ? ' rotate-90' : 'rotate-0'"
+            :class="isOpen ? ' -rotate-90' : 'rotate-90'"
           />
         </button>
       </summary>

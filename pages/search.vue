@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { useSearchData } from "~/components/search/controller/SearchDataController";
+import { useSearchData } from "../components/search/controller/SearchDataController";
 import type {
   ISearchResult,
   TGrouppedSearchData,
   TSearchDataObject,
-} from "~/types/serchTypes";
-import { FormatDateFromNumber } from "~/utils/functions";
-import loaderComponent from "~/components/loader/loaderComponent.vue";
-import SearchCard from "~/components/search/SearchCard.vue";
-import { useI18n } from "#i18n";
-import SearchFilterComponent from "~/components/search/SearchFilterComponent.vue";
-import UpBtn from "~/components/search/UpBtn.vue";
+} from "../types/serchTypes";
+import { FormatDateFromNumber } from "../utils/functions";
+import loaderComponent from "../components/loader/loaderComponent.vue";
+import SearchCard from "../components/search/SearchCard.vue";
+
+import SearchFilterComponent from "../components/search/SearchFilterComponent.vue";
+import UpBtn from "../components/search/UpBtn.vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+import { useHead, useState } from "nuxt/app";
 
 const { t } = useI18n();
 

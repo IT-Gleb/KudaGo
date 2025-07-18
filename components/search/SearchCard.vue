@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { ISearchResult } from "~/types/serchTypes";
+import { useState } from "#app";
 
 const props = defineProps<{ item: ISearchResult; date: number | string }>();
+const stateItem = useState<Partial<ISearchResult>>("eventItem", () => ({}));
+
+const handleSetItem = () => {
+  stateItem.value = props.item;
+};
 </script>
 
 <template>
@@ -9,9 +15,13 @@ const props = defineProps<{ item: ISearchResult; date: number | string }>();
     <header
       class="bg-orange-200 dark:bg-black h-[70px] p-1 place-content-center overflow-hidden line-clamp-3"
     >
-      <h6 class="font-['Roboto'] text-[1.3em]/[1.5em] lg:text-[0.9em]/[1.1em]">
-        {{ item.title }}
-      </h6>
+      <NuxtLink :to="`/items/${item.id}`" @click="handleSetItem">
+        <h6
+          class="font-['Roboto'] text-[1.3em]/[1.5em] lg:text-[0.9em]/[1.1em]"
+        >
+          {{ item.title }}
+        </h6>
+      </NuxtLink>
     </header>
     <main>
       <div v-if="item.first_image" class="w-full h-[160px] overflow-hidden">
