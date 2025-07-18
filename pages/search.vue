@@ -10,7 +10,7 @@ import loaderComponent from "~/components/loader/loaderComponent.vue";
 import SearchCard from "~/components/search/SearchCard.vue";
 import { useI18n } from "#i18n";
 import SearchFilterComponent from "~/components/search/SearchFilterComponent.vue";
-import type { VNodeRef } from "vue";
+import UpBtn from "~/components/search/UpBtn.vue";
 
 const { t } = useI18n();
 
@@ -36,6 +36,7 @@ const handleMain = () => {
 };
 
 const currentPage = ref<number>(1);
+const ActiveFilterItem = ref<string>("");
 
 const { status, searchdata, error, execute } = useSearchData(
   paramSearch,
@@ -58,10 +59,18 @@ useHead({
   ],
 });
 
-const handleFilter = (paramKey: string, paramIndex: number) => {
+const ClearScrollTimer = () => {
+  if (scrollTimer.value !== null) {
+    clearTimeout(scrollTimer.value);
+  }
+  scrollTimer.value = null;
+};
+
+const handlerFilter = (paramKey: string, paramIndex: number) => {
   let tmp: ISearchResult[] = [];
 
   const isNoDate = paramKey === "unknow";
+  ActiveFilterItem.value = "";
 
   if (searchdata.value && searchdata.value.results) {
     tmp = Array.from(
@@ -75,6 +84,7 @@ const handleFilter = (paramKey: string, paramIndex: number) => {
       {},
       { [isNoDate ? "unknow" : Number(paramKey)]: tmp }
     );
+    ActiveFilterItem.value = Object.keys(searchdata.value.results)[paramIndex];
   }
 
   scrollTimer.value = setTimeout(() => {
@@ -87,12 +97,12 @@ const handleFilter = (paramKey: string, paramIndex: number) => {
         inline: "nearest",
       });
     }
-    clearTimeout(scrollTimer.value as NodeJS.Timeout);
-    scrollTimer.value = null;
+    ClearScrollTimer();
   }, 600);
 };
 
 const handlerCancelFilter = () => {
+  ActiveFilterItem.value = "";
   if (searchdata.value && "isGroupped" in searchdata.value) {
     FilteredData.value = Object.assign(
       {},
@@ -109,11 +119,12 @@ watch(
   { deep: true }
 );
 
+onMounted(() => {
+  execute();
+});
+
 onUnmounted(() => {
-  if (scrollTimer.value !== null) {
-    clearTimeout(scrollTimer.value as NodeJS.Timeout);
-  }
-  scrollTimer.value = null;
+  ClearScrollTimer();
 });
 </script>
 
@@ -180,9 +191,10 @@ onUnmounted(() => {
 
       <SearchFilterComponent
         :items="Object.keys(searchdata?.results as unknown as string[]) "
-        :run-filter="handleFilter"
+        :run-filter="handlerFilter"
         :cancel-filter="handlerCancelFilter"
         :disabled-button="searchdata?.count === FilteredData.count"
+        :active-item="ActiveFilterItem"
       />
 
       <div class="my-10 font-light">
@@ -216,6 +228,7 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+    <UpBtn v-if="serchItems > 1" />
   </section>
 </template>
 
