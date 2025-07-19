@@ -20,7 +20,7 @@ async function Fetcher(paramUrl: string): Promise<ISearchRoot> {
       retry: 3,
       retryDelay: 500,
       cache: "no-store",
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(20000),
     });
 
     data = JSON.parse(await (req as Blob).text()) satisfies ISearchRoot;
@@ -98,12 +98,12 @@ export default defineEventHandler(async (event) => {
   }
   const _searchUrl = new URL(`http://localhost${event.path}`);
   const query = _searchUrl.searchParams.get("query") ?? "";
-  const page = _searchUrl.searchParams.get("page") ?? "1";
+  // const page = _searchUrl.searchParams.get("page") ?? "1";
 
   // console.log(query);
   const searchUrl = new URL(shablonUrl);
   searchUrl.searchParams.set("q", query.trim());
-  searchUrl.searchParams.set("page", page.trim());
+  // searchUrl.searchParams.set("page", page.trim());
   let nullData: ISearchRoot = {
     count: 0,
     next: null,

@@ -38,13 +38,11 @@ const handlerMain = () => {
   router.replace({ path: "/" });
 };
 
-const currentPage = ref<number>(1);
+// const currentPage = ref<number>(1);
 const ActiveFilterItem = ref<string>("");
 
-const { status, searchdata, error, execute, clear } = useSearchData(
-  paramSearch,
-  currentPage
-);
+const { status, searchdata, error, execute, clear } =
+  useSearchData(paramSearch);
 
 const serchItems = computed(() => {
   if (searchdata.value) {
@@ -121,10 +119,6 @@ watch(
   },
   { deep: true }
 );
-
-onMounted(() => {
-  execute();
-});
 
 onUnmounted(() => {
   ClearScrollTimer();

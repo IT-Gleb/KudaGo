@@ -5,7 +5,8 @@ import type {
 } from "~/types/serchTypes";
 import type { Ref } from "vue";
 
-export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
+// , paramPage: Ref<number>
+export const useSearchData = (param: Ref<string>) => {
   const {
     status,
     data: searchdata,
@@ -21,11 +22,11 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
           method: "GET",
           retry: 3,
           retryDelay: 500,
-          signal: AbortSignal.timeout(5000),
+          signal: AbortSignal.timeout(20000),
           cache: "force-cache",
           params: {
             query: param.value,
-            page: paramPage.value,
+            //page: paramPage.value,
           },
         });
       } else {
@@ -34,9 +35,9 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
     },
     {
       dedupe: "cancel",
-      immediate: false,
+      immediate: true,
       lazy: true,
-      watch: [param, paramPage],
+      watch: [param],
       transform: (input) => {
         let data: TGrouppedSearchData = {
           count: 0,

@@ -91,10 +91,10 @@ export default defineNuxtConfig({
     // },
     "/api/searchevent": {
       ssr: false,
-      swr: true,
-      cache: {
-        maxAge: 10,
-      },
+      // swr: true,
+      // cache: {
+      //   maxAge: 10,
+      // },
     },
     "/api/cityes": {
       swr: true,
