@@ -11,6 +11,7 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
     data: searchdata,
     error,
     execute,
+    clear,
   } = useAsyncData<ISearchRoot | TGrouppedSearchData | null>(
     `searchData-${randomIntegerFromMinMax(1, 100)}`,
     async () => {
@@ -74,5 +75,5 @@ export const useSearchData = (param: Ref<string>, paramPage: Ref<number>) => {
       },
     }
   );
-  return { status, error, searchdata, execute };
+  return { status, error, searchdata, execute, clear };
 };

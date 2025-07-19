@@ -11,7 +11,7 @@ import {
   type ChartConfiguration,
   type ChartOptions,
 } from "chart.js";
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onMounted, nextTick } from "vue";
 import { calculateColor, PieStore } from "~/store/pieStore";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
@@ -20,7 +20,7 @@ import { useI18n } from "#i18n";
 
 const { t } = useI18n();
 
-const timerCreateChart = ref<NodeJS.Timeout | null>(null);
+// const timerCreateChart = ref<NodeJS.Timeout | null>(null);
 
 ChartJS.register(
   PieController,
@@ -129,26 +129,31 @@ const ChartConfig: ChartConfiguration = {
 };
 
 onMounted(() => {
-  if (ChartRef.value !== null) {
-    PieChart.value = new ChartJS(ChartRef.value, ChartConfig);
-  } else {
-    timerCreateChart.value = setTimeout(() => {
-      // console.log("Graph");
+  nextTick(() => {
+    if (ChartRef.value !== null) {
+      PieChart.value = new ChartJS(ChartRef.value, ChartConfig);
+    }
+  });
+  // if (ChartRef.value !== null) {
+  //   PieChart.value = new ChartJS(ChartRef.value, ChartConfig);
+  // } else {
+  //   timerCreateChart.value = setTimeout(() => {
+  //     // console.log("Graph");
 
-      PieChart.value = new ChartJS(
-        ChartRef.value as HTMLCanvasElement,
-        ChartConfig
-      );
-    }, 1000);
-  }
+  //     PieChart.value = new ChartJS(
+  //       ChartRef.value as HTMLCanvasElement,
+  //       ChartConfig
+  //     );
+  //   }, 1000);
+  // }
   //(PieChart.value as ChartJS).draw();
 });
 
 onUnmounted(() => {
-  if (timerCreateChart.value !== null) {
-    clearTimeout(timerCreateChart.value);
-    timerCreateChart.value = null;
-  }
+  // if (timerCreateChart.value !== null) {
+  //   clearTimeout(timerCreateChart.value);
+  //   timerCreateChart.value = null;
+  // }
   if (PieChart.value) {
     (PieChart.value as ChartJS).destroy();
     PieChart.value = null;

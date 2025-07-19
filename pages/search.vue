@@ -34,14 +34,14 @@ const isSearchParam = computed(
 
 const scrollTimer = ref<NodeJS.Timeout | null>(null);
 
-const handleMain = () => {
+const handlerMain = () => {
   router.replace({ path: "/" });
 };
 
 const currentPage = ref<number>(1);
 const ActiveFilterItem = ref<string>("");
 
-const { status, searchdata, error, execute } = useSearchData(
+const { status, searchdata, error, execute, clear } = useSearchData(
   paramSearch,
   currentPage
 );
@@ -138,7 +138,7 @@ onUnmounted(() => {
         type="button"
         aria-label="На главную"
         class="min-w-[60px] min-h-[30px] p-2 place-content-center bg-slate-600 text-slate-100 active:scale-90 cursor-pointer"
-        @click="handleMain"
+        @click="handlerMain"
       >
         На главную
       </button>
@@ -153,7 +153,12 @@ onUnmounted(() => {
         type="button"
         aria-label="Обновить"
         class="min-w-[60px] min-h-[30px] p-1 bg-indigo-950 text-slate-300 active:scale-90 cursor-pointer rounded-md"
-        @click="async () => await execute()"
+        @click="
+          async () => {
+            clear();
+            await execute();
+          }
+        "
       >
         Обновить
       </button>

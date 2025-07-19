@@ -9,37 +9,12 @@ import {
   ExtractParagraphData,
 } from "~/utils/functions";
 
-export default defineEventHandler(async (event) => {
-  const shablonUrl: string =
-    "https://kudago.com/public-api/v1.4/search/?q=&lang=&expand=place,dates&page=1&page_size=100&location=&ctype=event&is_free=&lat=&lon=&radius=&text_format=text";
+const pageSize: number = 100;
 
-  if (event.method !== "GET") {
-    return {
-      errorMsg: "Не верный метод получения данных",
-      type: "NoGetMethod",
-    };
-  }
-  const _searchUrl = new URL(`http://localhost${event.path}`);
-  const query = _searchUrl.searchParams.get("query") ?? "";
-  const page = _searchUrl.searchParams.get("page") ?? "1";
-
-  // console.log(query);
-  const searchUrl = new URL(shablonUrl);
-  searchUrl.searchParams.set("q", query.trim());
-  searchUrl.searchParams.set("page", page.trim());
-  let data: ISearchRoot = {
-    count: 0,
-    next: null,
-    previous: null,
-    results: [],
-  };
-
-  if (query.trim() === "") {
-    return data;
-  }
-
+async function Fetcher(paramUrl: string): Promise<ISearchRoot> {
+  let data: ISearchRoot = { count: 0, next: null, previous: null, results: [] };
   try {
-    const req = await $fetch<Blob, string>(searchUrl.toString(), {
+    const req = await $fetch<Blob, string>(paramUrl, {
       headers: { "Content-Type": "application/json;utf-8" },
       method: "GET",
       retry: 3,
@@ -51,6 +26,8 @@ export default defineEventHandler(async (event) => {
     data = JSON.parse(await (req as Blob).text()) satisfies ISearchRoot;
     // const bdtext = JSON.parse(data.results[0].body_text);
     // return bdtext;
+    // console.log(data.count);
+
     let tmp: ISearchResult[] = [];
 
     //Отфильтровать по дате равной или больше текущей
@@ -94,14 +71,76 @@ export default defineEventHandler(async (event) => {
       }
     });
     data.results = Array.from(tmp);
-    data.count = tmp.length;
+    // data.count = tmp.length;
+    data.next = null;
+    data.previous = null;
 
     return data;
   } catch (err) {
-    if ((err as Error).name === "AbortError") {
-      return { errorMsg: "Превышено время ожидания...", type: "AbortError" };
-    } else {
-      return { errorMsg: (err as Error).message, type: (err as Error).name };
-    }
+    console.log(err);
+    return {
+      count: 0,
+      next: null,
+      previous: null,
+      results: [],
+    } satisfies ISearchRoot;
   }
+}
+
+export default defineEventHandler(async (event) => {
+  const shablonUrl: string = `https://kudago.com/public-api/v1.4/search/?q=&lang=&expand=place,dates&page=&page_size=${pageSize}&location=&ctype=event&is_free=&lat=&lon=&radius=&text_format=text`;
+
+  if (event.method !== "GET") {
+    return {
+      errorMsg: "Не верный метод получения данных",
+      type: "NoGetMethod",
+    };
+  }
+  const _searchUrl = new URL(`http://localhost${event.path}`);
+  const query = _searchUrl.searchParams.get("query") ?? "";
+  const page = _searchUrl.searchParams.get("page") ?? "1";
+
+  // console.log(query);
+  const searchUrl = new URL(shablonUrl);
+  searchUrl.searchParams.set("q", query.trim());
+  searchUrl.searchParams.set("page", page.trim());
+  let nullData: ISearchRoot = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+  };
+  let searchData: ISearchRoot = Object.assign({}, nullData);
+
+  if (query.trim() === "") {
+    return nullData;
+  }
+
+  let maxCount: number = Math.ceil(pageSize / pageSize);
+  let workIndex: number = 1;
+
+  // let workSet = new Set();
+
+  while (workIndex <= maxCount) {
+    searchUrl.searchParams.set("page", `${workIndex}`);
+    const tmp: ISearchRoot = await Fetcher(searchUrl.toString());
+
+    if (tmp.count !== 0 && tmp.count !== null) {
+      maxCount = Math.ceil((tmp.count as number) / pageSize);
+    }
+
+    if (tmp.results) {
+      // tmp.results.forEach((item) => workSet.add(item.id));
+
+      (searchData.results as ISearchResult[]) = (
+        searchData.results as ISearchResult[]
+      ).concat(tmp.results);
+    }
+
+    workIndex++;
+  }
+  (searchData.count as number) = (searchData.results as ISearchResult[]).length;
+  // console.log(workSet.size);
+
+  return searchData;
 });

@@ -83,8 +83,11 @@ const handleSetItem = () => {
       </div>
     </main>
     <footer
-      class="text-right p-2 place-content-center bg-orange-100 dark:bg-black"
+      class="text-right p-2 place-content-center bg-orange-100 dark:bg-black flex gap-2 justify-between"
     >
+      <NuxtLink :to="`/items/${item.id}`" @click="handleSetItem">
+        <small>Подробнее</small>
+      </NuxtLink>
       <NuxtLink :to="item.item_url" target="_blank">
         <small>Первоисточник</small>
       </NuxtLink>
