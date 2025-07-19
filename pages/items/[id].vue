@@ -2,11 +2,10 @@
 import { useRouter } from "vue-router";
 import { ref, nextTick, onMounted } from "vue";
 import { useState } from "#app";
-import type { ISearchResult } from "~/types/serchTypes";
+import type { ISearchResult, TSearchEditObject } from "~/types/serchTypes";
 import { ClientOnly } from "#components";
 import L, { icon, type LeafletEventHandlerFn } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import marker from "~/components/svg/marker.vue";
 
 const router = useRouter();
 
@@ -19,6 +18,8 @@ const handlerBack = () => {
 const handlerMain = () => {
   router.push("/");
 };
+
+const parametres = useState<TSearchEditObject>("searchTxt");
 
 const eventItem = useState<Partial<ISearchResult>>("eventItem");
 
@@ -110,6 +111,14 @@ onMounted(() => {
 <template>
   <ClientOnly>
     <section class="p-2 text-[1em]/[1.2em] lg:text-[0.8rem]/[1rem]">
+      <div>
+        <div>
+          {{ parametres.id }}
+        </div>
+        <div>
+          {{ parametres.searchTxt }}
+        </div>
+      </div>
       <div class="w-fit mx-auto my-10">
         {{ $route.params.id }}
         <div>{{ eventItem.id }}</div>

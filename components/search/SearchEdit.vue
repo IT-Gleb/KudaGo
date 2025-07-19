@@ -6,6 +6,8 @@ import { ref } from "vue";
 import { useI18n } from "#i18n";
 import { useResizeObserver } from "@vueuse/core";
 import { useRouter } from "vue-router";
+import type { TSearchEditObject } from "~/types/serchTypes";
+import { StringToId } from "~/utils/functions";
 
 const delayDebonce: number = 1500;
 
@@ -56,10 +58,14 @@ const showVirtualKeyboard = () => {
   }
 };
 
-const textToSearch = useState("searchTxt", () => "");
+const textToSearch = useState<TSearchEditObject>("searchTxt", () => ({
+  id: 0,
+  searchTxt: "",
+}));
 
 watch(debouncedInput, () => {
-  textToSearch.value = debouncedInput.value.trim();
+  textToSearch.value.searchTxt = debouncedInput.value.trim();
+  textToSearch.value.id = StringToId(debouncedInput.value.trim());
 });
 
 watch(searchText, () => {

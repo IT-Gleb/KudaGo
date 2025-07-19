@@ -224,3 +224,8 @@ export interface Search_Data7 {
   currentLinkEntityKey: string;
 }
 //-----------------------------------
+
+export type TSearchEditObject = {
+  id: number;
+  searchTxt: string;
+};

@@ -2,6 +2,7 @@
 import SearchEdit from "./SearchEdit.vue";
 import Search from "../svg/Search.vue";
 import { useI18n } from "#i18n";
+import type { TSearchEditObject } from "~/types/serchTypes";
 
 const { t } = useI18n();
 
@@ -21,8 +22,8 @@ defineExpose({ handleShow });
 
 watch(
   useState("searchTxt"),
-  (newValue: string) => {
-    if (newValue.trim().length > SearchMinSymbolsLength) {
+  (newValue: TSearchEditObject) => {
+    if (newValue.searchTxt.trim().length > SearchMinSymbolsLength) {
       // console.log("нужно искать по строке: ", newValue);
       router.push({ path: "/search" });
     }

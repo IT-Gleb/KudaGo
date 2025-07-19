@@ -2,11 +2,16 @@ import type {
   ISearchResult,
   ISearchRoot,
   TGrouppedSearchData,
+  TSearchEditObject,
 } from "~/types/serchTypes";
 import type { Ref } from "vue";
 
 // , paramPage: Ref<number>
-export const useSearchData = (param: Ref<string>) => {
+
+export const useSearchData = (
+  paramId: Ref<string>,
+  param: Ref<TSearchEditObject>
+) => {
   const {
     status,
     data: searchdata,
@@ -14,9 +19,9 @@ export const useSearchData = (param: Ref<string>) => {
     execute,
     clear,
   } = useAsyncData<ISearchRoot | TGrouppedSearchData | null>(
-    `searchData-${randomIntegerFromMinMax(1, 100)}`,
+    paramId,
     async () => {
-      if (param.value.length > SearchMinSymbolsLength) {
+      if (param.value.searchTxt.length > SearchMinSymbolsLength) {
         return await $fetch<ISearchRoot, string>("/api/searchevent", {
           headers: { "Content-Type": "application/json;utf-8" },
           method: "GET",
@@ -25,7 +30,7 @@ export const useSearchData = (param: Ref<string>) => {
           signal: AbortSignal.timeout(20000),
           cache: "force-cache",
           params: {
-            query: param.value,
+            query: param.value.searchTxt,
             //page: paramPage.value,
           },
         });
@@ -35,8 +40,8 @@ export const useSearchData = (param: Ref<string>) => {
     },
     {
       dedupe: "cancel",
+      lazy: false,
       immediate: true,
-      lazy: true,
       watch: [param],
       transform: (input) => {
         let data: TGrouppedSearchData = {

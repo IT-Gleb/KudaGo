@@ -4,6 +4,7 @@ import type {
   ISearchResult,
   TGrouppedSearchData,
   TSearchDataObject,
+  TSearchEditObject,
 } from "../types/serchTypes";
 import { FormatDateFromNumber } from "../utils/functions";
 import loaderComponent from "../components/loader/loaderComponent.vue";
@@ -21,7 +22,12 @@ const itemsOnPage: number = 15;
 
 const router = useRouter();
 
-const paramSearch = useState<string>("searchTxt");
+const paramSearch = useState<TSearchEditObject>("searchTxt");
+const paramSearchId = computed(() =>
+  paramSearch.value.id !== 0
+    ? `SerchData-${paramSearch.value.id}`
+    : `SerchData-${randomIntegerFromMinMax(1, 100)}`
+);
 const FilteredData = ref<TGrouppedSearchData>({
   count: 0,
   isGroupped: false,
@@ -29,7 +35,7 @@ const FilteredData = ref<TGrouppedSearchData>({
 });
 
 const isSearchParam = computed(
-  () => paramSearch.value && paramSearch.value.trim().length > 0
+  () => paramSearch.value && paramSearch.value.searchTxt.trim().length > 0
 );
 
 const scrollTimer = ref<NodeJS.Timeout | null>(null);
@@ -41,8 +47,10 @@ const handlerMain = () => {
 // const currentPage = ref<number>(1);
 const ActiveFilterItem = ref<string>("");
 
-const { status, searchdata, error, execute, clear } =
-  useSearchData(paramSearch);
+const { status, searchdata, error, execute, clear } = useSearchData(
+  paramSearchId,
+  paramSearch
+);
 
 const serchItems = computed(() => {
   if (searchdata.value) {
@@ -139,8 +147,8 @@ onUnmounted(() => {
 
       <div>
         Параметры поиска:
-        <span v-if="paramSearch !== ''"
-          ><mark>{{ paramSearch }}</mark></span
+        <span v-if="paramSearch.searchTxt !== ''"
+          ><mark>{{ paramSearch.searchTxt }}</mark></span
         >
       </div>
       <button

@@ -513,3 +513,18 @@ export async function Wait(paramMs: number) {
     }, paramMs);
   });
 }
+
+//Сгенерировать id из сторки для поиска в cashe
+export function StringToId(param: string) {
+  let hash: number = 0;
+  if (param.trim() === "") {
+    return hash;
+  }
+
+  for (let i: number = 0; i < param.length; i++) {
+    let char = param.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
