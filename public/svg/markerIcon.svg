@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M9 11L11 13L15 9M19 10.2C19 14.1764 15.5 17.4 12 21C8.5 17.4 5 14.1764 5 10.2C5 6.22355 8.13401 3 12 3C15.866 3 19 6.22355 19 10.2Z" stroke="#1e40af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 30 45" fill="none">
+<path id="path_S1" fill="#669cf7" fill-rule="evenodd" stroke="#117191" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M 15.000 2.045 C 9.339 2.045 6.332 6.831 4.773 12.273 C 1.287 24.441 14.999 42.951 15.000 42.955 C 15.001 42.951 28.713 24.441 25.227 12.273 C 23.668 6.831 20.661 2.045 15.000 2.045 Z"/>
+<path id="path_S2" fill="#cee3ff" fill-rule="evenodd" stroke="#117191" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M 15.000 7.159 C 12.170 7.159 9.886 9.442 9.886 12.273 C 9.886 15.103 12.170 17.386 15.000 17.386 C 17.830 17.386 20.114 15.103 20.114 12.273 C 20.114 9.442 17.830 7.159 15.000 7.159 Z"/>
 </svg>

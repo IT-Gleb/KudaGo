@@ -214,6 +214,10 @@ onUnmounted(() => {
               (keyO as string) === "unknow"
                 ? "Дата начала не указана"
                 : FormatDateFromNumber(Number(keyO))
+            }}{{
+              FilteredData.count !== searchdata?.count
+                ? ` (${FilteredData.count})`
+                : ""
             }}
           </h5>
           <hr class="text-orange-700 dark:text-slate-500" />

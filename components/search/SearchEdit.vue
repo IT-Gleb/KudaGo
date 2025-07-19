@@ -137,10 +137,13 @@ const handlerSubmit = (): boolean => {
   <div
     popover="hint"
     ref="popRef"
-    class="w-fit my-2 p-2 place-content-center bg-slate-800 text-white dark:bg-slate-600 dark:text-slate-200 first-letter:uppercase font-normal lowercase"
+    class="w-fit my-2 p-2 place-content-center bg-slate-800 text-white dark:bg-slate-600 dark:text-slate-200 first-letter:uppercase font-normal lowercase indent-2 text-left"
   >
     <small>
-      Введите не менее {{ SearchMinSymbolsLength + 1 }}-х символов для поиска
+      Поиск по событиям например:
+      <span class="text-green-400">стендап</span>.
+      <span class="uppercase">В</span>ведите не менее
+      {{ SearchMinSymbolsLength + 1 }}-х символов для поиска.
     </small>
   </div>
 </template>

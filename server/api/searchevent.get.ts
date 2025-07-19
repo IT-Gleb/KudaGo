@@ -132,9 +132,9 @@ export default defineEventHandler(async (event) => {
     if (tmp.results) {
       // tmp.results.forEach((item) => workSet.add(item.id));
 
-      (searchData.results as ISearchResult[]) = (
-        searchData.results as ISearchResult[]
-      ).concat(tmp.results);
+      searchData.results = searchData.results?.concat(
+        tmp.results
+      ) as ISearchResult[];
     }
 
     workIndex++;

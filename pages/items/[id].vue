@@ -41,9 +41,9 @@ const initLeafLetMap = () => {
 
   const mIcon = L.icon({
     iconUrl: "/svg/markerIcon.svg",
-    iconSize: [36, 92],
+    iconSize: [24, 50],
     // iconAnchor: [32, 91],
-    tooltipAnchor: [36, -5],
+    tooltipAnchor: [45, -8],
   });
 
   // const mIcon = L.divIcon({
