@@ -8,7 +8,7 @@ const handlerUp = () => {
 
 <template>
   <div
-    class="fixed right-1 top-[94%] bg-slate-900 text-white px-1 py-[2px] border-2 border-slate-50 rounded-lg"
+    class="fixed right-2 top-[90%] w-fit bg-slate-900 text-white px-1 py-[2px] outline-2 outline-offset-2 outline-indigo-950 dark:outline-green-500 border-2 border-slate-50 rounded-full"
   >
     <button
       type="button"

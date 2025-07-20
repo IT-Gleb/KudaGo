@@ -23,12 +23,13 @@ watch(isRusLocale, async (newValue: boolean) => {
 });
 
 onBeforeMount(async () => {
-  const item: TMyLocale = localStorage.getItem("locale") as TMyLocale;
+  let item: TMyLocale = localStorage.getItem("locale") as TMyLocale;
   if (item !== null) {
     setLocale(item);
   } else {
-    await setLocale(defaultLocale);
-    localStorage.setItem("locale", defaultLocale);
+    item = defaultLocale;
+    await setLocale(item);
+    localStorage.setItem("locale", item);
   }
   isRusLocale.value = item === "ru";
 });
