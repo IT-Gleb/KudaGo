@@ -15,7 +15,7 @@ const handleSetItem = () => {
     <header
       class="bg-orange-200 dark:bg-black h-[70px] p-1 place-content-center overflow-hidden line-clamp-3"
     >
-      <NuxtLink :to="`/items/${item.id}`" @click="handleSetItem">
+      <NuxtLink :to="`/searcheditems/${item.id}`" @click="handleSetItem">
         <h6
           class="font-['Roboto'] text-[1.3em]/[1.5em] lg:text-[0.9em]/[1.1em]"
         >
@@ -85,7 +85,7 @@ const handleSetItem = () => {
     <footer
       class="text-right p-2 place-content-center bg-orange-100 dark:bg-black flex gap-2 justify-between"
     >
-      <NuxtLink :to="`/items/${item.id}`" @click="handleSetItem">
+      <NuxtLink :to="`/searcheditems/${item.id}`" @click="handleSetItem">
         <small>Подробнее</small>
       </NuxtLink>
       <NuxtLink :to="item.item_url" target="_blank">

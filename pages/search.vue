@@ -15,6 +15,7 @@ import UpBtn from "../components/search/UpBtn.vue";
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useHead, useState } from "nuxt/app";
+import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
 
 const { t } = useI18n();
 
@@ -24,7 +25,7 @@ const router = useRouter();
 
 const paramSearch = useState<TSearchEditObject>("searchTxt");
 const paramSearchId = computed(() =>
-  paramSearch.value.id !== 0
+  paramSearch.value && paramSearch.value.id !== 0
     ? `SerchData-${paramSearch.value.id}`
     : `SerchData-${randomIntegerFromMinMax(1, 100)}`
 );
@@ -134,118 +135,125 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="p-1 lg:w-[80%] mx-auto">
-    <div class="flex flex-row items-center justify-between my-10">
-      <button
-        type="button"
-        aria-label="На главную"
-        class="min-w-[60px] min-h-[30px] p-2 place-content-center bg-slate-600 text-slate-100 active:scale-90 cursor-pointer"
-        @click="handlerMain"
-      >
-        На главную
-      </button>
-
-      <div>
-        Параметры поиска:
-        <span v-if="paramSearch.searchTxt !== ''"
-          ><mark>{{ paramSearch.searchTxt }}</mark></span
+  <NuxtErrorBoundary
+    @error="
+      () => {
+        console.log('Error on seach page');
+      }
+    "
+  >
+    <section class="p-1 lg:w-[80%] mx-auto">
+      <div class="flex flex-row items-center justify-between my-10">
+        <button
+          type="button"
+          aria-label="На главную"
+          class="min-w-[60px] min-h-[30px] p-2 place-content-center bg-slate-600 text-slate-100 active:scale-90 cursor-pointer"
+          @click="handlerMain"
         >
+          На главную
+        </button>
+
+        <div>
+          Параметры поиска:
+          <span v-if="paramSearch.searchTxt !== ''"
+            ><mark>{{ paramSearch.searchTxt }}</mark></span
+          >
+        </div>
+        <button
+          type="button"
+          aria-label="Обновить"
+          class="min-w-[60px] min-h-[30px] p-1 bg-indigo-950 text-slate-300 active:scale-90 cursor-pointer rounded-md"
+          @click="
+            async () => {
+              clear();
+              await execute();
+            }
+          "
+        >
+          Обновить
+        </button>
       </div>
-      <button
-        type="button"
-        aria-label="Обновить"
-        class="min-w-[60px] min-h-[30px] p-1 bg-indigo-950 text-slate-300 active:scale-90 cursor-pointer rounded-md"
-        @click="
-          async () => {
-            clear();
-            await execute();
-          }
+
+      <div v-if="!isSearchParam" class="w-fit mx-auto my-10">
+        <h4>Не введены параметры поиска</h4>
+      </div>
+
+      <div class="my-10">
+        <div
+          v-if="status === 'pending'"
+          class="w-[34px] h-[34px] mx-auto text-orange-600 dark:text-slate-400"
+        >
+          <loader-component />
+        </div>
+        <div v-if="error !== null">{{ error }}</div>
+      </div>
+      <div
+        v-if="
+          status !== 'pending' &&
+          status !== 'error' &&
+          serchItems < 1 &&
+          isSearchParam
         "
       >
-        Обновить
-      </button>
-    </div>
-
-    <div v-if="!isSearchParam" class="w-fit mx-auto my-10">
-      <h4>Не введены параметры поиска</h4>
-    </div>
-
-    <div class="my-10">
-      <div
-        v-if="status === 'pending'"
-        class="w-[34px] h-[34px] mx-auto text-orange-600 dark:text-slate-400"
-      >
-        <loader-component />
+        <h4>Нет Данных</h4>
       </div>
-      <div v-if="error !== null">{{ error }}</div>
-    </div>
-    <div
-      v-if="
-        status !== 'pending' &&
-        status !== 'error' &&
-        serchItems < 1 &&
-        isSearchParam
-      "
-    >
-      <h4>Нет Данных</h4>
-    </div>
 
-    <div
-      v-if="
-        (status === 'success' || status === 'idle') &&
-        serchItems > 0 &&
-        isSearchParam
-      "
-    >
-      Найдено: {{ serchItems }}
+      <div
+        v-if="
+          (status === 'success' || status === 'idle') &&
+          serchItems > 0 &&
+          isSearchParam
+        "
+      >
+        Найдено: {{ serchItems }}
 
-      <SearchFilterComponent
-        :items="Object.keys(searchdata?.results as unknown as string[]) "
-        :run-filter="handlerFilter"
-        :cancel-filter="handlerCancelFilter"
-        :disabled-button="searchdata?.count === FilteredData.count"
-        :active-item="ActiveFilterItem"
-      />
+        <SearchFilterComponent
+          :items="Object.keys(searchdata?.results as unknown as string[]) "
+          :run-filter="handlerFilter"
+          :cancel-filter="handlerCancelFilter"
+          :disabled-button="searchdata?.count === FilteredData.count"
+          :active-item="ActiveFilterItem"
+        />
 
-      <div class="my-10 font-light">
-        <div
-          v-for="([keyO, value], index) in Object.entries(FilteredData.results as
-          TSearchDataObject)"
-          :key="keyO"
-          :id="keyO"
-          class="my-5 font-bold font-['Roboto'] p-1"
-        >
-          <h5
-            class="text-orange-600 dark:text-slate-200 text-[1.8em]/[2.1em] lg:text-[1rem]/[1.2rem]"
-          >
-            {{
-              (keyO as string) === "unknow"
-                ? "Дата начала не указана"
-                : FormatDateFromNumber(Number(keyO))
-            }}{{
-              FilteredData.count !== searchdata?.count
-                ? ` (${FilteredData.count})`
-                : ""
-            }}
-          </h5>
-          <hr class="text-orange-700 dark:text-slate-500" />
+        <div class="my-10 font-light">
           <div
-            class="mx-2 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            v-for="([keyO, value], index) in Object.entries(FilteredData.results as
+          TSearchDataObject)"
+            :key="keyO"
+            :id="keyO"
+            class="my-5 font-bold font-['Roboto'] p-1"
           >
-            <SearchCard
-              v-for="itm of value"
-              :key="itm.id"
-              :item="itm"
-              :date="keyO"
-            />
+            <h5
+              class="text-orange-600 dark:text-slate-200 text-[1.8em]/[2.1em] lg:text-[1rem]/[1.2rem]"
+            >
+              {{
+                (keyO as string) === "unknow"
+                  ? "Дата начала не указана"
+                  : FormatDateFromNumber(Number(keyO))
+              }}{{
+                FilteredData.count !== searchdata?.count
+                  ? ` (${FilteredData.count})`
+                  : ""
+              }}
+            </h5>
+            <hr class="text-orange-700 dark:text-slate-500" />
+            <div
+              class="mx-2 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            >
+              <SearchCard
+                v-for="itm of value"
+                :key="itm.id"
+                :item="itm"
+                :date="keyO"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <UpBtn v-if="serchItems > 1" />
-  </section>
+      <UpBtn v-if="serchItems > 1" />
+    </section>
+    <template #error="{ error, clearError }">
+      <MyErrorComponent :err-object="error" :err-fn="clearError" />
+    </template>
+  </NuxtErrorBoundary>
 </template>
-
-<!--
-   v-for="([key, value], index) in Object.entries(searchdata?.results as TSearchDataObject)"
- -->

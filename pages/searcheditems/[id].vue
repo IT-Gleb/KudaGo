@@ -2,10 +2,17 @@
 import { useRouter } from "vue-router";
 import { ref, nextTick, onMounted } from "vue";
 import { useState } from "#app";
-import type { ISearchResult, TSearchEditObject } from "~/types/serchTypes";
+import type {
+  ISearchResult,
+  ISerchPlace,
+  TSearchEditObject,
+} from "~/types/serchTypes";
 import { ClientOnly } from "#components";
 import L, { icon, type LeafletEventHandlerFn } from "leaflet";
 import "leaflet/dist/leaflet.css";
+
+const mapMaxZoom: number = 19;
+const currentMapZoom: number = 16;
 
 const router = useRouter();
 
@@ -22,13 +29,31 @@ const handlerMain = () => {
 const parametres = useState<TSearchEditObject>("searchTxt");
 
 const eventItem = useState<Partial<ISearchResult>>("eventItem");
+eventItem.value.body_text = JSON.parse(eventItem.value.body_text as string);
 
 useHead({
   title: `${eventItem.value.title}:[Kuda-Go]`,
 });
 
+const hasPlaceData = (): boolean => {
+  let res: boolean = false;
+
+  if (eventItem.value.place !== null && eventItem.value.place !== undefined) {
+    const { coords } = eventItem.value.place as ISerchPlace;
+    if (coords) {
+      const { lat, lon } = coords;
+      res = lat !== null && lon !== null;
+    }
+  }
+
+  return res;
+};
+
+const hasPlace = computed(() => hasPlaceData());
+
+//Инициализировать карту
 const initLeafLetMap = () => {
-  if (!eventItem.value.place) {
+  if (!hasPlace.value) {
     return;
   }
   LeafletMap.value = L.map("map", {
@@ -36,15 +61,15 @@ const initLeafLetMap = () => {
       eventItem.value.place?.coords?.lat as number,
       eventItem.value.place?.coords?.lon as number
     ),
-    zoom: 16,
+    zoom: currentMapZoom,
     attributionControl: false,
   });
 
   const mIcon = L.icon({
     iconUrl: "/svg/markerIcon.svg",
     iconSize: [24, 50],
-    // iconAnchor: [32, 91],
-    tooltipAnchor: [45, -8],
+    iconAnchor: [12, 49],
+    tooltipAnchor: [45, -30],
   });
 
   // const mIcon = L.divIcon({
@@ -58,8 +83,8 @@ const initLeafLetMap = () => {
   MyAttrControl.setPrefix("<a href='https://leafletjs.com/'>Maps</a>");
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 25,
-    attribution: "© ",
+    maxZoom: mapMaxZoom,
+    attribution: "© openstreetmaps",
     subdomains: ["a", "b", "c"],
   }).addTo(LeafletMap.value);
   //Транспорт
@@ -78,11 +103,11 @@ const initLeafLetMap = () => {
         eventItem.value.place?.coords?.lat as number,
         eventItem.value.place?.coords?.lon as number,
       ],
-      { icon: mIcon, alt: Locations[eventItem.value.place.location] }
+      { icon: mIcon, alt: Locations[eventItem.value.place?.location as string] }
     )
       .addTo(LeafletMap.value)
       .bindTooltip(
-        (Locations[eventItem.value.place.location] +
+        (Locations[eventItem.value.place?.location as string] +
           " - " +
           eventItem.value.place?.address) as string,
         {
@@ -99,6 +124,25 @@ const initLeafLetMap = () => {
   }
 
   //L.polygon(()=>[pnt.Latitude, pnt.Longitude]), { color: 'red' }).addTo(LeafletMap.value)
+};
+
+const handlerRedrawMap = () => {
+  if (LeafletMap.value) {
+    LeafletMap.value.remove();
+    LeafletMap.value = undefined;
+    initLeafLetMap();
+    if (LeafletMap.value) {
+      (LeafletMap.value as L.Map).setView(
+        [
+          eventItem.value.place?.coords?.lat as number,
+          eventItem.value.place?.coords?.lon as number,
+        ],
+        16
+      );
+
+      (LeafletMap.value as L.Map).invalidateSize(true);
+    }
+  }
 };
 
 onMounted(() => {
@@ -126,22 +170,37 @@ onMounted(() => {
           {{ eventItem.title }}
         </div>
 
+        <div class="my-10">
+          {{ eventItem }}
+        </div>
+
         <div>
           {{ eventItem.place }}
         </div>
       </div>
 
       <div
-        v-if="!eventItem.place"
+        v-if="!hasPlace"
         class="w-[80vw] lg:w-[60vw] mx-auto my-10 text-center"
       >
         <h4>Нет данных по гео-локации</h4>
       </div>
-      <div
-        v-if="eventItem.place"
-        id="map"
-        class="w-[95vw] h-[45vh] lg:w-[75vw] lg:h-[55vh] mx-auto"
-      ></div>
+      <div v-if="hasPlace" class="flex gap-2 items-start justify-evenly">
+        <div
+          v-if="eventItem.place"
+          id="map"
+          class="w-[95vw] h-[45vh] lg:w-[75vw] lg:h-[55vh] mx-auto"
+        ></div>
+
+        <button
+          type="button"
+          aria-label="Обновить карту"
+          class="min-w-[60px] min-h-[30px] active:scale-90 bg-slate-800 text-slate-100 p-1 cursor-pointer"
+          @click="handlerRedrawMap"
+        >
+          Update Map
+        </button>
+      </div>
 
       <div class="flex items-center gap-2 justify-evenly my-10">
         <button
