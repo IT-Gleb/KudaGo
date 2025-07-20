@@ -53,7 +53,7 @@ const { status, searchdata, error, execute, clear } = useSearchData(
   paramSearch
 );
 
-const serchItems = computed(() => {
+const searchItems = computed(() => {
   if (searchdata.value) {
     return FilteredData.value.count !== null ? FilteredData.value.count : 0;
   } else {
@@ -191,7 +191,7 @@ onUnmounted(() => {
         v-if="
           status !== 'pending' &&
           status !== 'error' &&
-          serchItems < 1 &&
+          searchItems < 1 &&
           isSearchParam
         "
       >
@@ -201,11 +201,11 @@ onUnmounted(() => {
       <div
         v-if="
           (status === 'success' || status === 'idle') &&
-          serchItems > 0 &&
+          searchItems > 0 &&
           isSearchParam
         "
       >
-        Найдено: {{ serchItems }}
+        Найдено: {{ searchItems }}
 
         <SearchFilterComponent
           :items="Object.keys(searchdata?.results as unknown as string[]) "
@@ -250,7 +250,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <UpBtn v-if="serchItems > 1" />
+      <UpBtn v-if="searchItems > 1" />
     </section>
     <template #error="{ error, clearError }">
       <MyErrorComponent :err-object="error" :err-fn="clearError" />

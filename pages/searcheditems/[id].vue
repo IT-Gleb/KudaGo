@@ -26,10 +26,25 @@ const handlerMain = () => {
   router.push("/");
 };
 
+const isObject = (param: string) => {
+  let res: boolean = false;
+  try {
+    JSON.parse(param);
+    res = true;
+  } catch (err) {
+    res = false;
+  }
+
+  return res;
+};
+
 const parametres = useState<TSearchEditObject>("searchTxt");
 
 const eventItem = useState<Partial<ISearchResult>>("eventItem");
-eventItem.value.body_text = JSON.parse(eventItem.value.body_text as string);
+
+if (isObject(eventItem.value.body_text as string)) {
+  eventItem.value.body_text = JSON.parse(eventItem.value.body_text as string);
+}
 
 useHead({
   title: `${eventItem.value.title}:[Kuda-Go]`,
@@ -185,7 +200,10 @@ onMounted(() => {
       >
         <h4>Нет данных по гео-локации</h4>
       </div>
-      <div v-if="hasPlace" class="flex gap-2 items-start justify-evenly">
+      <div
+        v-if="hasPlace"
+        class="flex gap-2 items-start justify-evenly flex-wrap"
+      >
         <div
           v-if="eventItem.place"
           id="map"

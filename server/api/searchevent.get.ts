@@ -31,25 +31,14 @@ async function Fetcher(paramUrl: string): Promise<ISearchRoot> {
     let tmp: ISearchResult[] = [];
 
     //Отфильтровать по дате равной или больше текущей
-    tmp = (data.results as ISearchResult[])
-      .filter((item) => {
-        if (item.daterange && item.daterange.start_date) {
-          return CompareDateAndNow(item.daterange?.start_date);
-        } else {
-          return true;
-        }
-      })
-      .sort((a, b) => {
-        if (a.daterange?.start_date && b.daterange?.start_date) {
-          if (a.daterange?.start_date > b.daterange?.start_date) {
-            return 1;
-          } else {
-            return -1;
-          }
-        } else {
-          return 1;
-        }
-      });
+    tmp = (data.results as ISearchResult[]).filter((item) => {
+      if (item.daterange && item.daterange.start_date) {
+        return CompareDateAndNow(item.daterange?.start_date);
+      } else {
+        return true;
+      }
+    });
+
     //Удалить ссылки в тексте
     tmp.forEach((item) => {
       if (item.description !== null) {
@@ -140,6 +129,18 @@ export default defineEventHandler(async (event) => {
     workIndex++;
   }
   (searchData.count as number) = (searchData.results as ISearchResult[]).length;
+  //Отсортировать по дате начала,
+  (searchData.results as ISearchResult[]).sort((a, b) => {
+    if (a.daterange?.start_date && b.daterange?.start_date) {
+      if (a.daterange?.start_date > b.daterange?.start_date) {
+        return 1;
+      } else {
+        return -1;
+      }
+    } else {
+      return 1;
+    }
+  });
   // console.log(workSet.size);
 
   return searchData;
