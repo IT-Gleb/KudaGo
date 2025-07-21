@@ -5,7 +5,7 @@ import { useState } from "#app";
 import type {
   ISearchResult,
   ISerchPlace,
-  TSearchEditObject,
+  Search_Root,
 } from "~/types/serchTypes";
 import { ClientOnly } from "#components";
 import L, { icon, type LeafletEventHandlerFn } from "leaflet";
@@ -13,6 +13,7 @@ import "leaflet/dist/leaflet.css";
 
 const mapMaxZoom: number = 19;
 const currentMapZoom: number = 16;
+const placeMap: string = "PlaceMap";
 
 const router = useRouter();
 
@@ -26,25 +27,67 @@ const handlerMain = () => {
   router.push("/");
 };
 
-const isObject = (param: string) => {
+const isObject = (param: unknown) => {
   let res: boolean = false;
-  try {
-    JSON.parse(param);
-    res = true;
-  } catch (err) {
-    res = false;
+  if (typeof param === "object") {
+    return true;
+  }
+  if (typeof param === "string") {
+    try {
+      JSON.parse(param);
+      res = true;
+    } catch (err) {
+      res = false;
+    }
   }
 
   return res;
 };
-
-const parametres = useState<TSearchEditObject>("searchTxt");
 
 const eventItem = useState<Partial<ISearchResult>>("eventItem");
 
 if (isObject(eventItem.value.body_text as string)) {
   eventItem.value.body_text = JSON.parse(eventItem.value.body_text as string);
 }
+
+function formatTextToHTML(param: string): string {
+  // console.log(param);
+  const reg = new RegExp(`^[А-Я][\\s\\S]+?\\?$`, "gmu");
+  let txt: string = `${param}`;
+  try {
+    reg
+      .exec(txt)
+      ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)));
+    // ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)));
+    // console.log(txt);
+  } catch (err) {
+    return txt;
+  }
+
+  return txt;
+}
+
+const TextBlocks = computed<string | { id: string; text: string }[]>(() => {
+  if (!eventItem.value.body_text) {
+    return "";
+  }
+  if (isObject(eventItem.value.body_text)) {
+    let tmpTexts: { id: string; text: string }[] = [];
+    (eventItem.value.body_text as unknown as Search_Root).blocks.forEach(
+      (item) => {
+        if (item.text.length > 0) {
+          tmpTexts = [
+            ...tmpTexts,
+            { id: item.key, text: formatTextToHTML(item.text) },
+          ];
+        }
+      }
+    );
+    return tmpTexts;
+  } else {
+    return eventItem.value.body_text;
+  }
+});
 
 useHead({
   title: `${eventItem.value.title}:[Kuda-Go]`,
@@ -71,7 +114,7 @@ const initLeafLetMap = () => {
   if (!hasPlace.value) {
     return;
   }
-  LeafletMap.value = L.map("map", {
+  LeafletMap.value = L.map(placeMap, {
     center: new L.LatLng(
       eventItem.value.place?.coords?.lat as number,
       eventItem.value.place?.coords?.lon as number
@@ -169,27 +212,67 @@ onMounted(() => {
 
 <template>
   <ClientOnly>
-    <section class="p-2 text-[1em]/[1.2em] lg:text-[0.8rem]/[1rem]">
-      <div>
-        <div>
-          {{ parametres.id }}
-        </div>
-        <div>
-          {{ parametres.searchTxt }}
-        </div>
-      </div>
+    <section
+      class="p-2 text-[1em]/[1.2em] lg:text-[0.8rem]/[1rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
+    >
       <div class="w-fit mx-auto my-10">
         {{ $route.params.id }}
         <div>{{ eventItem.id }}</div>
+
+        <div class="flex items-center gap-2 justify-evenly my-10">
+          <button
+            type="button"
+            aria-label="Вернуться"
+            class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
+            @click="handlerBack"
+          >
+            Вернуться
+          </button>
+
+          <button
+            type="button"
+            aria-label="На Главную"
+            class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
+            @click="handlerMain"
+          >
+            На Главную
+          </button>
+        </div>
+
         <div>
-          {{ eventItem.title }}
+          <h4 class="text-[1.6em]/[1.65em]">{{ eventItem.title }}</h4>
+        </div>
+
+        <div
+          v-if="eventItem.first_image?.thumbnails !== null"
+          class="max-w-fit mx-auto object-cover object-center my-10 p-1"
+        >
+          <img
+            :src="eventItem.first_image?.thumbnails['640x384']"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="block max-w-full max-h-full"
+          />
+        </div>
+
+        <div
+          v-if="typeof TextBlocks === 'object'"
+          class="mt-5 w-fit mx-auto flex flex-col flex-wrap gap-2 items-start justify-evenly"
+        >
+          <div
+            v-for="item in TextBlocks"
+            :key="item.id"
+            class="indent-3 p-1 text-pretty [&>div>h4]:text-[1.2em]/[1.25em]"
+          >
+            <div v-html="item.text"></div>
+          </div>
+        </div>
+        <div v-else class="indent-3 p-1 text-pretty">
+          <p>{{ TextBlocks }}</p>
         </div>
 
         <div class="my-10">
-          {{ eventItem }}
-        </div>
-
-        <div>
           {{ eventItem.place }}
         </div>
       </div>
@@ -202,12 +285,12 @@ onMounted(() => {
       </div>
       <div
         v-if="hasPlace"
-        class="flex gap-2 items-start justify-evenly flex-wrap"
+        class="flex gap-4 items-start justify-evenly flex-wrap"
       >
         <div
           v-if="eventItem.place"
-          id="map"
-          class="w-[95vw] h-[45vh] lg:w-[75vw] lg:h-[55vh] mx-auto"
+          :id="placeMap"
+          class="w-[95%] h-[55vh] mx-auto"
         ></div>
 
         <button
@@ -223,20 +306,19 @@ onMounted(() => {
       <div class="flex items-center gap-2 justify-evenly my-10">
         <button
           type="button"
-          aria-label="На Главную"
-          class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
-          @click="handlerMain"
-        >
-          На Главную
-        </button>
-
-        <button
-          type="button"
           aria-label="Вернуться"
           class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
           @click="handlerBack"
         >
           Вернуться
+        </button>
+        <button
+          type="button"
+          aria-label="На Главную"
+          class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
+          @click="handlerMain"
+        >
+          На Главную
         </button>
       </div>
     </section>
