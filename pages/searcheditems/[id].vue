@@ -14,12 +14,18 @@ if (isObject(eventItem.value.body_text as string)) {
 
 function formatTextToHTMLHeaders(param: string): string {
   // console.log(param);
-  const reg = new RegExp(`^[А-Я][\\s\\S]+?\\?$`, "gmu");
+  let reg: RegExp[] = [
+    new RegExp(`^[А-Я][\\s\\S]+?\\?$`, "gmu"),
+    new RegExp(`^\\d\\d?[\\s\\S]+?:$`, "gmu"),
+  ];
   let txt: string = `${param}`;
   try {
-    reg
-      .exec(txt)
-      ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)));
+    reg.forEach((regitem) =>
+      regitem
+        .exec(txt)
+        ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)))
+    );
+
     // ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)));
     // console.log(txt);
   } catch (err) {
@@ -92,7 +98,7 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
         </div>
 
         <div
-          class="max-w-[96%] mx-auto flex flex-col md:flex-row items-start justify-between border-t"
+          class="max-w-[96%] mx-auto flex flex-col text-[0.8em]/[1.4em] md:flex-row items-start justify-between border-t"
         >
           <div v-if="typeof TextBlocks === 'string'" class="indent-3 px-2">
             {{ TextBlocks }}
@@ -101,7 +107,7 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
             <div v-for="item in TextBlocks" :key="item.id">
               <div
                 v-html="item.text"
-                class="indent-3 mt-2 px-2 pb-2 text-[0.8em]/[1.4em] [&>h4]:text-[1.2em]/[1.35em] [&>h4]:mt-1"
+                class="indent-3 mt-2 px-2 pb-2 [&>h4]:text-[1.2em]/[1.35em] [&>h4]:mt-1"
               ></div>
             </div>
           </div>

@@ -60,6 +60,14 @@ const filtered_searchItems = computed(() => {
   }
 });
 
+const noSearchData = computed(
+  () =>
+    !searchdata.value ||
+    searchdata.value === undefined ||
+    searchdata.value.results === null ||
+    (searchdata.value.results as ISearchResult[]).length < 1
+);
+
 const s_searchItems = computed(() => {
   if (searchdata.value) {
     return searchdata.value.count !== null ? searchdata.value.count : 0;
@@ -88,13 +96,14 @@ const handlerFilter = (paramKey: string, paramIndex: number) => {
 
   const isNoDate = paramKey === "unknow";
   ActiveFilterItem.value = "";
+  if (noSearchData.value) {
+    FilterState.value = "";
+    return;
+  }
 
-  if (
-    searchdata.value !== undefined &&
-    searchdata.value &&
-    searchdata.value.results
-  ) {
+  if (!noSearchData.value) {
     tmp = Array.from(
+      //@ts-ignore
       searchdata.value?.results[
         //@ts-ignore
         isNoDate ? "unknow" : Number(paramKey)
@@ -105,6 +114,7 @@ const handlerFilter = (paramKey: string, paramIndex: number) => {
       {},
       { [isNoDate ? "unknow" : Number(paramKey)]: tmp }
     );
+    //@ts-ignore
     ActiveFilterItem.value = Object.keys(searchdata.value.results)[paramIndex];
     FilterState.value = ActiveFilterItem.value;
   }
@@ -146,17 +156,7 @@ watch(
     let tmp = useState("filterState");
     let index: number = 0;
 
-    if (
-      (tmp.value as string) === "" &&
-      (searchdata.value?.count as number) > 0
-    ) {
-      // console.log("begin: ", tmp.value);
-      FilterState.value = Object.keys(
-        searchdata.value?.results as ISearchResult[]
-      )[index] as string;
-      // console.log("end: ", tmp.value);
-    }
-    if ((tmp.value as string).length > 1) {
+    if ((tmp.value as string).length > 1 && searchdata.value) {
       const objKeys = Object.keys(searchdata.value?.results as ISearchResult[]);
       const { length } = objKeys;
 
@@ -166,6 +166,17 @@ watch(
           break;
         }
       }
+    }
+
+    if (
+      (tmp.value as string) === "" &&
+      (searchdata.value?.count as number) > 0
+    ) {
+      // console.log("begin: ", tmp.value);
+      FilterState.value = Object.keys(
+        searchdata.value?.results as ISearchResult[]
+      )[index] as string;
+      // console.log("end: ", tmp.value);
     }
 
     handlerFilter(tmp.value as string, index);
@@ -261,7 +272,7 @@ onUnmounted(() => {
 
         <div class="my-10 font-light">
           <div
-            v-for="([keyO, value], index) in Object.entries(FilteredData.results as
+            v-for="([keyO, value]) in Object.entries(FilteredData.results as
           TSearchDataObject)"
             :key="keyO"
             :id="keyO"

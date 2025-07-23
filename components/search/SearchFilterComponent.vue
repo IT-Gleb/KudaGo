@@ -36,7 +36,7 @@ const handlerOpen = () => {
           type="button"
           aria-label="Раскрыть"
           class="w-[20px] h-[20px] cursor-pointer"
-          @click.stop="handlerOpen"
+          @click.prevent="handlerOpen"
         >
           <next-svg
             class="transition-transform"
@@ -56,7 +56,7 @@ const handlerOpen = () => {
               ? 'bg-green-500 text-indigo-800'
               : 'bg-slate-700 text-white'
           "
-          @click.stop="props.runFilter(item, index)"
+          @click.stop.prevent="props.runFilter(item, index)"
         >
           {{
             item === "unknow"
@@ -73,7 +73,7 @@ const handlerOpen = () => {
           aria-label="Отменить"
           class="min-w-[60px] min-h-[30px] bg-indigo-950 dark:bg-slate-500 text-white dark:text-slate-100 cursor-pointer disabled:opacity-20 disabled:pointer-events-none active:scale-90 p-1 rounded-md"
           :disabled="props.disabledButton"
-          @click.stop="props.cancelFilter"
+          @click.prevent.stop="props.cancelFilter"
         >
           Отменить
         </button>
