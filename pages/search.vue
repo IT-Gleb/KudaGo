@@ -19,8 +19,6 @@ import MyErrorComponent from "~/components/ui/myError/MyErrorComponent.vue";
 
 const { t } = useI18n();
 
-const itemsOnPage: number = 15;
-
 const router = useRouter();
 
 const paramSearch = useState<TSearchEditObject>("searchTxt");
@@ -47,15 +45,24 @@ const handlerMain = () => {
 
 // const currentPage = ref<number>(1);
 const ActiveFilterItem = ref<string>("");
+const FilterState = useState("filterState", () => ActiveFilterItem.value);
 
 const { status, searchdata, error, execute, clear } = useSearchData(
   paramSearchId,
   paramSearch
 );
 
-const searchItems = computed(() => {
+const filtered_searchItems = computed(() => {
   if (searchdata.value) {
     return FilteredData.value.count !== null ? FilteredData.value.count : 0;
+  } else {
+    return 0;
+  }
+});
+
+const s_searchItems = computed(() => {
+  if (searchdata.value) {
+    return searchdata.value.count !== null ? searchdata.value.count : 0;
   } else {
     return 0;
   }
@@ -82,7 +89,11 @@ const handlerFilter = (paramKey: string, paramIndex: number) => {
   const isNoDate = paramKey === "unknow";
   ActiveFilterItem.value = "";
 
-  if (searchdata.value && searchdata.value.results) {
+  if (
+    searchdata.value !== undefined &&
+    searchdata.value &&
+    searchdata.value.results
+  ) {
     tmp = Array.from(
       searchdata.value?.results[
         //@ts-ignore
@@ -95,6 +106,7 @@ const handlerFilter = (paramKey: string, paramIndex: number) => {
       { [isNoDate ? "unknow" : Number(paramKey)]: tmp }
     );
     ActiveFilterItem.value = Object.keys(searchdata.value.results)[paramIndex];
+    FilterState.value = ActiveFilterItem.value;
   }
 
   scrollTimer.value = setTimeout(() => {
@@ -119,12 +131,44 @@ const handlerCancelFilter = () => {
       searchdata.value as TGrouppedSearchData
     );
   }
+  FilterState.value = "";
 };
 
 watch(
   searchdata,
   () => {
-    handlerCancelFilter();
+    //    handlerCancelFilter();
+
+    if (searchdata.value === undefined) {
+      return;
+    }
+
+    let tmp = useState("filterState");
+    let index: number = 0;
+
+    if (
+      (tmp.value as string) === "" &&
+      (searchdata.value?.count as number) > 0
+    ) {
+      // console.log("begin: ", tmp.value);
+      FilterState.value = Object.keys(
+        searchdata.value?.results as ISearchResult[]
+      )[index] as string;
+      // console.log("end: ", tmp.value);
+    }
+    if ((tmp.value as string).length > 1) {
+      const objKeys = Object.keys(searchdata.value?.results as ISearchResult[]);
+      const { length } = objKeys;
+
+      for (let indx: number = 0; indx < length; indx++) {
+        if (objKeys[indx] === tmp.value) {
+          index = indx;
+          break;
+        }
+      }
+    }
+
+    handlerFilter(tmp.value as string, index);
   },
   { deep: true }
 );
@@ -191,7 +235,7 @@ onUnmounted(() => {
         v-if="
           status !== 'pending' &&
           status !== 'error' &&
-          searchItems < 1 &&
+          s_searchItems < 1 &&
           isSearchParam
         "
       >
@@ -201,11 +245,11 @@ onUnmounted(() => {
       <div
         v-if="
           (status === 'success' || status === 'idle') &&
-          searchItems > 0 &&
+          s_searchItems > 0 &&
           isSearchParam
         "
       >
-        Найдено: {{ searchItems }}
+        Найдено: {{ s_searchItems }} Отобрано: {{ filtered_searchItems }}
 
         <SearchFilterComponent
           :items="Object.keys(searchdata?.results as unknown as string[]) "
@@ -250,7 +294,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <UpBtn v-if="searchItems > 1" />
+      <UpBtn v-if="s_searchItems > 1" />
     </section>
     <template #error="{ error, clearError }">
       <MyErrorComponent :err-object="error" :err-fn="clearError" />

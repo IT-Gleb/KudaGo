@@ -10,7 +10,10 @@ const mapMaxZoom: number = 19;
 const currentMapZoom: number = 16;
 const placeMap: string = "PlaceMap";
 
-const props = defineProps<{ place: ISerchPlace | null | undefined }>();
+const props = defineProps<{
+  title: string;
+  place: ISerchPlace | null | undefined;
+}>();
 const hasPlace = computed(() => hasPlaceData(props.place));
 
 const LeafletMap = ref<L.Map>();
@@ -119,7 +122,15 @@ onMounted(() => {
       v-if="hasPlace"
       class="flex gap-4 items-start justify-evenly flex-wrap"
     >
-      <div :id="placeMap" class="w-[90vw] h-[65vh]"></div>
+      <div :id="placeMap" class="w-[90vw] h-[65vh] relative">
+        <div
+          class="absolute z-[1000] min-h-[40px] max-w-[75%] top-2 right-3 place-content-center p-1 overflow-hidden bg-yellow-50 dark:bg-indigo-950 text-slate-800 dark:text-yellow-200 rounded-md shadow-lg"
+        >
+          <span class="uppercase font-medium font-['Roboto'] text-pretty">{{
+            props.title
+          }}</span>
+        </div>
+      </div>
       <button
         type="button"
         aria-label="Обновить карту"

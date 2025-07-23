@@ -61,7 +61,7 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
 <template>
   <ClientOnly>
     <section
-      class="p-2 text-[1.2em]/[1.4em] lg:text-[1rem]/[1.2rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
+      class="p-2 text-[1.2em]/[1.4em] lg:text-[1rem]/[1.5rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
     >
       <BackMainButtons />
       <div class="w-fit mx-auto my-10">
@@ -101,7 +101,7 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
             <div v-for="item in TextBlocks" :key="item.id">
               <div
                 v-html="item.text"
-                class="indent-3 mt-2 px-2 text-[0.8em]/[1em] [&>h4]:text-[1.2em]/[1.35em] [&>h4]:mt-1"
+                class="indent-3 mt-2 px-2 pb-2 text-[0.8em]/[1.4em] [&>h4]:text-[1.2em]/[1.35em] [&>h4]:mt-1"
               ></div>
             </div>
           </div>
@@ -109,7 +109,10 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
             v-if="hasPlace"
             class="w-[96%] md:w-[50%] mx-auto pl-2 py-2 md:border-l"
           >
-            <LMap :place="eventItem.place" />
+            <LMap
+              :title="eventItem.title as string "
+              :place="eventItem.place"
+            />
           </div>
         </div>
       </div>
