@@ -3,6 +3,7 @@
   "author": "Gleb Torgashin",
   "mainMenu": ["News", "Content", "Films", "Tests"],
   "mainTitle": ["what", "to visit"],
+  "subHead": "what to visit",
   "popMessages": {
     "dataLoad": "Receiving data...",
     "dataEventDay": " according to the events of the day",

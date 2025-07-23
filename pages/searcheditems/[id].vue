@@ -70,10 +70,6 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
       class="p-2 text-[1.2em]/[1.4em] lg:text-[1rem]/[1.5rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
     >
       <BackMainButtons />
-      <div class="w-fit mx-auto my-10">
-        {{ $route.params.id }}
-        <div>{{ eventItem.id }}</div>
-      </div>
 
       <div class="flex flex-col items-start gap-2 justify-between border-b">
         <div class="w-full border-b border-b-black p-2 pb-4">
@@ -107,7 +103,7 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
             <div v-for="item in TextBlocks" :key="item.id">
               <div
                 v-html="item.text"
-                class="indent-3 mt-2 px-2 pb-2 [&>h4]:text-[1.2em]/[1.35em] [&>h4]:mt-1"
+                class="indent-3 mt-2 px-2 pb-2 [&>h4]:text-[1.1em]/[1.35em] [&>h4]:mt-1"
               ></div>
             </div>
           </div>
@@ -127,16 +123,3 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
     </section>
   </ClientOnly>
 </template>
-
-<style scoped>
-.icon-class {
-  color: green;
-}
-.my-labels {
-  background-color: black !important;
-  color: white !important;
-}
-.leaflet-control-attribution {
-  display: none !important;
-}
-</style>
