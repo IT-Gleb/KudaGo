@@ -1,9 +1,11 @@
 import type { TResourceString } from "~/types/filmTypes";
 import type {
   IEventOfDayRoot,
+  IPlace,
   TEventOfDayObject,
   TGetParamsObject,
 } from "~/types/myTypes";
+import type { ISerchPlace } from "~/types/serchTypes";
 
 const delimeter: string = ". ";
 
@@ -527,4 +529,37 @@ export function StringToId(param: string) {
     hash = hash & hash;
   }
   return Math.abs(hash);
+}
+
+export function hasPlaceData(
+  paramPlace: ISerchPlace | null | undefined
+): boolean {
+  let res: boolean = false;
+
+  if (paramPlace !== null && typeof paramPlace !== undefined) {
+    const { coords } = paramPlace as ISerchPlace;
+    if (coords) {
+      const { lat, lon } = coords;
+      res = lat !== null && lon !== null;
+    }
+  }
+
+  return res;
+}
+
+export function isObject(param: unknown): boolean {
+  let res: boolean = false;
+  if (typeof param === "object") {
+    return true;
+  }
+  if (typeof param === "string") {
+    try {
+      JSON.parse(param);
+      res = true;
+    } catch (err) {
+      res = false;
+    }
+  }
+
+  return res;
 }

@@ -1,48 +1,10 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import { ref, nextTick, onMounted } from "vue";
 import { useState } from "#app";
-import type {
-  ISearchResult,
-  ISerchPlace,
-  Search_Root,
-} from "~/types/serchTypes";
+import type { ISearchResult, Search_Root } from "~/types/serchTypes";
 import { ClientOnly } from "#components";
-import L, { icon, type LeafletEventHandlerFn } from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-const mapMaxZoom: number = 19;
-const currentMapZoom: number = 16;
-const placeMap: string = "PlaceMap";
-
-const router = useRouter();
-
-const LeafletMap = ref<L.Map>();
-
-const handlerBack = () => {
-  router.back();
-};
-
-const handlerMain = () => {
-  router.push("/");
-};
-
-const isObject = (param: unknown) => {
-  let res: boolean = false;
-  if (typeof param === "object") {
-    return true;
-  }
-  if (typeof param === "string") {
-    try {
-      JSON.parse(param);
-      res = true;
-    } catch (err) {
-      res = false;
-    }
-  }
-
-  return res;
-};
+import { hasPlaceData, isObject } from "~/utils/functions";
+import BackMainButtons from "~/components/backMainButtons/BackMainButtons.vue";
+import LMap from "~/components/leafletmap/LMap.vue";
 
 const eventItem = useState<Partial<ISearchResult>>("eventItem");
 
@@ -50,7 +12,7 @@ if (isObject(eventItem.value.body_text as string)) {
   eventItem.value.body_text = JSON.parse(eventItem.value.body_text as string);
 }
 
-function formatTextToHTML(param: string): string {
+function formatTextToHTMLHeaders(param: string): string {
   // console.log(param);
   const reg = new RegExp(`^[А-Я][\\s\\S]+?\\?$`, "gmu");
   let txt: string = `${param}`;
@@ -78,7 +40,7 @@ const TextBlocks = computed<string | { id: string; text: string }[]>(() => {
         if (item.text.length > 0) {
           tmpTexts = [
             ...tmpTexts,
-            { id: item.key, text: formatTextToHTML(item.text) },
+            { id: item.key, text: formatTextToHTMLHeaders(item.text) },
           ];
         }
       }
@@ -93,234 +55,66 @@ useHead({
   title: `${eventItem.value.title}:[Kuda-Go]`,
 });
 
-const hasPlaceData = (): boolean => {
-  let res: boolean = false;
-
-  if (eventItem.value.place !== null && eventItem.value.place !== undefined) {
-    const { coords } = eventItem.value.place as ISerchPlace;
-    if (coords) {
-      const { lat, lon } = coords;
-      res = lat !== null && lon !== null;
-    }
-  }
-
-  return res;
-};
-
-const hasPlace = computed(() => hasPlaceData());
-
-//Инициализировать карту
-const initLeafLetMap = () => {
-  if (!hasPlace.value) {
-    return;
-  }
-  LeafletMap.value = L.map(placeMap, {
-    center: new L.LatLng(
-      eventItem.value.place?.coords?.lat as number,
-      eventItem.value.place?.coords?.lon as number
-    ),
-    zoom: currentMapZoom,
-    attributionControl: false,
-  });
-
-  const mIcon = L.icon({
-    iconUrl: "/svg/markerIcon.svg",
-    iconSize: [24, 50],
-    iconAnchor: [12, 49],
-    tooltipAnchor: [45, -30],
-  });
-
-  // const mIcon = L.divIcon({
-  //   className: "icon-class",
-  //   iconSize: [36, 92],
-  //   iconAnchor: [30, 91],
-  //   tooltipAnchor: [40, -45],
-  // });
-
-  const MyAttrControl = L.control.attribution().addTo(LeafletMap.value);
-  MyAttrControl.setPrefix("<a href='https://leafletjs.com/'>Maps</a>");
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: mapMaxZoom,
-    attribution: "© openstreetmaps",
-    subdomains: ["a", "b", "c"],
-  }).addTo(LeafletMap.value);
-  //Транспорт
-  //Нужен ключ
-  // L.tileLayer(
-  //   "http://a.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png"
-  // ).addTo(LeafletMap.value);
-  // L.tileLayer(
-  //   "http://{s}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png"
-  // ).addTo(LeafletMap.value);
-
-  // L.marker([52.103839, 4.252742], { icon: customDivIcon }).addTo(leafletMap.value)
-  if (LeafletMap.value) {
-    const marker = L.marker(
-      [
-        eventItem.value.place?.coords?.lat as number,
-        eventItem.value.place?.coords?.lon as number,
-      ],
-      { icon: mIcon, alt: Locations[eventItem.value.place?.location as string] }
-    )
-      .addTo(LeafletMap.value)
-      .bindTooltip(
-        (Locations[eventItem.value.place?.location as string] +
-          " - " +
-          eventItem.value.place?.address) as string,
-        {
-          permanent: true,
-          offset: new L.Point(50, -30),
-          direction: "center",
-          className: "my-labels",
-        }
-      );
-    // .bindPopup("<br> " + eventItem.value.title);
-    if (marker.dragging) {
-      marker.dragging.enable();
-    }
-  }
-
-  //L.polygon(()=>[pnt.Latitude, pnt.Longitude]), { color: 'red' }).addTo(LeafletMap.value)
-};
-
-const handlerRedrawMap = () => {
-  if (LeafletMap.value) {
-    LeafletMap.value.remove();
-    LeafletMap.value = undefined;
-    initLeafLetMap();
-    if (LeafletMap.value) {
-      (LeafletMap.value as L.Map).setView(
-        [
-          eventItem.value.place?.coords?.lat as number,
-          eventItem.value.place?.coords?.lon as number,
-        ],
-        16
-      );
-
-      (LeafletMap.value as L.Map).invalidateSize(true);
-    }
-  }
-};
-
-onMounted(() => {
-  nextTick(() => {
-    initLeafLetMap();
-  });
-});
+const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
 </script>
 
 <template>
   <ClientOnly>
     <section
-      class="p-2 text-[1em]/[1.2em] lg:text-[0.8rem]/[1rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
+      class="p-2 text-[1.2em]/[1.4em] lg:text-[1rem]/[1.2rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
     >
+      <BackMainButtons />
       <div class="w-fit mx-auto my-10">
         {{ $route.params.id }}
         <div>{{ eventItem.id }}</div>
+      </div>
 
-        <div class="flex items-center gap-2 justify-evenly my-10">
-          <button
-            type="button"
-            aria-label="Вернуться"
-            class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
-            @click="handlerBack"
-          >
-            Вернуться
-          </button>
-
-          <button
-            type="button"
-            aria-label="На Главную"
-            class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
-            @click="handlerMain"
-          >
-            На Главную
-          </button>
+      <div class="flex flex-col items-start gap-2 justify-between border-b">
+        <div class="w-full border-b border-b-black p-2 pb-4">
+          <h4 class="text-[1.3em]/[1.6em]">{{ eventItem.title }}</h4>
         </div>
-
-        <div>
-          <h4 class="text-[1.6em]/[1.65em]">{{ eventItem.title }}</h4>
-        </div>
-
-        <div
-          v-if="eventItem.first_image?.thumbnails !== null"
-          class="max-w-fit mx-auto object-cover object-center my-10 p-1"
-        >
-          <img
-            :src="eventItem.first_image?.thumbnails['640x384']"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            class="block max-w-full max-h-full"
-          />
-        </div>
-
-        <div
-          v-if="typeof TextBlocks === 'object'"
-          class="mt-5 w-fit mx-auto flex flex-col flex-wrap gap-2 items-start justify-evenly"
-        >
-          <div
-            v-for="item in TextBlocks"
-            :key="item.id"
-            class="indent-3 p-1 text-pretty [&>div>h4]:text-[1.2em]/[1.25em]"
-          >
-            <div v-html="item.text"></div>
+        <div class="w-full">
+          <div class="w-fit mx-auto">
+            <div class="object-cover object-center">
+              <img
+                :src="
+                eventItem.first_image?.thumbnails !== null
+                  ? eventItem.first_image?.thumbnails['640x384'] as string
+                  : ''
+              "
+                :alt="eventItem.title"
+                loading="lazy"
+                decoding="async"
+                class="block max-w-full max-h-full"
+              />
+            </div>
           </div>
         </div>
-        <div v-else class="indent-3 p-1 text-pretty">
-          <p>{{ TextBlocks }}</p>
-        </div>
 
-        <div class="my-10">
-          {{ eventItem.place }}
-        </div>
-      </div>
-
-      <div
-        v-if="!hasPlace"
-        class="w-[80vw] lg:w-[60vw] mx-auto my-10 text-center"
-      >
-        <h4>Нет данных по гео-локации</h4>
-      </div>
-      <div
-        v-if="hasPlace"
-        class="flex gap-4 items-start justify-evenly flex-wrap"
-      >
         <div
-          v-if="eventItem.place"
-          :id="placeMap"
-          class="w-[95%] h-[55vh] mx-auto"
-        ></div>
-
-        <button
-          type="button"
-          aria-label="Обновить карту"
-          class="min-w-[60px] min-h-[30px] active:scale-90 bg-slate-800 text-slate-100 p-1 cursor-pointer"
-          @click="handlerRedrawMap"
+          class="max-w-[96%] mx-auto flex flex-col md:flex-row items-start justify-between border-t"
         >
-          Update Map
-        </button>
+          <div v-if="typeof TextBlocks === 'string'" class="indent-3 px-2">
+            {{ TextBlocks }}
+          </div>
+          <div v-if="typeof TextBlocks === 'object'">
+            <div v-for="item in TextBlocks" :key="item.id">
+              <div
+                v-html="item.text"
+                class="indent-3 mt-2 px-2 text-[0.8em]/[1em] [&>h4]:text-[1.2em]/[1.35em] [&>h4]:mt-1"
+              ></div>
+            </div>
+          </div>
+          <div
+            v-if="hasPlace"
+            class="w-[96%] md:w-[50%] mx-auto pl-2 py-2 md:border-l"
+          >
+            <LMap :place="eventItem.place" />
+          </div>
+        </div>
       </div>
 
-      <div class="flex items-center gap-2 justify-evenly my-10">
-        <button
-          type="button"
-          aria-label="Вернуться"
-          class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
-          @click="handlerBack"
-        >
-          Вернуться
-        </button>
-        <button
-          type="button"
-          aria-label="На Главную"
-          class="bg-slate-700 text-slate-100 active:scale-90 p-1 min-w-[60px] min-h-[30px] cursor-pointer rounded-md"
-          @click="handlerMain"
-        >
-          На Главную
-        </button>
-      </div>
+      <BackMainButtons />
     </section>
   </ClientOnly>
 </template>
