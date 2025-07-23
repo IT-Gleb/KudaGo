@@ -2,6 +2,7 @@
 import { useSearchData } from "../components/search/controller/SearchDataController";
 import type {
   ISearchResult,
+  ISearchRoot,
   TGrouppedSearchData,
   TSearchDataObject,
   TSearchEditObject,
@@ -65,7 +66,7 @@ const noSearchData = computed(
     !searchdata.value ||
     searchdata.value === undefined ||
     searchdata.value.results === null ||
-    (searchdata.value.results as ISearchResult[]).length < 1
+    searchdata.value.count === null
 );
 
 const s_searchItems = computed(() => {
@@ -101,7 +102,7 @@ const handlerFilter = (paramKey: string, paramIndex: number) => {
     return;
   }
 
-  if (!noSearchData.value) {
+  if (!noSearchData.value && searchdata.value && searchdata.value.count) {
     tmp = Array.from(
       //@ts-ignore
       searchdata.value?.results[
