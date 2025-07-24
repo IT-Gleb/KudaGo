@@ -117,14 +117,14 @@ const handlerSubmit = (): boolean => {
       autocomplete="off"
       v-model="searchText"
       :placeholder="t('search.placeholder')"
-      class="max-w-[320px] min-h-[30px] py-[2px] px-1 outline-none font-['Inter'] text-[1rem]/[1.2rem] placeholder:text-slate-500"
+      class="max-w-[160px] min-h-[30px] py-[2px] px-1 outline-none font-['Inter'] text-[1rem]/[1.2rem] placeholder:text-slate-500"
     />
     <div class="flex items-end gap-1 text-indigo-950 bg-slate-300 p-1">
       <button
         type="button"
         :title="t('buttons.clearSearch')"
         :aria-label="t('buttons.clearSearch')"
-        class="w-[24px] h-[24px] cursor-pointer active:scale-90"
+        class="w-[22px] h-[22px] cursor-pointer active:scale-90"
         @click="handleClear"
       >
         <Cross />
@@ -133,7 +133,7 @@ const handlerSubmit = (): boolean => {
         type="button"
         :title="t('buttons.closeSearch')"
         :aria-label="t('buttons.closeSearch')"
-        class="w-[24px] h-[24px] cursor-pointer active:scale-90"
+        class="w-[22px] h-[22px] cursor-pointer active:scale-90"
         @click="props.funcBlur"
       >
         <RoundCross />

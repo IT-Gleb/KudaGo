@@ -36,7 +36,7 @@ const initLeafLetMap = () => {
     iconUrl: "/svg/markerIcon.svg",
     iconSize: [24, 50],
     iconAnchor: [12, 49],
-    tooltipAnchor: [45, -30],
+    tooltipAnchor: [-55, -32],
   });
 
   // const mIcon = L.divIcon({
@@ -47,7 +47,9 @@ const initLeafLetMap = () => {
   // });
 
   const MyAttrControl = L.control.attribution().addTo(LeafletMap.value);
-  MyAttrControl.setPrefix("<a href='https://leafletjs.com/'>Maps</a>");
+  MyAttrControl.setPrefix(
+    "<a href='https://leafletjs.com/' target='_blank'>Maps</a>"
+  );
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: mapMaxZoom,

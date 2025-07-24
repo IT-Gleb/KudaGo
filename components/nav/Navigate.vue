@@ -10,7 +10,9 @@ import SearchComponent from "../search/SearchComponent.vue";
   >
     <SearchComponent />
     <langButton />
-    <div class="place-content-center mr-5">
+    <div
+      class="max-[420px]:hidden min-[420.5px]:block place-content-center mr-5"
+    >
       <ThemeButton />
     </div>
   </nav>
