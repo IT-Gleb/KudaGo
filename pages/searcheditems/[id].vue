@@ -62,6 +62,19 @@ useHead({
 });
 
 const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
+
+const subways = (param: string) =>
+  computed(() => {
+    let tmp = param.split(",");
+    if (tmp.length > 0) {
+      tmp.forEach((item) => {
+        item = item.trim();
+        return item;
+      });
+      return tmp.join(", ");
+    }
+    return param;
+  });
 </script>
 
 <template>
@@ -91,6 +104,37 @@ const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
               />
             </div>
           </div>
+        </div>
+
+        <div
+          v-if="eventItem.place"
+          class="w-fit mx-auto p-2 grid grid-cols-[100px_1fr] md:grid-cols-[160px_1fr] my-5 text-[0.9em]/[1.2em] gap-2"
+        >
+          <div class="font-bold font-['Roboto']">Город:</div>
+          <div>{{ Locations[eventItem.place?.location] }}</div>
+          <div class="font-bold font-['Roboto']">Место:</div>
+          <div>«{{ eventItem.place.title }}»</div>
+
+          <div class="font-bold font-['Roboto']">Адрес:</div>
+          <div>{{ eventItem.place?.address }}</div>
+          <div class="font-bold font-['Roboto']">Ссылка:</div>
+          <div>
+            <NuxtLink :to="eventItem.item_url" target="_blank">{{
+              eventItem.item_url
+            }}</NuxtLink>
+          </div>
+          <div class="font-bold font-['Roboto']">Телефон:</div>
+          <div class="first-letter:uppercase">
+            <NuxtLink
+              :to="`tel:${eventItem.place.phone
+                .replaceAll(' ', '')
+                .replaceAll('-', '')}`"
+              >{{ eventItem.place.phone }}</NuxtLink
+            >
+          </div>
+
+          <div class="font-bold font-['Roboto']">Ближайшее метро:</div>
+          <div>{{ subways(eventItem.place?.subway) }}</div>
         </div>
 
         <div

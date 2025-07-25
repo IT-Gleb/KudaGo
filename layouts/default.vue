@@ -19,10 +19,11 @@ const isMainPage = computed(
     <header
       class="w-full text-center bg-slate-200 dark:bg-slate-950 place-items-center dark:text-slate-300 place-content-center flex flex-row gap-x-2 justify-between"
     >
-      <span
+      <NuxtLink
+        to="/"
         class="pl-2 text-[0.85em]/[1.1em] uppercase font-['Roboto'] font-semibold"
       >
-        {{ !isMainPage ? t("subHead") : "" }}</span
+        {{ !isMainPage ? t("subHead") : "" }}</NuxtLink
       >
       <Navigate />
     </header>
