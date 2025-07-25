@@ -1,14 +1,27 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { motion } from "motion-v";
+import type { TIsSearchShow } from "~/types/serchTypes";
 const darkClass: string = "dark";
 
 const thisX = ref<number>(0);
 const isDark = ref<boolean>(false);
 const keyStore: string = "darkTheme";
 const lengths = ref<number[]>([36, 72]);
+const hideWindowWidth = 420;
 
 const isDesktop = useMediaQuery("only screen and (min-width: 1024px)");
+const isSearchShow = useState<TIsSearchShow>("searchShow");
+
+const hasVisibled = computed<boolean>(() => {
+  if (
+    isSearchShow.value.isSearchShow &&
+    isSearchShow.value.windowWidth < hideWindowWidth
+  ) {
+    return false;
+  }
+  return true;
+});
 
 const pathLength = isDesktop.value
   ? ref(lengths.value[1])
@@ -70,11 +83,13 @@ watch(isDesktop, () => {
   handlePath();
   // console.log(isDesktop.value, pathLength.value);
 });
+
 //export default defineComponent({ name: "ThemeButton" });
 </script>
 
 <template>
   <div
+    v-if="hasVisibled"
     class="w-[60px] h-[24px] lg:w-[100px] lg:h-[30px] bg-[linear-gradient(to_right,theme(colors.slate.100),theme(colors.slate.500))] dark:bg-[linear-gradient(to_right,theme(colors.black),theme(colors.slate.500))] rounded-4xl border border-indigo-950 dark:border-slate-500 overflow-hidden place-content-center"
   >
     <!-- <div class="w-[35px] h-[35px] rounded-full bg-slate-800 cursor-pointer" /> -->

@@ -1,3 +1,8 @@
+export type TIsSearchShow = {
+  isSearchShow: boolean;
+  windowWidth: number;
+};
+
 export interface ISearchRoot {
   count: number | null;
   next: string | null;
