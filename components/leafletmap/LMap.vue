@@ -126,11 +126,15 @@ onMounted(() => {
     >
       <div :id="placeMap" class="w-[90vw] h-[65vh] relative">
         <div
-          class="absolute z-[1000] min-h-[40px] max-w-[75%] top-2 right-3 place-content-center p-1 overflow-hidden bg-yellow-50 dark:bg-indigo-950 text-slate-800 dark:text-yellow-200 rounded-md shadow-lg"
+          class="absolute z-[1000] min-h-[40px] max-w-[75%] top-2 right-3 place-content-center overflow-hidden bg-yellow-50 dark:bg-slate-800 text-slate-800 dark:text-yellow-200 rounded-md shadow-lg"
         >
-          <span class="uppercase font-medium font-['Roboto'] text-pretty">{{
-            props.title
-          }}</span>
+          <div class="uppercase font-medium font-['Roboto'] text-pretty p-1">
+            {{ props.title }}
+          </div>
+          <hr class="dark:text-slate-400" />
+          <div class="bg-yellow-100 dark:bg-indigo-950 p-1 text-pretty">
+            {{ place?.title }}
+          </div>
         </div>
       </div>
       <button

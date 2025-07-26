@@ -5,6 +5,7 @@ import { ClientOnly } from "#components";
 import { hasPlaceData, isObject } from "~/utils/functions";
 import BackMainButtons from "~/components/backMainButtons/BackMainButtons.vue";
 import LMap from "~/components/leafletmap/LMap.vue";
+import { nanoid } from "nanoid";
 
 const eventItem = useState<Partial<ISearchResult>>("eventItem");
 
@@ -17,6 +18,8 @@ function formatTextToHTMLHeaders(param: string): string {
   let reg: RegExp[] = [
     new RegExp(`^[А-Я][\\s\\S]+?\\?$`, "gmu"),
     new RegExp(`^\\d\\d?[\\s\\S]+?:$`, "gmu"),
+    new RegExp(`^[А-Я]?[\\s\\S]+?:\\?$`, "gi"),
+    new RegExp(`^[А-Я]?[\\s\\S]+?\\+\\)$`, "gi"),
   ];
   let txt: string = `${param}`;
   try {
@@ -43,7 +46,8 @@ const TextBlocks = computed<string | { id: string; text: string }[]>(() => {
     let tmpTexts: { id: string; text: string }[] = [];
     (eventItem.value.body_text as unknown as Search_Root).blocks.forEach(
       (item) => {
-        if (item.text.length > 0) {
+        const reg = new RegExp("еще?ё? больше", "gmi");
+        if (item.text.length > 0 && !reg.test(item.text)) {
           tmpTexts = [
             ...tmpTexts,
             { id: item.key, text: formatTextToHTMLHeaders(item.text) },
@@ -76,14 +80,20 @@ const subways = (param: string) =>
     return param;
   });
 
-const phones = computed<string[] | undefined>(() => {
+type TPlacePhone = {
+  id: string;
+  text: string;
+  link: string;
+}[];
+
+const phones = computed<TPlacePhone>(() => {
   let tmp = eventItem.value.place?.phone.split(",");
-  let res: string[] = [];
+  let res: TPlacePhone = [];
   if (tmp) {
-    tmp.forEach(
-      (item) => (item = item.replaceAll(" ", "").replaceAll("-", ""))
-    );
-    res = Array.from(tmp);
+    tmp.forEach((item) => {
+      const tmpLink = item.replaceAll(" ", "").replaceAll("-", "");
+      res.push({ id: nanoid(), link: tmpLink, text: item });
+    });
   }
 
   return res;
@@ -139,13 +149,17 @@ const phones = computed<string[] | undefined>(() => {
           <div v-if="eventItem.place?.phone" class="font-bold font-['Roboto']">
             Телефон:
           </div>
-          <div v-if="eventItem.place?.phone" class="first-letter:uppercase">
+          <div
+            v-if="eventItem.place?.phone"
+            class="flex flex-wrap items-start gap-3"
+          >
             <NuxtLink
               v-for="item in phones"
-              :key="item"
-              :to="`tel:${item}`"
+              :key="item.id"
+              :to="`tel:${item.link}`"
               target="_blank"
-              >{{ item }}
+              class="underline underline-offset-2"
+              >{{ item.text }}
             </NuxtLink>
           </div>
 
@@ -154,6 +168,15 @@ const phones = computed<string[] | undefined>(() => {
           </div>
           <div v-if="eventItem.place?.subway">
             {{ subways(eventItem.place?.subway) }}
+          </div>
+          <div
+            v-if="eventItem.age_restriction"
+            class="font-bold font-['Roboto']"
+          >
+            Возрастные ограничения:
+          </div>
+          <div v-if="eventItem.age_restriction">
+            {{ eventItem.age_restriction }}+
           </div>
         </div>
 
