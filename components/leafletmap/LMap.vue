@@ -132,7 +132,9 @@ onMounted(() => {
             {{ props.title }}
           </div>
           <hr class="dark:text-slate-400" />
-          <div class="bg-yellow-100 dark:bg-indigo-950 p-1 text-pretty">
+          <div
+            class="bg-yellow-100 dark:bg-indigo-950 p-1 text-pretty font-semibold"
+          >
             {{ place?.title }}
           </div>
         </div>

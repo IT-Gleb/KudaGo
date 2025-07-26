@@ -8,7 +8,7 @@ const handlerUp = () => {
 
 <template>
   <div
-    class="fixed right-2 top-[90%] w-fit bg-slate-900 text-white px-1 py-[2px] outline-2 outline-offset-2 outline-indigo-950 dark:outline-green-500 border-2 border-slate-50 rounded-full"
+    class="fixed right-2 top-[90%] w-fit bg-slate-900 text-white px-1 py-[2px] outline-2 outline-offset-2 outline-indigo-950 dark:outline-green-500 border-2 border-slate-50 rounded-full initClass"
   >
     <button
       type="button"
@@ -20,3 +20,21 @@ const handlerUp = () => {
     </button>
   </div>
 </template>
+
+<style lang="css" scoped>
+.initClass {
+  animation-delay: 1s;
+  animation: start_animation 400ms ease;
+}
+
+@keyframes start_animation {
+  0% {
+    opacity: 0.2;
+    transform: translateY(-300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
