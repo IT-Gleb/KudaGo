@@ -61,10 +61,10 @@ useHead({
   title: `${eventItem.value.title}:[Kuda-Go]`,
 });
 
-const hasPlace = computed(() => hasPlaceData(eventItem.value.place));
+const hasPlace = computed<boolean>(() => hasPlaceData(eventItem.value.place));
 
 const subways = (param: string) =>
-  computed(() => {
+  computed<string>(() => {
     let tmp = param.split(",");
     if (tmp.length > 0) {
       tmp.forEach((item) => {
@@ -75,6 +75,19 @@ const subways = (param: string) =>
     }
     return param;
   });
+
+const phones = computed<string[] | undefined>(() => {
+  let tmp = eventItem.value.place?.phone.split(",");
+  let res: string[] = [];
+  if (tmp) {
+    tmp.forEach(
+      (item) => (item = item.replaceAll(" ", "").replaceAll("-", ""))
+    );
+    res = Array.from(tmp);
+  }
+
+  return res;
+});
 </script>
 
 <template>
@@ -123,18 +136,25 @@ const subways = (param: string) =>
               eventItem.item_url
             }}</NuxtLink>
           </div>
-          <div class="font-bold font-['Roboto']">Телефон:</div>
-          <div class="first-letter:uppercase">
+          <div v-if="eventItem.place?.phone" class="font-bold font-['Roboto']">
+            Телефон:
+          </div>
+          <div v-if="eventItem.place?.phone" class="first-letter:uppercase">
             <NuxtLink
-              :to="`tel:${eventItem.place.phone
-                .replaceAll(' ', '')
-                .replaceAll('-', '')}`"
-              >{{ eventItem.place.phone }}</NuxtLink
-            >
+              v-for="item in phones"
+              :key="item"
+              :to="`tel:${item}`"
+              target="_blank"
+              >{{ item }}
+            </NuxtLink>
           </div>
 
-          <div class="font-bold font-['Roboto']">Ближайшее метро:</div>
-          <div>{{ subways(eventItem.place?.subway) }}</div>
+          <div v-if="eventItem.place?.subway" class="font-bold font-['Roboto']">
+            Ближайшее метро:
+          </div>
+          <div v-if="eventItem.place?.subway">
+            {{ subways(eventItem.place?.subway) }}
+          </div>
         </div>
 
         <div
