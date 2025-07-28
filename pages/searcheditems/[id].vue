@@ -16,13 +16,13 @@ if (isObject(eventItem.value.body_text as string)) {
 function formatTextToHTMLHeaders(param: string): string {
   // console.log(param);
   let reg: RegExp[] = [
-    new RegExp(`^[А-Я][\\s\\S]+?\\?$`, "gmu"),
+    new RegExp(`^[А-Я][\\s\\S].*?[^\\.]$`, "gsi"),
     new RegExp(`^\\d\\d?[\\s\\S]+?:$`, "gs"),
-    new RegExp(`^[А-Я]?[\\s\\S]+?:\\?$`, "gi"),
+    new RegExp(`^[А-Я]?[\\s\\S]+?:\\?$`, "gsi"),
     // new RegExp(`^[А-Я]?[\\s\\S]+?\\+\\)$`, "gi"),
     new RegExp(`^[А-Я||\\"«]?[\\s\\S].*?\\)$`, "gsi"),
   ];
-  let txt: string = `${param}`;
+  let txt: string = `${param.trim()}`;
   try {
     reg.forEach((regitem) =>
       regitem
