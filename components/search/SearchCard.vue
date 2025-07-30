@@ -9,6 +9,10 @@ const stateItem = useState<Partial<ISearchResult>>("eventItem", () => ({}));
 
 const handleSetItem = () => {
   stateItem.value = props.item;
+  //Записать в localstorage
+  if (typeof window !== "undefined") {
+    localStorage.setItem("sItem", JSON.stringify(stateItem.value));
+  }
 };
 
 const maxTitle = computed(() =>

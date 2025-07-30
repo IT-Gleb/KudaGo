@@ -7,27 +7,50 @@ import BackMainButtons from "~/components/backMainButtons/BackMainButtons.vue";
 import LMap from "~/components/leafletmap/LMap.vue";
 import { nanoid } from "nanoid";
 
-const eventItem = useState<Partial<ISearchResult>>("eventItem");
+let eventItem = ref<Partial<ISearchResult>>({});
 
-if (isObject(eventItem.value.body_text as string)) {
-  eventItem.value.body_text = JSON.parse(eventItem.value.body_text as string);
-}
+onMounted(() => {
+  try {
+    eventItem = useState<Partial<ISearchResult>>("eventItem");
+    if (!eventItem.value) {
+      // console.log("item- undefined");
+      if (typeof window !== "undefined") {
+        const strData: string | null = localStorage.getItem("sItem") as string;
+        if (strData) {
+          eventItem.value = JSON.parse(strData);
+        }
+      }
+    }
+  } catch (err: unknown) {}
+
+  if (isObject(eventItem.value?.body_text as string)) {
+    eventItem.value.body_text = JSON.parse(
+      eventItem.value?.body_text as string
+    );
+  }
+
+  useHead({
+    title: `${eventItem.value.title}:[Kuda-Go]`,
+  });
+});
 
 function formatTextToHTMLHeaders(param: string): string {
   // console.log(param);
   let reg: RegExp[] = [
-    new RegExp(`^[А-Я][\\s\\S].*?[^\\.]$`, "gsi"),
+    new RegExp(`^[А-Я][\\s\\S].*?[^\\.\\!]$`, "gsi"),
     new RegExp(`^\\d\\d?[\\s\\S]+?:$`, "gs"),
     new RegExp(`^[А-Я]?[\\s\\S]+?:\\?$`, "gsi"),
     // new RegExp(`^[А-Я]?[\\s\\S]+?\\+\\)$`, "gi"),
     new RegExp(`^[А-Я||\\"«]?[\\s\\S].*?\\)$`, "gsi"),
   ];
-  let txt: string = `${param.trim()}`;
+  let txt: string = param.trim();
   try {
     reg.forEach((regitem) =>
       regitem
         .exec(txt)
-        ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)))
+        ?.forEach(
+          (item) => (txt = txt.replaceAll(item, `<span>${item}</span>`))
+        )
     );
 
     // ?.forEach((item) => (txt = txt.replaceAll(item, `<h4>${item}</h4>`)));
@@ -60,10 +83,6 @@ const TextBlocks = computed<string | { id: string; text: string }[]>(() => {
   } else {
     return eventItem.value.body_text;
   }
-});
-
-useHead({
-  title: `${eventItem.value.title}:[Kuda-Go]`,
 });
 
 const hasPlace = computed<boolean>(() => hasPlaceData(eventItem.value.place));
@@ -181,25 +200,27 @@ const phones = computed<TPlacePhone>(() => {
           </div>
         </div>
 
-        <div
-          class="max-w-[96%] mx-auto text-[0.8em]/[1.4em] border-t flex flex-col gap-2"
-        >
-          <div v-if="typeof TextBlocks === 'string'" class="indent-3 px-2">
-            {{ TextBlocks }}
-          </div>
+        <div class="max-w-[96%] mx-auto text-[0.8em]/[1.4em] border-t">
           <div
-            v-else
-            v-for="(item, index) in TextBlocks"
-            :key="item.id"
-            v-html="item.text"
-            class="indent-3 mt-2 px-2 pb-2 [&>h4]:text-[1.1em]/[1.35em] [&>h4]:mt-1"
-          ></div>
-          <div v-if="hasPlace" class="w-[96%] md:w-[90%] mx-auto pl-2 py-2">
+            v-if="hasPlace"
+            class="w-[96%] md:w-[52%] md:mx-2 md:border-e px-2 py-2 float-left"
+          >
             <LMap
               :title="eventItem.title as string "
               :place="eventItem.place"
             />
           </div>
+
+          <p v-if="typeof TextBlocks === 'string'" class="indent-3 px-2">
+            {{ TextBlocks }}
+          </p>
+          <p
+            v-else
+            v-for="item in TextBlocks"
+            :key="item.id"
+            v-html="item.text"
+            class="indent-3 mt-2 px-2 pb-2 text-balance [&>span]:text-[1.1em]/[1.35em] [&>span]:mt-1 [&>span]:font-bold [&>span]:uppercase [&>span]:font-['Roboto']"
+          ></p>
         </div>
       </div>
 

@@ -1,7 +1,6 @@
 import type { TResourceString } from "~/types/filmTypes";
 import type {
   IEventOfDayRoot,
-  IPlace,
   TEventOfDayObject,
   TGetParamsObject,
 } from "~/types/myTypes";

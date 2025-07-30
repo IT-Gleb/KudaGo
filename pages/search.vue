@@ -2,7 +2,6 @@
 import { useSearchData } from "../components/search/controller/SearchDataController";
 import type {
   ISearchResult,
-  ISearchRoot,
   TGrouppedSearchData,
   TSearchDataObject,
   TSearchEditObject,
@@ -297,7 +296,7 @@ onUnmounted(() => {
               class="mx-2 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
             >
               <SearchCard
-                v-for="itm of value"
+                v-for="itm in value"
                 :key="itm.id"
                 :item="itm"
                 :date="keyO"
