@@ -119,34 +119,29 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-[98%] mx-auto">
-    <div
-      v-if="hasPlace"
-      class="flex gap-4 items-start justify-evenly flex-wrap"
-    >
-      <div :id="placeMap" class="w-[90vw] h-[65vh] relative">
+  <div v-if="hasPlace" class="flex gap-4 items-start justify-evenly flex-wrap">
+    <div :id="placeMap" class="w-[90vw] h-[65vh] relative">
+      <div
+        class="absolute z-[1000] min-h-[40px] max-w-[75%] top-2 right-3 place-content-center overflow-hidden bg-yellow-50 dark:bg-slate-800 text-slate-800 dark:text-yellow-200 rounded-md shadow-lg"
+      >
+        <div class="uppercase font-medium font-['Roboto'] text-pretty p-1">
+          {{ props.title }}
+        </div>
+        <hr class="dark:text-slate-400" />
         <div
-          class="absolute z-[1000] min-h-[40px] max-w-[75%] top-2 right-3 place-content-center overflow-hidden bg-yellow-50 dark:bg-slate-800 text-slate-800 dark:text-yellow-200 rounded-md shadow-lg"
+          class="bg-yellow-100 dark:bg-indigo-950 p-1 text-pretty font-semibold"
         >
-          <div class="uppercase font-medium font-['Roboto'] text-pretty p-1">
-            {{ props.title }}
-          </div>
-          <hr class="dark:text-slate-400" />
-          <div
-            class="bg-yellow-100 dark:bg-indigo-950 p-1 text-pretty font-semibold"
-          >
-            {{ place?.title }}
-          </div>
+          {{ place?.title }}
         </div>
       </div>
-      <button
-        type="button"
-        aria-label="Обновить карту"
-        class="min-w-[60px] min-h-[30px] active:scale-90 bg-slate-800 text-slate-100 p-1 cursor-pointer"
-        @click="handlerRedrawMap"
-      >
-        Update Map
-      </button>
     </div>
+    <button
+      type="button"
+      aria-label="Обновить карту"
+      class="min-w-[60px] min-h-[30px] active:scale-90 bg-slate-800 text-slate-100 p-1 cursor-pointer"
+      @click="handlerRedrawMap"
+    >
+      Update Map
+    </button>
   </div>
 </template>

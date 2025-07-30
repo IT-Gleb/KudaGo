@@ -182,23 +182,19 @@ const phones = computed<TPlacePhone>(() => {
         </div>
 
         <div
-          class="max-w-[96%] mx-auto flex flex-col text-[0.8em]/[1.4em] md:flex-row items-start justify-between border-t"
+          class="max-w-[96%] mx-auto text-[0.8em]/[1.4em] border-t flex flex-col gap-2"
         >
           <div v-if="typeof TextBlocks === 'string'" class="indent-3 px-2">
             {{ TextBlocks }}
           </div>
-          <div v-if="typeof TextBlocks === 'object'">
-            <div v-for="item in TextBlocks" :key="item.id">
-              <div
-                v-html="item.text"
-                class="indent-3 mt-2 px-2 pb-2 [&>h4]:text-[1.1em]/[1.35em] [&>h4]:mt-1"
-              ></div>
-            </div>
-          </div>
           <div
-            v-if="hasPlace"
-            class="w-[96%] md:w-[50%] mx-auto pl-2 py-2 md:border-l"
-          >
+            v-else
+            v-for="(item, index) in TextBlocks"
+            :key="item.id"
+            v-html="item.text"
+            class="indent-3 mt-2 px-2 pb-2 [&>h4]:text-[1.1em]/[1.35em] [&>h4]:mt-1"
+          ></div>
+          <div v-if="hasPlace" class="w-[96%] md:w-[90%] mx-auto pl-2 py-2">
             <LMap
               :title="eventItem.title as string "
               :place="eventItem.place"

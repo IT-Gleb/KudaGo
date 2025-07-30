@@ -2,24 +2,32 @@
 import type { ISearchResult } from "~/types/serchTypes";
 import { useState } from "#app";
 
+const maxLength: number = 55;
+
 const props = defineProps<{ item: ISearchResult; date: number | string }>();
 const stateItem = useState<Partial<ISearchResult>>("eventItem", () => ({}));
 
 const handleSetItem = () => {
   stateItem.value = props.item;
 };
+
+const maxTitle = computed(() =>
+  props.item.title.length > maxLength
+    ? props.item.title.substring(0, maxLength - 3) + "..."
+    : props.item.title
+);
 </script>
 
 <template>
   <article class="bg-slate-50 dark:bg-slate-950">
     <header
-      class="bg-orange-200 dark:bg-black h-[70px] p-1 place-content-center overflow-hidden line-clamp-3"
+      class="bg-orange-200 dark:bg-black h-[70px] p-1 place-content-center overflow-hidden"
     >
       <NuxtLink :to="`/searcheditems/${item.id}`" @click="handleSetItem">
         <h6
-          class="font-['Roboto'] text-[1.3em]/[1.5em] lg:text-[0.9em]/[1.1em]"
+          class="font-['Roboto'] text-[1.3em]/[1.5em] lg:text-[0.9em]/[1.1em] text-balance underline-offset-2 underline"
         >
-          {{ item.title }}
+          {{ maxTitle }}
         </h6>
       </NuxtLink>
     </header>
@@ -86,10 +94,10 @@ const handleSetItem = () => {
       class="text-right p-2 place-content-center bg-orange-100 dark:bg-black flex gap-2 justify-between"
     >
       <NuxtLink :to="`/searcheditems/${item.id}`" @click="handleSetItem">
-        <small>Подробнее</small>
+        <small class="underline underline-offset-4">Подробнее</small>
       </NuxtLink>
       <NuxtLink :to="item.item_url" target="_blank">
-        <small>Первоисточник</small>
+        <small class="underline underline-offset-4">Первоисточник</small>
       </NuxtLink>
     </footer>
   </article>
