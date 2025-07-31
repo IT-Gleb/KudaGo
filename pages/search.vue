@@ -23,13 +23,13 @@ const router = useRouter();
 
 let paramSearch = ref<Partial<TSearchEditObject>>({});
 try {
-  //  paramSearch = useState<Partial<TSearchEditObject>>("searchTxt");
-  const strData: string = localStorage.getItem("TxtSearchObj") as string;
-  paramSearch.value = JSON.parse(strData);
-} catch (err: unknown) {
-  console.log((err as Error).message);
+  paramSearch = useState<Partial<TSearchEditObject>>("searchTxt");
   // const strData: string = localStorage.getItem("TxtSearchObj") as string;
   // paramSearch.value = JSON.parse(strData);
+} catch (err: unknown) {
+  console.log((err as Error).message);
+  const strData: string = localStorage.getItem("TxtSearchObj") as string;
+  paramSearch.value = JSON.parse(strData);
 }
 
 const FilteredData = ref<TGrouppedSearchData>({

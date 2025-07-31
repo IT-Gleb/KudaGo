@@ -203,7 +203,7 @@ const phones = computed<TPlacePhone>(() => {
         <div class="max-w-[96%] mx-auto text-[0.8em]/[1.4em] border-t">
           <div
             v-if="hasPlace"
-            class="w-[96%] md:w-[52%] md:mx-2 md:border-e px-2 py-2 float-left"
+            class="w-[96%] md:w-[52%] md:mx-2 md:border-s px-2 py-2 float-right"
           >
             <LMap
               :title="eventItem.title as string "
