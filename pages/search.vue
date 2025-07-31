@@ -21,35 +21,49 @@ const { t } = useI18n();
 
 const router = useRouter();
 
-const paramSearch = useState<TSearchEditObject>("searchTxt");
-const paramSearchId = computed(() =>
-  paramSearch.value && paramSearch.value.id !== 0
-    ? `SerchData-${paramSearch.value.id}`
-    : `SerchData-${randomIntegerFromMinMax(1, 100)}`
-);
+let paramSearch = ref<Partial<TSearchEditObject>>({});
+try {
+  //  paramSearch = useState<Partial<TSearchEditObject>>("searchTxt");
+  const strData: string = localStorage.getItem("TxtSearchObj") as string;
+  paramSearch.value = JSON.parse(strData);
+} catch (err: unknown) {
+  console.log((err as Error).message);
+  // const strData: string = localStorage.getItem("TxtSearchObj") as string;
+  // paramSearch.value = JSON.parse(strData);
+}
+
 const FilteredData = ref<TGrouppedSearchData>({
   count: 0,
   isGroupped: false,
   results: [],
 });
 
-const isSearchParam = computed(
-  () => paramSearch.value && paramSearch.value.searchTxt.trim().length > 0
+const scrollTimer = ref<NodeJS.Timeout | null>(null);
+const ActiveFilterItem = ref<string>("");
+
+const paramSearchId = computed(() =>
+  paramSearch.value && paramSearch.value.id !== 0
+    ? `SerchData-${paramSearch.value.id}`
+    : `SerchData-${randomIntegerFromMinMax(1, 100)}`
 );
 
-const scrollTimer = ref<NodeJS.Timeout | null>(null);
+const isSearchParam = computed(
+  () =>
+    paramSearch.value &&
+    paramSearch.value.searchTxt &&
+    paramSearch.value.searchTxt.trim().length > 0
+);
 
 const handlerMain = () => {
   router.replace({ path: "/" });
 };
 
 // const currentPage = ref<number>(1);
-const ActiveFilterItem = ref<string>("");
-const FilterState = useState("filterState", () => ActiveFilterItem.value);
+let FilterState = useState("filterState", () => ActiveFilterItem.value);
 
 const { status, searchdata, error, execute, clear } = useSearchData(
   paramSearchId,
-  paramSearch
+  <Ref>paramSearch
 );
 
 const filtered_searchItems = computed(() => {
@@ -74,14 +88,6 @@ const s_searchItems = computed(() => {
   } else {
     return 0;
   }
-});
-
-useHead({
-  title: "Поиск:[Kuda Go]",
-  meta: [
-    { name: "description", content: t("title") },
-    { name: "author", content: t("author") },
-  ],
 });
 
 const ClearScrollTimer = () => {
@@ -183,6 +189,24 @@ watch(
   },
   { deep: true }
 );
+
+onMounted(() => {
+  try {
+    // paramSearch = useState<Partial<TSearchEditObject>>("searchTxt");
+    const strData: string = localStorage.getItem("TxtSearchObj") as string;
+    paramSearch.value = JSON.parse(strData);
+  } catch (err: unknown) {
+    console.log((err as Error).message);
+  }
+
+  useHead({
+    title: "Поиск:[Kuda Go]",
+    meta: [
+      { name: "description", content: t("title") },
+      { name: "author", content: t("author") },
+    ],
+  });
+});
 
 onUnmounted(() => {
   ClearScrollTimer();

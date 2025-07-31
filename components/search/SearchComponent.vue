@@ -60,7 +60,7 @@ watch(isShow, (newValue) => {
     :aria-label="t('buttons.searchButton')"
     :title="t('buttons.searchButton')"
     v-if="!isShow"
-    class="w-[24px] h-[24px] text-indigo-900 dark:text-slate-400 cursor-pointer active:scale-90"
+    class="w-[24px] h-[24px] text-slate-300 dark:text-slate-400 cursor-pointer active:scale-90"
     @click="handleShow(true)"
   >
     <Search />

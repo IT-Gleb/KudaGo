@@ -66,6 +66,12 @@ const textToSearch = useState<TSearchEditObject>("searchTxt", () => ({
 watch(debouncedInput, () => {
   textToSearch.value.searchTxt = debouncedInput.value.trim();
   textToSearch.value.id = StringToId(debouncedInput.value.trim());
+
+  //Записать в локал стор
+  // console.log("Пишу в стор... данные поиска");
+  if (typeof window !== "undefined") {
+    localStorage.setItem("TxtSearchObj", JSON.stringify(textToSearch.value));
+  }
 });
 
 watch(searchText, () => {
