@@ -22,7 +22,7 @@ const handlerOpen = () => {
   <section class="my-10 lg:text-[0.7em]/[1em] bg-slate-100 dark:bg-slate-800">
     <details :open="isOpen" @click.prevent="handlerOpen">
       <summary
-        class="bg-slate-300 dark:bg-slate-800 p-2 flex gap-2 items-center justify-between cursor-pointer"
+        class="bg-slate-300 dark:bg-slate-800 p-2 inset-0 flex gap-2 items-center justify-between cursor-pointer"
       >
         Отобрать по:
         {{
@@ -36,7 +36,7 @@ const handlerOpen = () => {
           type="button"
           aria-label="Раскрыть"
           class="w-[20px] h-[20px] cursor-pointer"
-          @click.prevent="handlerOpen"
+          @click.prevent.stop="handlerOpen"
         >
           <next-svg
             class="transition-transform"
@@ -44,7 +44,7 @@ const handlerOpen = () => {
           />
         </button>
       </summary>
-      <div class="p-1 flex flex-wrap items-center justify-start gap-4 mt-3">
+      <div class="p-2 flex flex-wrap items-center justify-start gap-4 mt-3">
         <button
           type="button"
           v-for="(item, index) in props.items"
@@ -56,7 +56,7 @@ const handlerOpen = () => {
               ? 'bg-green-500 text-indigo-800'
               : 'bg-slate-700 text-white'
           "
-          @click.stop.prevent="props.runFilter(item, index)"
+          @click.prevent.stop="props.runFilter(item, index)"
         >
           {{
             item === "unknow"
