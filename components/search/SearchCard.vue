@@ -25,7 +25,7 @@ const maxTitle = computed(() =>
 <template>
   <article class="bg-slate-50 dark:bg-slate-950">
     <header
-      class="bg-orange-200 dark:bg-black h-[70px] p-1 place-content-center overflow-hidden"
+      class="bg-orange-200 dark:bg-black h-[90px] 2xl:h-[110px] p-1 place-content-center overflow-hidden"
     >
       <NuxtLink :to="`/searcheditems/${item.id}`" @click="handleSetItem">
         <h6
