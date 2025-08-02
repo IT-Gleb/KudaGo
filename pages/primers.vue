@@ -20,16 +20,18 @@ onMounted(async () => {
 
 <template>
   <div class="p-2 my-10 flex flex-col gap-2">
-    <div class="my-5 place-content-center lg:w-[60%] text-left">
-      <NuxtLink to="/" class="my-5"
+    <div
+      class="my-5 place-content-center lg:w-[60%] text-left text-[1.6em]/[2em]"
+    >
+      <NuxtLink to="/" class="my-5 underline underline-offset-2"
         ><small>{{ t("links.onMainPage") }}</small></NuxtLink
       >
     </div>
     <Suspense>
       <ProgresSection />
     </Suspense>
-    <div class="my-5 place-content-center text-right">
-      <NuxtLink to="/"
+    <div class="my-5 place-content-center text-right text-[1.6em]/[2em]">
+      <NuxtLink to="/" class="underline underline-offset-2"
         ><small>{{ t("links.onMainPage") }}</small></NuxtLink
       >
     </div>

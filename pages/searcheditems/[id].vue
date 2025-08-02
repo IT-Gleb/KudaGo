@@ -123,7 +123,7 @@ const phones = computed<TPlacePhone>(() => {
 <template>
   <ClientOnly>
     <section
-      class="p-2 text-[1.2em]/[1.4em] lg:text-[1rem]/[1.5rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
+      class="p-2 text-[1.5em]/[2em] lg:text-[1rem]/[1.5rem] w-[98vw] lg:w-[75vw] xl:w-[70vw] mx-auto"
     >
       <BackMainButtons />
 
@@ -200,7 +200,7 @@ const phones = computed<TPlacePhone>(() => {
           </div>
         </div>
 
-        <div class="max-w-[96%] mx-auto text-[0.8em]/[1.4em] border-t">
+        <div class="max-w-[96%] mx-auto text-[0.8em]/[1.2em] border-t">
           <div
             v-if="hasPlace"
             class="w-[96%] md:w-[52%] md:mx-2 md:border-s px-2 py-2 float-right"

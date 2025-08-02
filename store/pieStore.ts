@@ -6,6 +6,36 @@ import type {
   TPieChartItem,
 } from "~/components/graphChartjs/PieGraph.vue";
 
+//-------------------------------------
+class GraphSet extends Set<TPieChartItem> {
+  private g_validator(value: TPieChartItem) {
+    if (this.size < 1) {
+      return true;
+    }
+    const tmp = Array.from(this);
+    return tmp.every(
+      (item) =>
+        item.value !== value.value &&
+        item.bgColor.toLowerCase() !== value.bgColor.toLowerCase()
+    );
+  }
+
+  constructor(value: TPieChartItem[] | null) {
+    super(value);
+    //return this;
+  }
+
+  override add(value: TPieChartItem) {
+    if (!this.g_validator(value)) {
+      // console.log("Объект -", value, " не прошел проверку");
+      return this;
+    }
+    return super.add(value);
+  }
+}
+
+//-------------------------------------
+
 export const PieColors = ref<{ color: string }[]>([
   { color: "#9fa8da" },
   {
@@ -46,15 +76,36 @@ export const calculateColor = () => {
   return PieColors.value[indx].color;
 };
 
+const sortByValue = (a: TPieChartItem, b: TPieChartItem) => {
+  if (a.value > b.value) {
+    return 1;
+  } else {
+    return -1;
+  }
+};
+
 const calculateRandomArray = (): Array<TPieChartItem> => {
-  return Array.from({ length: randomIntegerFromMinMax(3, 12) }).map(
-    (_, index) => ({
+  let len = randomIntegerFromMinMax(3, 12);
+  const graph_values = new GraphSet(
+    Array.from({ length: len }).map((_, index) => ({
       id: nanoid(),
       value: randomIntegerFromMinMax(12, 25),
       label: `Sector-${index + 1}`,
       bgColor: calculateColor(),
-    })
+    }))
   );
+
+  // console.log(graph_values);
+  return Array.from(graph_values).sort(sortByValue);
+
+  // return Array.from({ length: randomIntegerFromMinMax(3, 12) }).map(
+  //   (_, index) => ({
+  //     id: nanoid(),
+  //     value: randomIntegerFromMinMax(12, 25),
+  //     label: `Sector-${index + 1}`,
+  //     bgColor: calculateColor(),
+  //   })
+  // );
 };
 
 export const PieStore = defineStore("pieStore", () => {
