@@ -96,7 +96,9 @@ const calculateRandomArray = (): Array<TPieChartItem> => {
   );
 
   // console.log(graph_values);
-  return Array.from(graph_values).sort(sortByValue);
+  return Array.from(graph_values)
+    .sort(sortByValue)
+    .map((item, index) => ({ ...item, label: `Sector-${index + 1}` }));
 
   // return Array.from({ length: randomIntegerFromMinMax(3, 12) }).map(
   //   (_, index) => ({
