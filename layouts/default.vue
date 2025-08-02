@@ -17,7 +17,12 @@ const isMainPage = computed(
 <template>
   <div class="flex flex-col min-h-[100vh]">
     <header
-      class="w-full text-center bg-indigo-950 dark:bg-slate-950 place-items-center text-slate-300 dark:text-slate-300 place-content-center flex flex-row gap-x-2 justify-between"
+      class="w-full text-center place-items-center place-content-center flex flex-row gap-x-2 justify-between"
+      :class="
+        isMainPage
+          ? 'bg-slate-200 dark:bg-slate-950 text-slate-900'
+          : 'bg-indigo-950 dark:bg-slate-950 text-slate-300'
+      "
     >
       <NuxtLink
         to="/"
