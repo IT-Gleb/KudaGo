@@ -7,7 +7,7 @@ import type {
 } from "~/components/graphChartjs/PieGraph.vue";
 
 //-------------------------------------
-class GraphSet extends Set<TPieChartItem> {
+class GraphDataSet extends Set<TPieChartItem> {
   private g_validator(value: TPieChartItem) {
     if (this.size < 1) {
       return true;
@@ -86,7 +86,7 @@ const sortByValue = (a: TPieChartItem, b: TPieChartItem) => {
 
 const calculateRandomArray = (): Array<TPieChartItem> => {
   let len = randomIntegerFromMinMax(3, 12);
-  const graph_values = new GraphSet(
+  const graph_values = new GraphDataSet(
     Array.from({ length: len }).map((_, index) => ({
       id: nanoid(),
       value: randomIntegerFromMinMax(12, 25),

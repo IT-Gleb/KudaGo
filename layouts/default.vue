@@ -20,7 +20,7 @@ const isMainPage = computed(
       class="w-full text-center place-items-center place-content-center flex flex-row gap-x-2 justify-between"
       :class="
         isMainPage
-          ? 'bg-slate-200 dark:bg-slate-950 text-slate-900'
+          ? 'bg-slate-200 dark:bg-slate-950 text-slate-900 dark:text-slate-300'
           : 'bg-indigo-950 dark:bg-slate-950 text-slate-300'
       "
     >
