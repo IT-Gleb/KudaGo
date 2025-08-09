@@ -20,7 +20,11 @@ const handlerOpen = () => {
 
 <template>
   <section class="my-10 lg:text-[0.7em]/[1em] bg-slate-100 dark:bg-slate-800">
-    <details :open="isOpen" @click.prevent="handlerOpen">
+    <details
+      :open="isOpen"
+      @click.prevent="handlerOpen"
+      class="pointer-events-none"
+    >
       <summary
         class="bg-slate-300 dark:bg-slate-800 p-2 inset-0 flex gap-2 items-center justify-between cursor-pointer"
       >
@@ -35,7 +39,7 @@ const handlerOpen = () => {
         <button
           type="button"
           aria-label="Раскрыть"
-          class="w-[20px] h-[20px] cursor-pointer"
+          class="w-[20px] h-[20px] cursor-pointer pointer-events-auto"
           @click.prevent.stop="handlerOpen"
         >
           <next-svg
@@ -44,13 +48,15 @@ const handlerOpen = () => {
           />
         </button>
       </summary>
-      <div class="p-2 flex flex-wrap items-center justify-start gap-4 mt-3">
+      <div
+        class="p-2 flex flex-wrap items-center justify-start gap-4 mt-3 pointer-events-none"
+      >
         <button
           type="button"
           v-for="(item, index) in props.items"
           :aria-label="`Фильтр по - ${item}`"
           :key="item"
-          class="active:scale-90 min-w-[60px] min-h-[30px] p-2 place-content-center cursor-pointer focus:font-bold focus:bg-green-500 focus:text-indigo-800 rounded-md"
+          class="active:scale-90 min-w-[60px] min-h-[30px] p-2 place-content-center cursor-pointer pointer-events-auto focus:font-bold focus:bg-green-500 focus:text-indigo-800 rounded-md"
           :class="
             item === props.activeItem
               ? 'bg-green-500 text-indigo-800'
@@ -71,7 +77,7 @@ const handlerOpen = () => {
         <button
           type="button"
           aria-label="Отменить"
-          class="min-w-[60px] min-h-[30px] bg-indigo-950 dark:bg-slate-500 text-white dark:text-slate-100 cursor-pointer disabled:opacity-20 disabled:pointer-events-none active:scale-90 p-1 rounded-md"
+          class="min-w-[60px] min-h-[30px] bg-indigo-950 dark:bg-slate-500 text-white dark:text-slate-100 cursor-pointer pointer-events-auto disabled:opacity-20 disabled:pointer-events-none active:scale-90 p-1 rounded-md"
           :disabled="props.disabledButton"
           @click.prevent.stop="props.cancelFilter"
         >

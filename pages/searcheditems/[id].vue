@@ -151,7 +151,7 @@ const phones = computed<TPlacePhone>(() => {
 
         <div
           v-if="eventItem.place"
-          class="w-fit mx-auto p-2 grid grid-cols-[100px_1fr] md:grid-cols-[160px_1fr] my-5 text-[0.9em]/[1.2em] gap-2"
+          class="w-fit mx-auto p-2 grid grid-cols-[100px_1fr] md:grid-cols-[160px_1fr] my-5 text-[0.8em]/[1.2em] gap-2"
         >
           <div class="font-bold font-['Roboto']">Город:</div>
           <div>{{ Locations[eventItem.place?.location] }}</div>
@@ -162,9 +162,12 @@ const phones = computed<TPlacePhone>(() => {
           <div>{{ eventItem.place?.address }}</div>
           <div class="font-bold font-['Roboto']">Ссылка:</div>
           <div>
-            <NuxtLink :to="eventItem.item_url" target="_blank">{{
-              eventItem.item_url
-            }}</NuxtLink>
+            <NuxtLink
+              :to="eventItem.item_url"
+              target="_blank"
+              class="underline underline-offset-2"
+              >{{ eventItem.item_url }}</NuxtLink
+            >
           </div>
           <div v-if="eventItem.place?.phone" class="font-bold font-['Roboto']">
             Телефон:
